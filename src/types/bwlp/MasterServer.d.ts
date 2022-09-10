@@ -4,12 +4,7 @@
 // DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 //
 
-import Int64 = require('node-int64');
-
-import { bwlp } from "./bwlp_types";
-
-
-export declare class MasterServerClient {
+declare class MasterServerClient {
     input: Thrift.TJSONProtocol;
     output: Thrift.TJSONProtocol;
     seqid: number;

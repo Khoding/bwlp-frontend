@@ -3,10 +3,8 @@
 //
 // DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 //
-import Int64 = require('node-int64');
 
-
-export declare enum AuthorizationError {
+declare enum AuthorizationError {
   GENERIC_ERROR = 0,
   NOT_AUTHENTICATED = 1,
   NO_PERMISSION = 2,
@@ -20,7 +18,7 @@ export declare enum AuthorizationError {
   BANNED_NETWORK = 10,
 }
 
-export declare enum InvocationError {
+declare enum InvocationError {
   MISSING_DATA = 0,
   INVALID_DATA = 1,
   UNKNOWN_IMAGE = 2,
@@ -30,49 +28,49 @@ export declare enum InvocationError {
   INTERNAL_SERVER_ERROR = 6,
 }
 
-export declare enum ShareMode {
+declare enum ShareMode {
   LOCAL = 0,
   PUBLISH = 1,
   DOWNLOAD = 2,
   FROZEN = 3,
 }
 
-export declare enum NetDirection {
+declare enum NetDirection {
   IN = 0,
   OUT = 1,
 }
 
-export declare enum Role {
+declare enum Role {
   STUDENT = 0,
   TUTOR = 1,
 }
 
-export declare enum TransferState {
+declare enum TransferState {
   IDLE = 0,
   WORKING = 1,
   FINISHED = 2,
   ERROR = 3,
 }
 
-export declare enum DateParamError {
+declare enum DateParamError {
   TOO_LOW = 0,
   TOO_HIGH = 1,
   NEGATIVE_RANGE = 2,
 }
 
-export declare enum NetShareAuth {
+declare enum NetShareAuth {
   LOGIN_USER = 0,
   OTHER_USER = 1,
 }
 
-export declare enum SscMode {
+declare enum SscMode {
   OFF = 0,
   ON = 1,
   AUTO = 2,
   USER = 3,
 }
 
-export declare class UserInfo {
+declare class UserInfo {
     userId: string;
     firstName: string;
     lastName: string;
@@ -83,7 +81,7 @@ export declare class UserInfo {
       constructor(args?: { userId: string; firstName: string; lastName: string; eMail: string; organizationId: string; role?: Role; });
   }
 
-export declare class WhoamiInfo {
+declare class WhoamiInfo {
     user: UserInfo;
     isSuperUser: boolean;
     canListImages: boolean;
@@ -91,7 +89,7 @@ export declare class WhoamiInfo {
       constructor(args?: { user: UserInfo; isSuperUser: boolean; canListImages: boolean; });
   }
 
-export declare class Organization {
+declare class Organization {
     organizationId: string;
     displayName: string;
     ecpUrl: string;
@@ -100,7 +98,7 @@ export declare class Organization {
       constructor(args?: { organizationId: string; displayName: string; ecpUrl: string; suffixList: string[]; });
   }
 
-export declare class Satellite {
+declare class Satellite {
     addressList: string[];
     displayName: string;
     certSha256: Buffer;
@@ -108,7 +106,7 @@ export declare class Satellite {
       constructor(args?: { addressList: string[]; displayName: string; certSha256: Buffer; });
   }
 
-export declare class SessionData {
+declare class SessionData {
     sessionId: string;
     authToken: string;
     serverAddress: string;
@@ -116,7 +114,7 @@ export declare class SessionData {
       constructor(args?: { sessionId: string; authToken: string; serverAddress: string; });
   }
 
-export declare class ClientSessionData {
+declare class ClientSessionData {
     sessionId: string;
     authToken: string;
     satellites: Satellite[];
@@ -125,20 +123,20 @@ export declare class ClientSessionData {
       constructor(args?: { sessionId: string; authToken: string; satellites: Satellite[]; userInfo: UserInfo; });
   }
 
-export declare class ServerSessionData {
+declare class ServerSessionData {
     sessionId: string;
 
       constructor(args?: { sessionId: string; });
   }
 
-export declare class Virtualizer {
+declare class Virtualizer {
     virtId: string;
     virtName: string;
 
       constructor(args?: { virtId: string; virtName: string; });
   }
 
-export declare class OperatingSystem {
+declare class OperatingSystem {
     osId: number;
     osName: string;
     virtualizerOsId: { [k: string]: string; };
@@ -149,7 +147,7 @@ export declare class OperatingSystem {
       constructor(args?: { osId: number; osName: string; virtualizerOsId: { [k: string]: string; }; architecture: string; maxMemMb: number; maxCores: number; });
   }
 
-export declare class ImagePermissions {
+declare class ImagePermissions {
     link: boolean;
     download: boolean;
     edit: boolean;
@@ -158,14 +156,14 @@ export declare class ImagePermissions {
       constructor(args?: { link: boolean; download: boolean; edit: boolean; admin: boolean; });
   }
 
-export declare class LecturePermissions {
+declare class LecturePermissions {
     edit: boolean;
     admin: boolean;
 
       constructor(args?: { edit: boolean; admin: boolean; });
   }
 
-export declare class ImageBaseWrite {
+declare class ImageBaseWrite {
     imageName: string;
     description: string;
     osId: number;
@@ -179,13 +177,13 @@ export declare class ImageBaseWrite {
       constructor(args?: { imageName: string; description: string; osId: number; virtId: string; isTemplate: boolean; defaultPermissions: ImagePermissions; shareMode: ShareMode; addTags?: string[]; remTags?: string[]; });
   }
 
-export declare class ImageVersionWrite {
+declare class ImageVersionWrite {
     isRestricted: boolean;
 
       constructor(args?: { isRestricted: boolean; });
   }
 
-export declare class ImageSummaryRead {
+declare class ImageSummaryRead {
     imageBaseId: string;
     latestVersionId: string;
     imageName: string;
@@ -212,7 +210,7 @@ export declare class ImageSummaryRead {
       constructor(args?: { imageBaseId: string; latestVersionId: string; imageName: string; description: string; osId: number; virtId: string; createTime: Int64; updateTime: Int64; uploadTime: Int64; expireTime: Int64; ownerId: string; uploaderId: string; shareMode: ShareMode; fileSize: Int64; isRestricted: boolean; isValid: boolean; isProcessed: boolean; isTemplate: boolean; defaultPermissions: ImagePermissions; userPermissions?: ImagePermissions; fileSizeSum?: Int64; versionCount?: number; });
   }
 
-export declare class ImageVersionDetails {
+declare class ImageVersionDetails {
     versionId: string;
     createTime: Int64;
     expireTime: Int64;
@@ -226,7 +224,7 @@ export declare class ImageVersionDetails {
       constructor(args?: { versionId: string; createTime: Int64; expireTime: Int64; fileSize: Int64; uploaderId: string; isRestricted: boolean; isValid: boolean; isProcessed: boolean; software: string[]; });
   }
 
-export declare class ImageDetailsRead {
+declare class ImageDetailsRead {
     imageBaseId: string;
     latestVersionId: string;
     versions: ImageVersionDetails[];
@@ -247,7 +245,7 @@ export declare class ImageDetailsRead {
       constructor(args?: { imageBaseId: string; latestVersionId: string; versions: ImageVersionDetails[]; imageName: string; description: string; tags: string[]; osId: number; virtId: string; createTime: Int64; updateTime: Int64; ownerId: string; updaterId: string; shareMode: ShareMode; isTemplate: boolean; defaultPermissions: ImagePermissions; userPermissions?: ImagePermissions; });
   }
 
-export declare class ImagePublishData {
+declare class ImagePublishData {
     imageBaseId: string;
     imageVersionId: string;
     imageName: string;
@@ -266,7 +264,7 @@ export declare class ImagePublishData {
       constructor(args?: { imageBaseId: string; imageVersionId: string; imageName: string; description: string; createTime: Int64; uploader: UserInfo; fileSize: Int64; software: string[]; tags: string[]; osId: number; virtId: string; isTemplate: boolean; owner: UserInfo; machineDescription: Buffer; });
   }
 
-export declare class NetRule {
+declare class NetRule {
     direction: NetDirection;
     host: string;
     port: number;
@@ -274,7 +272,7 @@ export declare class NetRule {
       constructor(args?: { direction: NetDirection; host: string; port: number; });
   }
 
-export declare class NetShare {
+declare class NetShare {
     auth: NetShareAuth;
     path: string;
     displayname?: string;
@@ -286,7 +284,7 @@ export declare class NetShare {
       constructor(args?: { auth: NetShareAuth; path: string; displayname?: string; mountpoint?: string; username?: string; password?: string; shareId?: number; });
   }
 
-export declare class LdapFilter {
+declare class LdapFilter {
     attribute: string;
     value: string;
     filterId?: number;
@@ -295,7 +293,7 @@ export declare class LdapFilter {
       constructor(args?: { attribute: string; value: string; filterId?: number; title?: string; });
   }
 
-export declare class PresetRunScript {
+declare class PresetRunScript {
     scriptId: number;
     displayname: string;
     osIds: number[];
@@ -303,7 +301,7 @@ export declare class PresetRunScript {
       constructor(args?: { scriptId: number; displayname: string; osIds: number[]; });
   }
 
-export declare class PresetNetRule {
+declare class PresetNetRule {
     ruleId: number;
     displayName: string;
     netRules: NetRule[];
@@ -311,7 +309,7 @@ export declare class PresetNetRule {
       constructor(args?: { ruleId: number; displayName: string; netRules: NetRule[]; });
   }
 
-export declare class PredefinedData {
+declare class PredefinedData {
     netShares: NetShare[];
     ldapFilter: LdapFilter[];
     runScripts: PresetRunScript[];
@@ -320,7 +318,7 @@ export declare class PredefinedData {
       constructor(args?: { netShares: NetShare[]; ldapFilter: LdapFilter[]; runScripts: PresetRunScript[]; networkExceptions: PresetNetRule[]; });
   }
 
-export declare class LectureWrite {
+declare class LectureWrite {
     lectureName: string;
     description: string;
     imageVersionId: string;
@@ -348,7 +346,7 @@ export declare class LectureWrite {
       constructor(args?: { lectureName: string; description: string; imageVersionId: string; autoUpdate: boolean; isEnabled: boolean; startTime: Int64; endTime: Int64; runscript: string; nics: string[]; networkExceptions?: NetRule[]; isExam: boolean; hasInternetAccess: boolean; defaultPermissions: LecturePermissions; addAllowedUsers?: string[]; remAllowedUsers?: string[]; locationIds: number[]; limitToLocations: boolean; limitToAllowedUsers: boolean; hasUsbAccess: boolean; networkShares?: NetShare[]; ldapFilters?: LdapFilter[]; presetScriptIds?: number[]; presetNetworkExceptionIds?: number[]; });
   }
 
-export declare class LectureSummary {
+declare class LectureSummary {
     lectureId: string;
     lectureName: string;
     description: string;
@@ -371,7 +369,7 @@ export declare class LectureSummary {
       constructor(args?: { lectureId: string; lectureName: string; description: string; imageVersionId: string; imageBaseId: string; isEnabled: boolean; startTime: Int64; endTime: Int64; lastUsed: Int64; useCount: number; ownerId: string; updaterId: string; isExam: boolean; hasInternetAccess: boolean; defaultPermissions: LecturePermissions; userPermissions?: LecturePermissions; isImageVersionUsable: boolean; hasUsbAccess: boolean; });
   }
 
-export declare class LectureRead {
+declare class LectureRead {
     lectureId: string;
     lectureName: string;
     description: string;
@@ -409,14 +407,14 @@ export declare class LectureRead {
       constructor(args?: { lectureId: string; lectureName: string; description: string; imageVersionId: string; imageBaseId: string; autoUpdate: boolean; isEnabled: boolean; startTime: Int64; endTime: Int64; lastUsed: Int64; useCount: number; createTime: Int64; updateTime: Int64; ownerId: string; updaterId: string; runscript: string; nics: string[]; allowedUsers: string[]; networkExceptions: NetRule[]; isExam: boolean; hasInternetAccess: boolean; defaultPermissions: LecturePermissions; userPermissions?: LecturePermissions; locationIds: number[]; limitToLocations: boolean; limitToAllowedUsers: boolean; hasUsbAccess: boolean; networkShares?: NetShare[]; ldapFilters?: LdapFilter[]; presetScriptIds?: number[]; presetNetworkShares?: number[]; presetLdapFilters?: number[]; presetNetworkExceptionIds?: number[]; });
   }
 
-export declare class MasterTag {
+declare class MasterTag {
     tag: string;
     createTime: Int64;
 
       constructor(args?: { tag: string; createTime: Int64; });
   }
 
-export declare class MasterSoftware {
+declare class MasterSoftware {
     software: string;
     isRestricted: boolean;
     createTime: Int64;
@@ -424,7 +422,7 @@ export declare class MasterSoftware {
       constructor(args?: { software: string; isRestricted: boolean; createTime: Int64; });
   }
 
-export declare class TransferInformation {
+declare class TransferInformation {
     token: string;
     plainPort: number;
     sslPort: number;
@@ -434,20 +432,20 @@ export declare class TransferInformation {
       constructor(args?: { token: string; plainPort: number; sslPort: number; blockHashes?: Buffer[]; machineDescription?: Buffer; });
   }
 
-export declare class TransferStatus {
+declare class TransferStatus {
     blockStatus: Buffer;
     state: TransferState;
 
       constructor(args?: { blockStatus: Buffer; state: TransferState; });
   }
 
-export declare class UploadOptions {
+declare class UploadOptions {
     serverSideCopying: boolean;
 
       constructor(args?: { serverSideCopying: boolean; });
   }
 
-export declare class SatelliteConfig {
+declare class SatelliteConfig {
     pageSize: number;
     defaultImagePermissions: ImagePermissions;
     defaultLecturePermissions: LecturePermissions;
@@ -463,57 +461,58 @@ export declare class SatelliteConfig {
       constructor(args?: { pageSize: number; defaultImagePermissions: ImagePermissions; defaultLecturePermissions: LecturePermissions; maxImageValidityDays: number; maxLectureValidityDays: number; maxTransfers?: number; maxConnectionsPerTransfer?: number; maxLocationsPerLecture?: number; allowLoginByDefault?: boolean; serverSideCopy?: SscMode; allowStudentDownload?: boolean; });
   }
 
-export declare class SatelliteStatus {
+declare class SatelliteStatus {
     availableStorageBytes: Int64;
     serverTime: Int64;
 
       constructor(args?: { availableStorageBytes: Int64; serverTime: Int64; });
   }
 
-export declare class SatelliteUserConfig {
+declare class SatelliteUserConfig {
     emailNotifications: boolean;
 
       constructor(args?: { emailNotifications: boolean; });
   }
 
-export declare class Location {
-    locationId: number;
-    locationName: string;
-    parentLocationId: number;
+// uncomment because it needs a rename
+// declare class Location {
+//     locationId: number;
+//     locationName: string;
+//     parentLocationId: number;
 
-      constructor(args?: { locationId: number; locationName: string; parentLocationId: number; });
-  }
+//       constructor(args?: { locationId: number; locationName: string; parentLocationId: number; });
+//   }
 
-export declare class TTransferRejectedException extends Thrift.TException {
+declare class TTransferRejectedException extends Thrift.TException {
     message: string;
 
       constructor(args?: { message: string; });
   }
 
-export declare class TAuthorizationException extends Thrift.TException {
+declare class TAuthorizationException extends Thrift.TException {
     number: AuthorizationError;
     message: string;
 
       constructor(args?: { number: AuthorizationError; message: string; });
   }
 
-export declare class TInvalidTokenException extends Thrift.TException {
+declare class TInvalidTokenException extends Thrift.TException {
   }
 
-export declare class TNotFoundException extends Thrift.TException {
+declare class TNotFoundException extends Thrift.TException {
     message: string;
 
       constructor(args?: { message: string; });
   }
 
-export declare class TInvalidDateParam extends Thrift.TException {
+declare class TInvalidDateParam extends Thrift.TException {
     number: DateParamError;
     message: string;
 
       constructor(args?: { number: DateParamError; message: string; });
   }
 
-export declare class TInvocationException extends Thrift.TException {
+declare class TInvocationException extends Thrift.TException {
     number: InvocationError;
     message: string;
 
