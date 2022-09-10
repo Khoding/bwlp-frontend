@@ -85,18 +85,6 @@ export class ImageVersionDetails {
   software: string[];
 }
 
-export class OperatingSystems {
-  osId: number;
-  osName: string;
-  virtualizerOsId: {
-    virtualbox: string;
-    vmware: string;
-  };
-  architecture: string;
-  maxMemMb: number;
-  maxCores: number;
-}
-
 export class ImageBaseWrite {
 
   constructor() {

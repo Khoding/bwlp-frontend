@@ -1,5 +1,5 @@
 import { VmsService } from './../vms.service';
-import { ImageSummaryRead, OperatingSystems } from './../vm';
+import { ImageSummaryRead } from './../vm';
 import { ChangeVmComponent } from './../change-vm/change-vm.component';
 import { LecturePermissions } from './../veranstaltung';
 import { Component, Injectable, OnInit } from '@angular/core';
@@ -15,6 +15,7 @@ import { MatDialog, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/mat
 import { SelectionModel } from '@angular/cdk/collections';
 import { VeranstaltungenService } from '../veranstaltungen.service';
 import { UserService } from './../user.service';
+import { ThriftService } from '../thrift.service';
 import { DatePipe } from '@angular/common';
 import { ChangeOwnerComponent } from '../change-owner/change-owner.component';
 import { AenderungenVerwerfenDialogComponent } from '../aenderungen-verwerfen-dialog/aenderungen-verwerfen-dialog.component';
@@ -148,7 +149,8 @@ export class VeranstaltungComponent implements OnInit {
   constructor(
     private route: ActivatedRoute, private database: ChecklistDatabase,
     private veranstaltungsService: VeranstaltungenService, private userService: UserService, private datePipe: DatePipe,
-    private formBuilder: FormBuilder, private router: Router, public dialog: MatDialog, private vmsService: VmsService
+    private formBuilder: FormBuilder, private router: Router, public dialog: MatDialog, private vmsService: VmsService,
+    private thriftService: ThriftService
   ) {
     //#region Baum related
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
@@ -196,8 +198,8 @@ export class VeranstaltungComponent implements OnInit {
       this.userService.getUserList().then(
         (users: UserInfo[]) => {
           this.users = users;
-          this.vmsService.getOsList().subscribe(
-            (osList: OperatingSystems[]) => {
+          this.thriftService.getOsList().subscribe(
+            (osList: OperatingSystem[]) => {
               this.vmsService.getVms().then(
                 (vms: ImageSummaryRead[]) => {
                   vms.forEach(vm => {

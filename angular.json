@@ -28,7 +28,10 @@
               "src/styles.css"
             ],
             "scripts": [
-              "src/assets/js/thrift/thrift.js"
+              "src/assets/js/thrift/thrift.js",
+              "src/assets/js/bwlp/bwlp_types.js",
+              "src/assets/js/bwlp/MasterServer.js",
+              "src/assets/js/bwlp/SatelliteServer.js"
             ]
           },
           "configurations": {

@@ -6,10 +6,11 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatDialog, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { LectureWrite, Location } from '../veranstaltung';
-import { ImageSummaryRead, OperatingSystems } from '../vm';
+import { ImageSummaryRead } from '../vm';
 import { UserInfo } from './../user';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VmsService } from '../vms.service';
+import { ThriftService } from '../thrift.service';
 import { UserService } from './../user.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { VeranstaltungenService } from '../veranstaltungen.service';
@@ -129,7 +130,7 @@ export class CreateVeranstaltungComponent implements OnInit {
   constructor(
     private database: ChecklistDatabase, private route: ActivatedRoute, private router: Router,
     private vmsService: VmsService, private formBuilder: FormBuilder, private veranstaltungsServive: VeranstaltungenService,
-    private datePipe: DatePipe, private userService: UserService, public dialog: MatDialog
+    private datePipe: DatePipe, private thriftService: ThriftService, private userService: UserService, public dialog: MatDialog
   ) {
     //#region Baum related
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
@@ -187,8 +188,8 @@ export class CreateVeranstaltungComponent implements OnInit {
         });
         // tslint:disable-next-line: prefer-const
         let validVms: ImageSummaryRead[] = [];
-        this.vmsService.getOsList().subscribe(
-          (osList: OperatingSystems[]) => {
+        this.thriftService.getOsList().subscribe(
+          (osList: OperatingSystem[]) => {
             this.vmsService.getVms().then(
               (vms: ImageSummaryRead[]) => {
                 vms.forEach(vm => {

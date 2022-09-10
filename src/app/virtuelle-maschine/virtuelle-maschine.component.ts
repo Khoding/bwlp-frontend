@@ -1,13 +1,14 @@
 import { ImagePermissions } from './../vm';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ImageBaseWrite, ImageDetailsRead, OperatingSystems } from '../vm';
+import { ImageBaseWrite, ImageDetailsRead } from '../vm';
 import { UserInfo } from './../user';
 import { VmsService } from '../vms.service';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { UserService } from './../user.service';
+import { ThriftService } from '../thrift.service';
 import { DatePipe } from '@angular/common';
 import { ChangeOwnerComponent } from '../change-owner/change-owner.component';
 import { MatDialog } from '@angular/material';
@@ -55,6 +56,7 @@ export class VirtuelleMaschineComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private vmsService: VmsService,
+    private thriftService: ThriftService,
     private userService: UserService,
     private datePipe: DatePipe,
     private formBuilder: FormBuilder,
@@ -90,8 +92,8 @@ export class VirtuelleMaschineComponent implements OnInit {
         if (id != null) {
           this.vmsService.getVm(id).then(
             (vm: ImageDetailsRead) => {
-              this.vmsService.getOsList().subscribe(
-                (osList: OperatingSystems[]) => {
+              this.thriftService.getOsList().subscribe(
+                (osList: OperatingSystem[]) => {
                   vm.osId = osList[vm.osId - 1].osName;
                   osList.forEach(os => {
                     this.osList.push(os.osName);

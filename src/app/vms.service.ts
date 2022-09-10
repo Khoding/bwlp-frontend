@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {ImageBaseWrite, ImageDetailsRead, ImageSummaryRead, OperatingSystems, ImagePermissions} from './vm';
+import {ImageBaseWrite, ImageDetailsRead, ImageSummaryRead, ImagePermissions} from './vm';
 
 @Injectable({
   providedIn: 'root'
@@ -20,11 +20,6 @@ export class VmsService {
   async getVm(id: string): Promise<ImageDetailsRead> {
     return await this.http.get<ImageDetailsRead>(`${this.apiBaseURL}/vms/${id}`,
     { headers: new HttpHeaders({Authorization: JSON.parse(sessionStorage.getItem('user')).sessionId})}).toPromise();
-  }
-
-  getOsList(): Observable<OperatingSystems[]> {
-    return this.http.get<OperatingSystems[]>(`${this.apiBaseURL}/operatingSystems`,
-    { headers: new HttpHeaders({Authorization: JSON.parse(sessionStorage.getItem('user')).sessionId})});
   }
 
   getPermissions(id: string): Observable<Map<any, ImagePermissions>> {

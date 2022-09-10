@@ -1,7 +1,8 @@
 import { Router } from '@angular/router';
 import { UserService } from './../user.service';
 import { VmsService } from './../vms.service';
-import { ImageBaseWrite, OperatingSystems } from './../vm';
+import { ThriftService } from '../thrift.service';
+import { ImageBaseWrite } from './../vm';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -36,6 +37,7 @@ export class CreateVmComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private vmService: VmsService,
+    private thriftService: ThriftService,
     private userService: UserService,
     private router: Router,
     public dialog: MatDialog
@@ -69,8 +71,8 @@ export class CreateVmComponent implements OnInit {
             this.options.push((user.firstName + ' ' + user.lastName + ' (' + user.eMail + ')'));
           }
         });
-        this.vmService.getOsList().subscribe(
-          (osList: OperatingSystems[]) => {
+        this.thriftService.getOsList().subscribe(
+          (osList: OperatingSystem[]) => {
             osList.forEach(os => {
               this.osList.push(os.osName);
             });

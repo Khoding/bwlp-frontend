@@ -2,9 +2,10 @@ import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { ImageSummaryRead, OperatingSystems } from '../vm';
+import { ImageSummaryRead } from '../vm';
 import { UserInfo } from './../user';
 import { VmsService } from '../vms.service';
+import { ThriftService } from '../thrift.service';
 import { UserService } from './../user.service';
 import { DatePipe } from '@angular/common';
 import { VirtuelleMaschinenDialogComponent } from '../virtuelle-maschinen-dialog/virtuelle-maschinen-dialog.component';
@@ -30,6 +31,7 @@ export class VirtuelleMaschinenComponent implements OnInit {
 
   constructor(
     private vmsService: VmsService,
+    private thriftService: ThriftService,
     private userService: UserService,
     private datePipe: DatePipe,
     private router: Router,
@@ -64,8 +66,8 @@ export class VirtuelleMaschinenComponent implements OnInit {
       this.userService.getUserList().then(
         (users: UserInfo[]) => {
           this.users = users;
-          this.vmsService.getOsList().subscribe(
-            (osList: OperatingSystems[]) => {
+          this.thriftService.getOsList().subscribe(
+            (osList: OperatingSystem[]) => {
               this.vmsService.getVms().then(
                 (vms: ImageSummaryRead[]) => {
                   vms.forEach(vm => {
