@@ -1,0 +1,390 @@
+.white-font {
+  color: whitesmoke;
+}
+
+.black-font {
+  color: black !important;
+}
+
+.grey-font {
+  color: lightgrey! important;
+}
+
+.navbarToggler {
+  color:whitesmoke; 
+  font-size:28px;
+}
+
+.darkFont {
+  color: #272726 !important;
+}
+
+div.content {
+  background-color: #272726;
+  border-radius: 25px;
+  padding: 30px;
+}
+
+div.contentRectangle {
+  background-color: #272726;
+  padding: 30px;
+}
+
+.text-box {
+  border-radius: 7px;
+}
+
+.button {
+  background-color: whitesmoke;
+  border: 5px solid whitesmoke;
+  color: #272726;
+  padding: 5px 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.butdis {
+  padding: 5px 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 5px;
+  border: 5px solid #cccccc;
+  background-color: #cccccc;
+}
+
+.button:hover {
+  border: 5px solid lightblue;
+}
+
+.cursorPointer {
+  cursor: pointer;
+}
+
+label.push {
+  cursor: pointer;
+}
+
+a.push {
+  cursor: pointer;
+}
+
+a.button {
+  text-decoration: none;
+  color: #272726;
+  cursor: pointer;
+}
+
+.addVM {
+  background-color: #272726;
+  border: none;
+  color: whitesmoke;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.navbar {
+  background-color: #272726;
+}
+
+.myNav {
+  text-decoration: none;
+  color: whitesmoke;
+  font-size: 120%;
+  padding: 15px 60px !important;
+  font-weight: 500;
+}
+
+.myNav:hover {
+  color: lightblue;
+}
+
+.myNav.select {
+  background-color: #555554;
+  color: whitesmoke;
+  border-radius: 7px;
+}
+
+.myDrop {
+  background-color: whitesmoke;
+  text-decoration: none;
+  color: #272726;
+  font-size: 130%;
+  padding: 10px 100px !important;
+  font-weight: 500;
+  border-radius: 0px !important;
+}
+
+.myDrop:hover {
+  background-color: #555554;
+  color: whitesmoke;
+  border-radius: 0px;
+}
+
+.navLogo {
+  width: 130px;
+}
+
+div.smallFluidContainer {
+  width: 99%;
+}
+
+.whiteHr {
+  border-color: whitesmoke;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+}
+
+.navbar-toggler-icon {
+  color: whitesmoke;
+}
+
+.description {
+  font-weight: 400;
+  font-size: 18px;
+}
+
+a.disabled {
+  color: #555554;
+  background: #cccccc;
+}
+
+span.days {
+  color: red;
+}
+
+.table {
+  -moz-hyphens: auto;
+  -o-hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+.my-custom-scrollbar {
+  position: relative;
+  height: 300px;
+  overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+  display: block;
+}
+
+.toggle-menu {
+  text-decoration: none;
+  color: whitesmoke;
+}
+
+.highlightItem {
+  background-color: #555554;
+  color: whitesmoke;
+  border-radius: 7px
+}
+
+.darkcontent:nth-child(odd) {
+  background-color: #444444;
+}
+
+.darkcontent:nth-child(even) {
+  background-color: #272726;
+}
+
+.mat-dialog-container {
+  background-color: #272726;
+  border-radius: 30px !important;
+}
+
+.fontawesomeicons {
+  cursor: pointer;
+}
+
+.createLecture {
+  width: 98%;
+  border: 1px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  overflow-y: scroll;
+  height: 300px;
+  table-layout: fixed;
+  background-color: white;
+  -moz-hyphens: auto;
+  -o-hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-table-list {
+  width: 99%;
+  border: 1px;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  position: absolute;
+  overflow-y: scroll;
+  height: 55%;
+  table-layout: fixed;
+  background-color: white;
+  -moz-hyphens: auto;
+  -o-hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-header-cell {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgb(33, 37, 41);
+  line-height: 24px;
+  padding: 12px;
+
+}
+
+.mat-cell-list {
+  color: rgb(33, 37, 41);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+  table-layout: fixed;
+  padding: 12px;
+}
+
+.mat-cell-mini-list {
+  color: rgb(33, 37, 41);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+  table-layout: fixed;
+  padding: 12px;
+}
+
+.mat-row:hover {
+  background-color: #212529;
+}
+
+.mat-row:nth-child(even) {
+  background-color: #f2f2f2;
+  border-color: #dee2e6;
+}
+
+.mat-row:nth-child(odd) {
+  background-color: #ffffff;
+  border-color: #dee2e6;
+}
+
+.mat-header-row {
+  border-bottom-color: #dee2e6;
+  background-color: white;
+}
+
+.mat-checkbox .mat-checkbox-frame {
+  border-color: #555554;
+  background-color: white;
+}
+
+.checkboxSpalte {
+  width: 50px !important;
+  flex: 0 0 50px;
+}
+
+.kleineSpalte {
+  width: 8% !important;
+  flex: 0 0 8%;
+}
+
+.deletebutton {
+  background-color: #ed1c24;
+  border: 5px solid #ed1c24;
+  color: whitesmoke !important;
+  padding: 5px 13px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 5px;
+
+}
+
+.deletebutton:hover {
+  border: 5px solid lightblue;
+  cursor: pointer;
+}
+
+.checkboxRaumauswahl {
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+}
+
+.mat-tree {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  background-color: #272726;
+}
+
+.checkboxRaumauswahl .mat-checkbox-frame {
+  border-color: white;
+  background-color: white;
+}
+
+.mat-checkbox-label {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+}
+
+.invalid {
+  color: #dc3545 !important;
+}
+
+.success {
+  background-color: #009244;
+  border: 3px solid #009244;
+  color: whitesmoke;
+  padding: 3px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.danger {
+  background-color: #ed1c24;
+  border: 3px solid #ed1c24;
+  color: whitesmoke;
+  padding: 3px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin-left: 5px;
+}
+.edit {
+  color: #005cbf !important;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+.lectureName {
+  font-size: 20px; 
+  font-weight:600;
+}
+
+.vmName {
+  font-size: 20px; 
+  font-weight:600;
+}

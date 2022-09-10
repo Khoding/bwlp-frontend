@@ -1,0 +1,359 @@
+<div class="container content mt-5 mb-5">
+  <div class="row white-font">
+    <div class="col-12">
+      <div class="form-group row">
+        <div class="col-12 text-right">
+          <a (click)="stashChanges()" class="cursorPointer">
+            <i class="fa fa-times white-font"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row white-font">
+    <div class="col-12">
+      <h4>
+        Neue Veranstaltung anlegen
+      </h4>
+      <p>
+        Bitte geben Sie einen aussagekräftigen Namen für die Veranstaltung ein.
+      </p>
+    </div>
+  </div>
+  <form (ngSubmit)="createLecture()" [formGroup]="createEventForm" class="form-horizontal" method="POST">
+    <div class="row white-font">
+      <div class="col-12">
+        <div class="form-group row">
+          <label class="control-label col-12 col-md-3 description mt-1"
+                 for="veranstaltungsname">Veranstaltungsname *</label>
+          <div class="col-12 col-md-9 mt-1">
+            <input type="text" (keydown.enter)="$event.preventDefault()" class="form-control" id="veranstaltungsname" name="veranstaltungsname"
+                   formControlName="lectureName" [ngClass]="{ 'is-invalid': submitted && form.lectureName.errors }"
+                   (change)="hasChanged()">
+            <div *ngIf="submitted && form.lectureName.errors" class="invalid">
+              <span *ngIf="form.lectureName.errors.required"><i class="fa fa-exclamation-triangle"></i> Veranstaltungsname darf nicht leer sein</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-12 col-lg-3 description mt-1" for="beschreibung">Beschreibung *</label>
+          <div class="col-12 col-lg-9 mt-1">
+            <textarea name="beschreibung" id="beschreibung" class="form-control"
+                      formControlName="description" [ngClass]="{ 'is-invalid': submitted && form.description.errors }"
+                      (change)="hasChanged()"></textarea>
+            <div *ngIf="submitted && form.description.errors" class="invalid">
+              <span *ngIf="form.description.errors.required"><i class="fa fa-exclamation-triangle"></i> Beschreibung darf nicht leer sein</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-12 col-md-3 description mt-1" for="startday">Startdatum *</label>
+          <div class="col-5 col-md-4 col-lg-2 col-xl-2 mt-1">
+            <input type="date" name="startday" min="{{currentDate}}" id="startday" class="form-control"
+                   (blur)="setStartDate($event.target.value)" value="{{date |date: 'yyyy-MM-dd'}}"
+                   formControlName="startDay" [ngClass]="{ 'is-invalid': submitted && form.startDay.errors }"
+                   (change)="hasChanged()">
+          </div>
+          <div class="col-4 col-md-3 col-lg-2 col-xl-2 mt-1">
+            <input type="time" name="starttime" class="form-control" formControlName="startTime" value="{{'00:00'}}"
+                   [ngClass]="{ 'is-invalid': submitted && form.startTime.errors }" (change)="hasChanged()">
+          </div>
+          <div class="col-12 offset-md-3 offset-lg-0 col-lg-2 col-xl-3 mt-1 invalid"
+               *ngIf="submitted && (form.startTime.errors || form.startDay.errors || amountOfDays < 1)">
+            <span *ngIf="form.startTime.errors?.required || form.startDay.errors?.required">
+              <i class="fa fa-exclamation-triangle"></i> Startdatum darf nicht leer sein</span>
+            <span *ngIf="amountOfDays < 1"><i class="fa fa-exclamation-triangle"></i>
+              Das Startdatum muss vor dem Enddatum liegen.</span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-12 col-md-3 description mt-1" for="endday">Enddatum *</label>
+          <div class="col-5 col-md-4 col-lg-2 col-xl-2 mt-1">
+            <input type="date" name="endday" min="{{currentDate}}" id="endday" class="form-control"
+                   (blur)="setEndDate($event.target.value)" value="{{date |date: 'yyyy-MM-dd'}}"
+                   formControlName="endDay" [ngClass]="{ 'is-invalid': submitted && form.endDay.errors }"
+                   (change)="hasChanged()">
+          </div>
+          <div class="col-4 col-md-3 col-lg-2 col-xl-2 mt-1">
+            <input type="time" name="endtime" class="form-control" formControlName="endTime" value="{{'23:59'}}"
+                   [ngClass]="{ 'is-invalid': submitted && form.endTime.errors }" (change)="hasChanged()">
+          </div>
+          <div class="col-12 offset-md-3 offset-lg-0 col-lg-2 col-xl-3 mt-1 invalid"
+               *ngIf="submitted && (form.endTime.errors || form.endDay.errors)">
+            <span *ngIf="form.endTime.errors?.required || form.endDay.errors?.required">
+              <i class="fa fa-exclamation-triangle"></i> Enddatum darf nicht leer sein</span>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-12 col-lg-3 description mt-1" for="amount">Dauer der Veranstaltung</label>
+          <div class="col-12 col-lg-8 mt-1">
+            <span class="days" id="amount">{{ amountOfDays }} Tag(e)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row white-font mt-5">
+      <div class="col-12">
+        <hr class="whiteHr">
+        <h4>
+          VM verknüpfen
+        </h4>
+        <p [ngClass]="{ 'invalid': submitted && form.imageVersionId.errors }"><i *ngIf="submitted && form.imageVersionId.errors"class="fa fa-exclamation-triangle"></i>
+          Wählen Sie eine VM für diese Veranstaltung aus. *
+        </p>
+      </div>
+    </div>
+    <div class="row white-font">
+      <div class="col-12">
+        <div class="form-group row">
+          <div class="col-12 col-lg-5">
+            <input type="text" class="form-control mr-5 mr-lg-0" id="search" (keydown.enter)="$event.preventDefault()"
+                   (keyup)="applyFilter($event.target.value)" (change)="hasChanged()">
+          </div>
+          <div class="col-12 col-md-7 col-lg-5 mt-3 mt-lg-0">
+            <select id="searchselect" class="form-control" disabled>
+              <option>Nur verwendbare/linkbare anzeigen</option>
+              <option>Öffentliche VMs</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-5 col-lg-2 mt-3 mt-lg-0">
+            <strong>Sichtbar:&nbsp;{{amountOfVms}}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-3 ml-1">
+      <mat-table class="createLecture" [dataSource]="vms">
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+          <mat-header-cell class="checkboxSpalte" *matHeaderCellDef>
+          </mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element" class="checkboxSpalte">
+            <input type="radio" value="{{element.latestVersionId}}" formControlName="imageVersionId">
+          </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.imageName}}</mat-cell>
+        </ng-container>
+
+        <!-- Betriebssystem Column -->
+        <ng-container matColumnDef="betriebssystem">
+          <mat-header-cell *matHeaderCellDef> OS</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.osId}}</mat-cell>
+        </ng-container>
+
+        <!-- Besitzer Column -->
+        <ng-container matColumnDef="besitzer">
+          <mat-header-cell *matHeaderCellDef> Besitzer</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.ownerId}}</mat-cell>
+        </ng-container>
+
+        <!-- Geändert Column -->
+        <ng-container matColumnDef="geaendert">
+          <mat-header-cell *matHeaderCellDef> Geändert</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list"
+                    *matCellDef="let element">{{element.updateTime}}</mat-cell>
+        </ng-container>
+
+        <!-- Ablaufdatum Column -->
+        <ng-container matColumnDef="ablaufdatum">
+          <mat-header-cell *matHeaderCellDef> Ablaufdatum</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list"
+                    *matCellDef="let element">{{element.expireTime}}</mat-cell>
+        </ng-container>
+
+        <!-- Größe Column -->
+        <ng-container matColumnDef="groesse">
+          <mat-header-cell *matHeaderCellDef> Größe</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.fileSize}}</mat-cell>
+        </ng-container>
+
+        <!--Verwendbar Column-->
+        <ng-container matColumnDef="verwendbar">
+          <mat-header-cell *matHeaderCellDef> Verwendbar</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element"><input type="checkbox"
+                                                                                [checked]="element.isValid"
+                                                                                disabled></mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+      </mat-table>
+    </div>
+    <div class="row white-font mt-2">
+      <div class="col-12">
+        <hr class="whiteHr">
+        <h4>
+          Berechtigungen festlegen
+        </h4>
+        <p>
+          Legen Sie hier die gewünschten Berechtigungen fest.
+        </p>
+      </div>
+    </div>
+    <div class="row white-font">
+      <div class="col-12">
+        <table class="table white-font">
+          <thead>
+          <tr>
+            <th></th>
+            <th>Benutzer</th>
+            <th>Bearbeiten</th>
+            <th>Admin</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let user of permissions;let i = index" class="darkcontent">
+            <td><i class="fa fa-minus fontawesomeicons" (click)="deleteUser(i); hasChanged();"></i></td>
+            <td>{{user.userName}}</td>
+            <td><input type="checkbox" (change)="hasChanged(); setEdit($event, i)"></td>
+            <td><input type="checkbox" (change)="hasChanged(); setAdmin($event, i)"></td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="form-group row mt-5">
+          <div class="col-12 col-md-9">
+            <input id="user" type="text" id="newUserName" class="form-control"
+                   name="newUserName" (keydown.enter)="$event.preventDefault()" matInput [formControl]="userControl"
+                   [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+          <!--for="newUserName" aus der label Klasse rausgenommen, wegen dem Bemerk ein paar zeilen drüber.-->
+          <label class="control-label col-12 col-md-3 push" (click)="addUser()">
+            <b><i class="fa fa-plus fontawesomeicons"></i> Benutzer hinzufügen</b>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row white-font">
+      <div class="col-12 mt-5">
+        <h4>
+          Standardberechtigungen
+        </h4>
+        <p>
+          Legen Sie hier die Berechtigungen für alle anderen (nicht in der Liste angezeigten) Benutzer fest.
+        </p>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="bearbeiten-veranstaltung" formControlName="edit"
+                 (change)="hasChanged()">
+          <label class="form-check-label" for="bearbeiten-veranstaltung">Bearbeiten</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="admin-veranstaltung" formControlName="admin"
+                 (change)="hasChanged()">
+          <label class="form-check-label" for="admin-veranstaltung">Admin</label>
+        </div>
+      </div>
+    </div>
+    <div class="row white-font mt-5">
+      <div class="col-12">
+        <hr class="whiteHr">
+        <h4>
+          Zusätzliche Optionen
+        </h4>
+        <p>
+          Bitte wählen Sie aus folgenden Optionen aus:
+        </p>
+      </div>
+    </div>
+    <div class="row white-font">
+      <div class="col-12">
+        <div class="form-group row">
+          <label class="col-12 col-md-3 col-lg-2"><b>Allgemein</b></label>
+          <div class="col-12 col-md-9">
+            <label><input type="checkbox" id="aktuellsteVersion" formControlName="autoUpdate" (change)="hasChanged()">
+              Immer auf aktuellste VM-Version updaten
+            </label> <br>
+            <label><input type="checkbox" id="aktiveveranstaltung" formControlName="isEnabled" (change)="hasChanged()">
+              Veranstaltung ist aktiv
+            </label> <br>
+            <label><input type="checkbox" id="pruefung" formControlName="isExam" (change)="hasChanged()">
+              Veranstaltung ist eine Prüfung</label>
+          </div>
+        </div>
+        <div class="form-group row mt-5">
+          <label class="col-12 col-md-3 col-lg-2"><b>Beschränkungen</b></label>
+          <div class="col-12 col-md-9">
+            <input type="checkbox" id="internetzugriff" formControlName="hasInternetAccess" (change)="hasChanged()">
+            Netzwerk-/Internetzugriff
+            zulassen <br>
+            <input type="checkbox" id="speichermedien" formControlName="hasUsbAccess" (change)="hasChanged()">
+            Speichermedien zulassen <br>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row white-font mt-5">
+      <div class="col-12">
+        <hr class="whiteHr">
+        <h4>
+          Raumauswahl
+        </h4>
+        <p>
+          Bitte wählen Sie die Räume für diese Veranstaltung aus.
+        </p>
+        <p *ngIf="this.selectedRooms.length > 4" class="invalid"><span><i class="fa fa-exclamation-triangle"></i> Es sind zu viele Räume ausgewählt.</span></p>
+      </div>
+      <div class="col-12">
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+          <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+            <button mat-icon-button disabled class="checkboxRaumauswahl" type="button"></button>
+            <mat-checkbox class="checkboxRaumauswahl"
+                          [checked]="checklistSelection.isSelected(node)"
+                          (change)="todoLeafItemSelectionToggle(node); hasChanged()">{{node.item}}</mat-checkbox>
+          </mat-tree-node>
+
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+            <button mat-icon-button matTreeNodeToggle class="checkboxRaumauswahl" type="button"
+                    [attr.aria-label]="'toggle ' + node.filename">
+              <mat-icon class="mat-icon-rtl-mirror white-font">
+                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+              </mat-icon>
+            </button>
+            <mat-checkbox class="checkboxRaumauswahl"
+                          [checked]="descendantsAllSelected(node)"
+                          [indeterminate]="descendantsPartiallySelected(node)"
+                          (change)="todoItemSelectionToggle(node); hasChanged()">{{node.item}}</mat-checkbox>
+          </mat-tree-node>
+        </mat-tree>
+      </div>
+      <div class="col-12 mt-3">
+        <div class="radio">
+          <label><input type="radio" [value]="true" formControlName="limitToLocations" (change)="hasChanged()">
+            Veranstaltung ausschließlich in den ausgewählten Räumen anzeigen</label>
+        </div>
+        <div class="radio mt-3 mt-sm-0">
+          <label><input type="radio" [value]="false" formControlName="limitToLocations" (change)="hasChanged()">
+            Veranstaltung mit höherer Priorität in den ausgewählten Räumen anzeigen</label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group row mt-3">
+          <div class="col-5">
+            <a class="button text-box" id="abbrechen" (click)="stashChanges()">
+              <i class="fa fa-times-circle"></i>
+              <b> Abbrechen </b>
+            </a>
+          </div>
+          <div class="offset-1 col-6 text-right">
+            <button type="submit" class="button text-box ml-4" id="fertigstellen" [ngClass]="{ 'invalid': (submitted && this.createEventForm.invalid) || this.selectedRooms.length > 4 || amountOfDays < 1}">
+              <i class="fa fa-check-circle"></i> Fertigstellen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,585 @@
+<div class="container content mt-5 mb-5">
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group row">
+        <div class="col-12 text-right">
+          <a (click)="stashChanges()" class="cursorPointer">
+            <i class="fa fa-times white-font"></i>
+          </a>
+        </div>
+      </div>
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active toggle-menu" data-toggle="tab" href="#allgemeine-veranstaltung"><b>Allgemein</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link toggle-menu" data-toggle="tab"
+             href="#beschraenkung-veranstaltung"><b>Beschränkungen</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link toggle-menu" data-toggle="tab" href="#firewall-veranstaltung"><b>Firewall</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link toggle-menu" data-toggle="tab" href="#raumauswahl-veranstaltung"><b>Raumauswahl</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link toggle-menu" data-toggle="tab" href="#vm-start-veranstaltung"><b>VM-Start</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link toggle-menu" data-toggle="tab"
+             href="#berechtigungen-veranstaltung"><b>Berechtigungen</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link toggle-menu" data-toggle="tab" href="#netzlaufwerke-veranstaltung"><b>Netzlaufwerke</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link toggle-menu" data-toggle="tab" href="#ldap-filter-veranstaltung"><b>LDAP-Filte</b>r</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="editEventForm" (ngSubmit)="editedLecture()">
+        <div class="tab-content white-font">
+
+          <div class="container tab-pane active mt-3" id="allgemeine-veranstaltung">
+            <div class="form-group row" *ngIf="edit; else name">
+              <input class="form-control lectureName" id="veranstaltungsname" name="veranstaltungsname"
+                     formControlName="lectureName"
+                     type="text" (change)="hasChanged()" [ngClass]="{ 'is-invalid': submitted && form.lectureName.errors }">
+              <div *ngIf="submitted && form.lectureName.errors" class="invalid">
+                <span *ngIf="form.lectureName.errors.required"><i class="fa fa-exclamation-triangle"></i> Veranstaltungsname darf nicht leer sein</span>
+              </div>
+            </div>
+            <ng-template #name>
+              <div class="form-group row"><h3><b>{{this.lecture.lectureName}}</b></h3></div>
+            </ng-template>
+            <div class="form-group row">
+              <label class="control-label col-12 col-sm-5 col-md-3 col-lg-3 col-xl-3 description"
+                     for="besitzer-veranstaltung"><b>Besitzer</b></label>
+              <div class="col-10 col-sm-4 col-md-5 col-lg-4  col-xl-3">
+                <span id="besitzer-veranstaltung">{{lecture.ownerId}}</span>
+              </div>
+              <div class="col-2 col-sm-3 col-md-4 col-lg-5 col-xl-6" *ngIf="admin">
+                <a (click)="changeOwner()" class="edit cursorPointer"><i class="fa fa-pencil-square-o"></i><b> Ändern</b></a>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="control-label col-12 col-md-3 description"
+                     for="beschreibung-veranstaltung"><b>Beschreibung</b></label>
+              <div class="col-12 col-md-9" *ngIf="edit; else beschreibung">
+              <textarea class="form-control" id="beschreibung-veranstaltung" formControlName="description"
+                        name="beschreibung" (change)="hasChanged()"
+                        [ngClass]="{ 'is-invalid': submitted && form.description.errors }"></textarea>
+                <div *ngIf="submitted && form.description.errors" class="invalid">
+                  <span *ngIf="form.description.errors.required"><i class="fa fa-exclamation-triangle"></i> Beschreibung darf nicht leer sein</span>
+                </div>
+              </div>
+              <ng-template #beschreibung>
+                <div class="col-12 col-md-9">
+                  <p>{{this.lecture.description}}</p>
+                </div>
+              </ng-template>
+            </div>
+            <div class="form-group row">
+              <label class="control-label col-5 col-md-3 description" for="erstellt-am-veranstaltung"><b>Erstellt
+                am</b></label>
+              <div class="col-7 col-md-9">
+                <span id="erstellt-am-veranstaltung">{{lecture.createTime}}</span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="control-label col-5 col-md-3 col-lg-3 col-xl-3 description"
+                     for="geaendert-am-veranstaltung"><b>Geändert
+                am</b></label>
+              <div class="col-7 col-md-3 col-lg-3 col-xl-2">
+                <span id="geaendert-am-veranstaltung">{{lecture.updateTime}}</span>
+              </div>
+              <label class="control-label col-5 col-md-2 col-lg-1 col-xl-1 description"
+                     for="geaendert-durch-veranstaltung"><b>durch</b></label>
+              <div class="col-7 col-md-4 col-lg-5 col-xl-6">
+                <span id="geaendert-durch-veranstaltung">{{lecture.updaterId}}</span>
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="edit; else verknuepft">
+              <label class="control-label col-12 col-md-3 col-lg-3 col-xl-3 description"
+                     for="verknuepfte-vm-veranstaltung"><b>Verknüpfte
+                VM</b></label>
+              <div class="col-10 col-md-5 col-sm-9 col-lg-4 col-xl-3">
+                <span id="verknuepfte-vm-veranstaltung" routerLink="/vms/{{lecture.imageBaseId}}" class="cursorPointer edit">{{lecture.imageVersionId}}</span>
+              </div>
+              <div class="col-2 col-sm-3 col-md-4 col-lg-5 col-xl-6" *ngIf="edit">
+                <a (click)="changeVm()" class="edit cursorPointer"><i class="fa fa-pencil-square-o"></i><b> Ändern</b></a>
+              </div>
+            </div>
+            <ng-template #verknuepft>
+              <div class="form-group row">
+                <label class="control-label col-5 col-md-3 col-lg-3 col-xl-3 description"><b>Verknüpfte
+                  VM</b></label>
+                <div class="col-7 col-md-9 col-sm-9 col-lg-9 col-xl-9">
+                  <span>{{lecture.imageVersionId}}</span>
+                </div>
+              </div>
+            </ng-template>
+            <div class="form-group row">
+              <label class="control-label col-5 col-md-3 description" for="id-veranstaltung"><b>ID</b></label>
+              <div class="col-7 col-md-9">
+                <span id="id-veranstaltung">{{lecture.lectureId}}</span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="control-label col-12 col-md-3 col-lg-3 col-xl-3 description"
+                     for="startdatum-veranstaltung"><b>Startdatum</b></label>
+              <div class="col-7 col-sm-5 col-md-5 col-lg-3 col-xl-2" *ngIf="edit; else startday">
+                <input id="startdatum-veranstaltung" class="form-control" name="startday" type="date" formControlName="startDay"
+                       (change)="hasChanged()" (blur)="setStartDate($event.target.value)"
+                       [ngClass]="{ 'is-invalid': submitted && form.startDay.errors }">
+              </div>
+              <ng-template #startday>
+                <div class="col-7 col-sm-5 col-md-5 col-lg-3 col-xl-2">
+                  <p>{{this.datePipe.transform(lecture.startTime, 'dd.MM.yyyy')}}</p>
+                </div>
+              </ng-template>
+              <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2 " *ngIf="edit; else starttime">
+                <input class="form-control" name="starttime" type="time" (change)="hasChanged()" formControlName="startTime"
+                       [ngClass]="{ 'is-invalid': submitted && form.startTime.errors }">
+              </div>
+              <ng-template #starttime>
+                <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2 ">
+                 <p>{{this.datePipe.transform(lecture.startTime, 'HH:mm')}}</p>
+                </div>
+              </ng-template>
+              <div class="col-12 offset-md-3 offset-lg-0 col-lg-2 col-xl-3 mt-1 invalid"
+                   *ngIf="submitted && (form.startTime.errors || form.startDay.errors || amountOfDays < 1)">
+                <span *ngIf="form.startTime.errors?.required || form.startDay.errors?.required">
+                  <i class="fa fa-exclamation-triangle"></i> Startdatum darf nicht leer sein</span>
+                <span *ngIf="amountOfDays < 1"><i class="fa fa-exclamation-triangle"></i>
+              Das Startdatum muss vor dem Enddatum liegen.</span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="control-label col-12 col-md-3 col-lg-3 col-xl-3 description"
+                     for="enddatum-veranstaltung"><b>Enddatum</b></label>
+              <div class="col-7 col-sm-5 col-md-5 col-lg-3 col-xl-2" *ngIf="edit; else endday">
+                <input id="enddatum-veranstaltung" class="form-control" name="endday" type="date" formControlName="endDay"
+                       (change)="hasChanged()" (blur)="setEndDate($event.target.value)"
+                       [ngClass]="{ 'is-invalid': submitted && form.endDay.errors }">
+              </div>
+              <ng-template #endday>
+                <div class="col-7 col-sm-5 col-md-5 col-lg-3 col-xl-2">
+                  <p>{{this.datePipe.transform(lecture.endTime, 'dd.MM.yyyy')}}</p>
+                </div>
+              </ng-template>
+              <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2" *ngIf="edit; else endtime">
+                <input class="form-control" name="endtime" type="time" formControlName="endTime"
+                       (change)="hasChanged()" [ngClass]="{ 'is-invalid': submitted && form.endTime.errors }">
+              </div>
+              <ng-template #endtime>
+                <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2">
+                  <p>{{this.datePipe.transform(lecture.endTime, 'HH:mm')}}</p>
+                </div>
+              </ng-template>
+              <div class="col-12 col-md-4 offset-md-3 offset-lg-0 col-lg-4 mt-2 mt-lg-0">
+                <label for="aktiv-veranstaltung">
+                  <input [checked]="lecture.isEnabled" id="aktiv-veranstaltung" *ngIf="edit, else enabled"
+                         name="veranstaltung-aktiv" type="checkbox" formControlName="isEnabled" (change)="hasChanged()">
+                  <ng-template #enabled><input type="checkbox" [checked]="lecture.isEnabled" disabled></ng-template>
+                  <b>&nbsp;Veranstaltung aktiv</b></label>
+              </div>
+              <div class="col-12 offset-md-3 invalid" *ngIf="submitted && (form.endTime.errors || form.endDay.errors)">
+                <span *ngIf="form.endTime.errors?.required || form.endDay.errors.required"><i class="fa fa-exclamation-triangle"></i> Enddatum darf nicht leer sein</span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="control-label col-12 col-md-3 description"
+                     for="vmversion-veranstaltung"><b>VM-Version</b></label>
+              <label class="col-12 col-md-9">
+                <input id="vmversion-veranstaltung" [checked]="lecture.autoUpdate"
+                       name="aktuellste-version" type="checkbox" (change)="hasChanged()" formControlName="autoUpdate"
+                *ngIf="edit; else autoupdate">
+                <ng-template #autoupdate><input type="checkbox" [checked]="lecture.autoUpdate" disabled></ng-template>
+                <b>&nbsp;Immer aktuellste Version verwenden</b></label>
+            </div>
+          </div>
+          <div class="container tab-pane fade" id="beschraenkung-veranstaltung">
+            <div class="row">
+            <span class="mt-3 col-12 description">
+              Legen Sie hier fest, ob die Veranstaltung den Zugriff auf Speichermedien (CD, USB, ...)
+              erlauben soll.
+            </span>
+              <br>
+              <label class="col-12 mt-3" for="speichermedium-veranstaltung">
+                <input id="speichermedium-veranstaltung" type="checkbox" *ngIf="edit; else hasusb"
+                       [checked]="lecture.hasUsbAccess" (change)="hasChanged()" formControlName="hasUsbAccess">
+                <ng-template #hasusb><input  [checked]="lecture.hasUsbAccess" type="checkbox" disabled></ng-template>
+                Externe Speichermedien zulassen
+              </label>
+            </div>
+            <div class="row">
+            <span class="mt-3 col-12 description">
+              Markieren Sie diese Veranstaltung als E-Prüfung.
+            </span>
+              <br>
+              <span class="col-12">
+              Die Prüfung wird nur dann startbar sein, wenn Leerpool.nrw in den Prüfungsmodus versetzt wird. Kontaktieren Sie dazu Ihren lokalen Leerpool.nrw-Administrator.
+            </span>
+              <label class="col-12 mt-3" for="epruefung-veranstaltung">
+                <input id="epruefung-veranstaltung" name="pruefungsmodus" type="checkbox" formControlName="isExam"
+                       [checked]="lecture.isExam" (change)="hasChanged()" *ngIf="edit; else isexam">
+                <ng-template #isexam><input [checked]="lecture.isExam" type="checkbox" disabled></ng-template>
+                Prüfungsmodus
+              </label>
+            </div>
+
+          </div>
+          <div class="container tab-pane fade" id="firewall-veranstaltung">
+            <div class="form-group row">
+              <h5 class="mt-3 col-12 description">
+                Legen Sie hier fest, ob die Veranstaltung Zugriff zum Internet haben soll. In der Liste können Sie
+                bestimmte Adressen und Services ein- oder ausschalten.
+              </h5>
+              <br>
+              <label class="col-12 mt-3" for="internetzugriff">
+                <input [checked]="lecture.hasInternetAccess" id="internetzugriff" *ngIf="edit; else hasinternet"
+                       name="internetzugriff" type="checkbox" (change)="hasChanged()" formControlName="hasInternetAccess">
+                <ng-template #hasinternet><input type="checkbox" disabled [checked]="lecture.hasInternetAccess"></ng-template>
+                Netzwerk-/Internetzugriff zulassen
+              </label>
+            </div>
+            <div class="form-group row mt-5">
+              <div class="col-12">
+                <h5>Netzwerkregeln</h5>
+                <p class="invalid"><i class="fa fa-exclamation-triangle"></i> Überprüfung noch nicht möglich</p>
+              </div>
+              <div class="col-12">
+                <p>
+                  Wenn Sie den Internetzugriff deaktiviert haben, können Sie hier Ausnahmen definieren (Whitelist).
+                  Bitte
+                  definieren Sie Ihre Regeln im Format &lt;host&gt; &lt;port&gt; &lt;in|out&gt;. <br>
+                  Sie können Port 0 angeben, was sämtlichen TCP und UDP Ports eines Hosts entspricht.
+                </p>
+              </div>
+              <div class="col-12 col-lg-9">
+                <p>
+                  Wenn Sie Internetzugriff aktivieren, hat diese Liste den gegenteiligen Effekt (Blacklist).
+                </p>
+              </div>
+              <div class="col-12 col-lg-3  text-right">
+                <a class="button text-box black-font">
+                  <i class="fa fa-share"></i><b> Regeln überprüfen</b></a>
+              </div>
+              <div class="col-12 mt-3">
+              <textarea class="form-control" id="firewallregeln-veranstaltung"
+                        name="firewallregeln" rows="10">{{lecture.networkExceptions}}</textarea>
+              </div>
+
+            </div>
+          </div>
+          <div class="container tab-pane fade" id="raumauswahl-veranstaltung">
+            <div class="form-group row mt-3">
+              <div class="col-12">
+                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+                    <button type="button" mat-icon-button disabled class="checkboxRaumauswahl"></button>
+                    <mat-checkbox class="checkboxRaumauswahl" [disabled]="!edit"
+                                  [checked]="checklistSelection.isSelected(node)"
+                                  (change)="todoLeafItemSelectionToggle(node); hasChanged();" >{{node.item}}</mat-checkbox>
+                  </mat-tree-node>
+                  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+                    <button type="button" mat-icon-button matTreeNodeToggle class="checkboxRaumauswahl"
+                            [attr.aria-label]="'toggle ' + node.filename">
+                      <mat-icon class="mat-icon-rtl-mirror white-font">
+                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                      </mat-icon>
+                    </button>
+                    <mat-checkbox class="checkboxRaumauswahl" [disabled]="!edit"
+                                  [checked]="descendantsAllSelected(node)"
+                                  [indeterminate]="descendantsPartiallySelected(node)"
+                                  (change)="todoItemSelectionToggle(node); hasChanged();">{{node.item}}</mat-checkbox>
+                  </mat-tree-node>
+                </mat-tree>
+                <div *ngIf="this.lecture.locationIds.length > 4" class="invalid">
+                  <span *ngIf="this.lecture.locationIds.length > 4"><i class="fa fa-exclamation-triangle"></i> Es sind zu viele Räume ausgewählt.</span>
+                </div>
+              </div>
+              <div class="col-12 mt-3">
+                <div class="radio">
+                  <label>
+                    <input type="radio" [value]="true" [checked]="lecture.limitToLocations" (change)="hasChanged()"
+                           formControlName="limitToLocations" *ngIf="edit; else limittrue">
+                    <ng-template #limittrue><input type="radio" [value]="true" [checked]="lecture.limitToLocations" disabled></ng-template>
+                    Veranstaltung ausschließlich in den ausgewählten Räumen anzeigen</label>
+                </div>
+                <div class="radio mt-3 mt-sm-0">
+                  <label><input type="radio" [value]="false" [checked]="!lecture.limitToLocations"
+                                (change)="hasChanged()" formControlName="limitToLocations" *ngIf="edit; else limitfalse">
+                    <ng-template #limitfalse><input type="radio" [value]="false" [checked]="!lecture.limitToLocations" disabled></ng-template>
+                    Veranstaltung mit höherer Priorität in den ausgewählten Räumen anzeigen</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container tab-pane fade mt-3" id="vm-start-veranstaltung">
+            <p class="invalid"><i class="fa fa-exclamation-triangle"></i> Funktionalität noch nicht gegeben</p>
+            <div class="row form-group">
+              <label for="audio" class="col-12 col-md-4 col-lg-3 control-label description"><b>Audio</b></label>
+              <div class="col-12 col-md-8 col-lg-9">
+                <select id="audio" class="form-control text-box" disabled>
+                  <option></option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row mt-5">
+              <p class="col-12"> Ein hier eingetragenes Skript wird nach dem Start der VM automatisch ausgeführt.</p>
+              <label for="erweiterung" class="col-12 col-md-4 col-lg-3 control-label description"><b>Dateinamenserweiterung</b></label>
+              <div class="col-12 col-md-8 col-lg-9">
+                <select id="erweiterung" class="form-control text-box" disabled>{{lecture.runscript}}</select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="sichtbarkeit" class="col-12 col-md-4 col-lg-3 control-label description">Sichtbarkeit</label>
+              <div class="col-12 col-md-8 col-lg-9">
+                <select id="sichtbarkeit" class="form-control text-box" disabled>
+                  <option></option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row mt-4">
+              <div class="col-12">
+                <textarea class="text-box form-control" rows="10" disabled>{{lecture.runscript}}</textarea>
+              </div>
+
+            </div>
+          </div>
+          <div class="container tab-pane fade mt-3" id="berechtigungen-veranstaltung">
+            <div class="form-group row white-font ">
+              <div class="col-12">
+                <table class="table white-font">
+                  <thead>
+                  <tr>
+                    <th *ngIf="admin"></th>
+                    <th>Benutzer</th>
+                    <th>Bearbeiten</th>
+                    <th>Admin</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let user of permissions;let i = index" class="darkcontent">
+                    <td *ngIf="admin"><i class="fa fa-minus fontawesomeicons" (click)="deleteUser(i); hasChanged();"></i></td>
+                    <td>{{user.userName}}</td>
+                    <td><input type="checkbox" *ngIf="admin; else useredit" [checked]="user.edit" (change)="hasChanged(); setEdit($event, i);"></td>
+                    <ng-template #useredit><input type="checkbox" [checked]="user.edit" disabled></ng-template>
+                    <td><input type="checkbox" *ngIf="admin; else useradmin" [checked]="user.admin" (change)="hasChanged(); setAdmin($event, i);"></td>
+                    <ng-template #useradmin><input type="checkbox" [checked]="user.admin" disabled></ng-template>
+                  </tr>
+                  </tbody>
+                </table>
+                <div class="form-group row mt-5" *ngIf="admin">
+                  <div class="col-12 col-md-9">
+                    <input id="user" type="text" id="newUserName" class="form-control"
+                    name="newUserName" (keydown.enter)="$event.preventDefault()" matInput [formControl]="userControl"
+                    [matAutocomplete]="auto">
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        {{option}}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </div>
+                  <label class="control-label col-12 col-md-3 push" for="newUserName" (click)="addUser()">
+                    <b><i class="fa fa-plus fontawesomeicons"></i> Benutzer hinzufügen</b>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row mt-5">
+              <div class="col-12">
+                <h5>Andere Nutzer</h5>
+                <p>
+                  Hier können Sie die Rechte für nicht in der Liste angegebene Nutzer festlegen
+                </p>
+                <div class="form-check form-check-inline">
+                  <input [checked]="lecture.defaultPermissions.edit" class="form-check-input"
+                         type="checkbox" id="bearbeiten-veranstaltung" (change)="hasChanged()" formControlName="edit"
+                         *ngIf="admin; else defaultedit">
+                  <ng-template #defaultedit><input [checked]="lecture.defaultPermissions.edit" disabled type="checkbox">&nbsp;</ng-template>
+                  <label class="form-check-label" for="bearbeiten-veranstaltung">Bearbeiten</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox"
+                         id="admin-veranstaltung" [checked]="lecture.defaultPermissions.admin" (change)="hasChanged()" formControlName="admin"
+                         *ngIf="admin; else defaultadmin">
+                  <ng-template #defaultadmin><input [checked]="lecture.defaultPermissions.admin" disabled type="checkbox">&nbsp;</ng-template>
+                  <label class="form-check-label" for="admin-veranstaltung">Admin</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container tab-pane fade" id="netzlaufwerke-veranstaltung">
+            <div class="form-group row mt-3">
+              <div class="col-12">
+                <p class="invalid"><i class="fa fa-exclamation-triangle"></i> Funktionalität noch nicht gegeben</p>
+                <p>
+                  Hier können Sie Netzlaufwerke angeben, die automatisch beim Start der Veranstaltung eingebunden werden
+                  sollen.
+                  Der Platzhalter %loginuser% wird im Pfad durch den Loginnamen des Nutzers ersetzt.
+                </p>
+              </div>
+            </div>
+            <div class="form-group row mt-5">
+              <div class="col-12">
+                <table class="table white-font">
+                  <thead>
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Pfad</th>
+                    <th>Laufwerk</th>
+                    <th>Authentifizierung</th>
+                    <th>Username</th>
+                    <th>Passwort</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+                <div class="form-group row mt-5">
+                  <div class="col-12">
+                    <b class="description">Eigenes Netzlaufwerk definieren</b>
+                  </div>
+                </div>
+                <div class="form-group row mt-2">
+                  <label class="control-label col-12 col-sm-4 col-md-3 col-lg-2" for="newNLWName">
+                    <b>Name</b></label>
+                  <div class="col-12 col-sm-8 col-md-9 col-lg-10">
+                    <input class="form-control" id="newNLWName" name="newNLWName" disabled>
+                  </div>
+                </div>
+                <div class="form-group row mt-2">
+                  <label class="control-label col-12 col-sm-4 col-md-3 col-lg-2 col-xl-2"
+                         for="newNLWPfad"><b>Pfad</b></label>
+                  <div class="col-12 col-sm-8 col-md-9 col-lg-8 col-xl-8">
+                    <input class="form-control" id="newNLWPfad"
+                           name="newNLWPfad" disabled>
+                  </div>
+                  <label class="col-12 col-lg-2 col-xl-2 mt-3 mt-lg-2 offset-sm-4 offset-md-3 offset-lg-0">
+                    <input type="checkbox" id="newNLWDrucker" name="newNLWDrucker" disabled> Drucker</label>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-12 col-sm-4 col-md-3 col-lg-2 col-xl-2"
+                         for="newNLWLaufwerk"><b>Laufwerk</b></label>
+                  <div class="col-12 col-sm-8 col-md-9 col-lg-10 col-xl-4">
+                    <select class="form-control" id="newNLWLaufwerk"
+                            name="newNLWLaufwerk" disabled>
+                    </select>
+                  </div>
+                  <label class="control-label col-12 col-sm-4 col-md-3 col-lg-2 col-xl-2 mt-sm-3 mt-xl-0"
+                         for="newNLWAuthentifizierung"><b>Authentifizierung</b></label>
+                  <div class="col-12 col-sm-8 col-md-9 col-lg-10 col-xl-4 mt-sm-3 mt-xl-0">
+                    <select class="form-control" id="newNLWAuthentifizierung"
+                            name="newNLWAuthentifizierung" disabled>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group row mt-2">
+                  <label class="control-label col-12 col-sm-4 col-md-3 col-lg-2 col-xl-2"
+                         for="newNLWBenutzer"><b>Benutzername</b></label>
+                  <div class="col-12 col-sm-8 col-md-9 col-lg-10 col-xl-4">
+                    <input class="form-control" id="newNLWBenutzer"
+                           name="newNLWBenutzer" disabled>
+                  </div>
+                  <label class="control-label col-12 col-sm-4 col-md-3 col-lg-2 col-xl-2 mt-sm-3 mt-xl-0"
+                         for="newNLWPasswort"><b>Passwort</b></label>
+                  <div class="col-12 col-sm-8 col-md-9 col-lg-10 col-xl-4 mt-sm-3 mt-xl-0">
+                     <input class="form-control" id="newNLWPasswort"
+                           name="newNLWPasswort" disabled>
+                  </div>
+                </div>
+                <div class="form-group row mt-2">
+                  <div class="col-12 text-right">
+                    <a class="push"><i class="fa fa-plus"></i><b> Netzlaufwerk hinzufügen</b></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="container tab-pane fade" id="ldap-filter-veranstaltung">
+            <div class="form-group row mt-3">
+              <div class="col-12">
+                <p class="invalid"><i class="fa fa-exclamation-triangle"></i> Funktionalität noch nicht gegeben</p>
+                <p>
+                  Geben Sie hier LDAP Filter ein, die die Sichtbarkeit der Veranstaltung abhängig vom angemeldeten
+                  Benutzer
+                  einschränken. Eine Veranstaltung ist sichtbar, sobald einer der angegebenen Filter zutrifft.
+                  Zusätzliche Raumbeschränkungen greifen weiterhin.
+                </p>
+              </div>
+            </div>
+            <div class="form-group row mt-5">
+              <div class="col-12">
+                <table class="table white-font">
+                  <thead>
+                  <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Attribut</th>
+                    <th>Wert</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+                </table>
+                <div class="form-group row mt-5">
+                  <div class="col-12">
+                    <b class="description">Eigenen Filter hinzufügen</b>
+                  </div>
+                </div>
+                <div class="form-group row mt-2">
+                  <label class="control-label col-12 col-sm-2"
+                         for="newFilterName">
+                    <b>Name</b></label>
+                  <div class="col-12 col-sm-10">
+                    <input class="form-control" id="newFilterName" disabled
+                           name="newFilterName">
+                  </div>
+                </div>
+                <div class="form-group row mt-2">
+                  <label class="control-label col-12 col-sm-2"
+                         for="newFilterAttribut"><b>Attribut</b></label>
+                  <div class="col-12 col-sm-10">
+                    <input class="form-control" id="newFilterAttribut" disabled
+                           name="newFilterAttribut">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="control-label col-12 col-sm-2"
+                         for="newFilterWert"><b>Wert</b></label>
+                  <div class="col-12 col-sm-10 col-lg-8">
+                    <input class="form-control" id="newFilterWert" disabled
+                           name="newFilterWert">
+                  </div>
+                  <div class="col-12 col-lg-2 mt-3 mt-lg-1">
+                    <a class="push"><i class="fa fa-plus"></i><b> Filter hinzufügen</b></a>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="container">
+            <div class="form-group row">
+              <div class="col-12 text-right" *ngIf="edit">
+                <button class="text-box" type="submit" [disabled]="!change"
+                        [ngClass]="{ 'butdis': !change, 'button': change,
+                        'invalid': (submitted && this.editEventForm.invalid) || this.lecture.locationIds.length > 4 || amountOfDays < 1}">
+                  <i class="fa fa-check-circle"></i> Speichern
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

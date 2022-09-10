@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>Besitzer ändern</h1>
+<hr class="whiteHr">
+<div mat-dialog-content>
+  <p>Wählen Sie einen Benutzer aus, dem Sie die Besitzrechte übertragen wollen:</p>
+  <form [formGroup]="changeOwnerForm">
+    <div class="form-group row">
+      <label for="search" class="col-12 col-xl-2"><b>Suche</b></label>
+      <div class="col-12 col-xl-10">
+        <input type="text" class="form-control mr-5 mr-lg-0" id="search" (keydown.enter)="$event.preventDefault()" (keyup)="applyFilter($event.target.value)">
+      </div>
+    </div>
+    <div class="mt-4">
+    <mat-table class="createLecture" [dataSource]="possibleusers">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <mat-header-cell class="checkboxSpalte" *matHeaderCellDef>
+        </mat-header-cell>
+        <mat-cell class="mat-cell-mini-list" *matCellDef="let element" class="checkboxSpalte">
+          <input type="radio" value="{{element.userId}}" formControlName="owner" (click)="hasChanged()">
+        </mat-cell>
+      </ng-container>
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
+        <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.lastName}}, {{element.firstName}} ({{element.eMail}})</mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="mt-5" class="offset-5">
+  <button class="text-box button mb-3" (click)="onNoClick()"><b> Abbrechen</b></button>
+  <button class="text-box mb-3" [disabled]="!change"
+          [ngClass]="{ 'butdis': !change, 'button': change}"
+          (click)="submit()"><b> Besitzer festlegen</b></button>
+</div>
+
+

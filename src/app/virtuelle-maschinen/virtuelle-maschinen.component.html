@@ -1,0 +1,133 @@
+<div class="container-fluid mt-5 content white-font smallFluidContainer">
+  <div class="row">
+    <div class="col-12">
+      <h4>
+        Übersicht virtuelle Maschinen
+      </h4>
+      <p>
+        Hier können Sie virtuelle Maschinen hochladen, herunterladen, bearbeiten und l&ouml;schen.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h4>
+        Suchen
+      </h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group row">
+        <div class="col-12 col-md-5 col-xl-5">
+          <input type="text" class="form-control mr-5" id="search" (keyup)="applyFilter($event.target.value)">
+        </div>
+        <div class="col-12 col-md-5 col-xl-3 mt-3 mt-md-0">
+          <select id="searchselect" class="form-control" disabled>
+            <option>Alle anzeigen</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-2 col-xl-2 mt-3 mt-md-0">
+          <strong>Sichtbar: {{amountOfVms}}</strong>
+        </div>
+        <div class="col-12 col-md-12 col-xl-2 text-right mt-3 mt-xl-0">
+          <a class="button text-box" routerLink="/vms/newvm"><i class="fa fa-plus-circle"></i><b>&nbsp;Neue
+            VM</b></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 text-right">
+      <a class="deletebutton text-box"(click)="deleteVm()">
+        <i class="fa fa-trash"></i><b> VM löschen</b>
+      </a>
+    </div>
+  </div>
+</div> <!-- container -->
+<div class="container-fluid mt-3 smallFluidContainer">
+  <div class="row mt-3">
+    <mat-table class="mat-table-list" #table [dataSource]="vms">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <mat-header-cell class="checkboxSpalte" *matHeaderCellDef >
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" color="warn">
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let row" class="checkboxSpalte">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.imageName}}</mat-cell>
+      </ng-container>
+
+      <!-- Betriebssystem Column -->
+      <ng-container matColumnDef="betriebssystem">
+        <mat-header-cell *matHeaderCellDef> OS </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.osId}}</mat-cell>
+      </ng-container>
+
+      <!-- Besitzer Column -->
+      <ng-container matColumnDef="besitzer">
+        <mat-header-cell *matHeaderCellDef> Besitzer </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.ownerId}}</mat-cell>
+      </ng-container>
+
+      <!-- Geändert Column -->
+      <ng-container matColumnDef="geaendert">
+        <mat-header-cell *matHeaderCellDef> Geändert </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.updateTime}}</mat-cell>
+      </ng-container>
+
+      <!-- Ablaufdatum Column -->
+      <ng-container matColumnDef="ablaufdatum">
+        <mat-header-cell *matHeaderCellDef> Ablaufdatum </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.expireTime}}</mat-cell>
+      </ng-container>
+
+      <!-- Größe Column -->
+      <ng-container matColumnDef="groesse">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Größe </mat-header-cell>
+        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.fileSize}}</mat-cell>
+      </ng-container>
+
+      <!--Verwendbar Column-->
+      <ng-container matColumnDef="verwendbar">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Verwendbar </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="kleineSpalte mat-cell-list"[routerLink]="['/vms', element.imageBaseId]"><input type="checkbox" [checked]="element.isValid" disabled></mat-cell>
+      </ng-container>
+
+      <!--Vorlage Column-->
+      <ng-container matColumnDef="vorlage">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Vorlage </mat-header-cell>
+        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]"><input type="checkbox" [checked]="element.isTemplate" disabled></mat-cell>
+      </ng-container>
+
+      <!-- Version Column -->
+      <ng-container matColumnDef="version">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Version </mat-header-cell>
+        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.versionCount}}</mat-cell>
+      </ng-container>
+
+      <!-- Gesamtgröße Column -->
+      <ng-container matColumnDef="gesamtgroesse">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Gesamtgröße </mat-header-cell>
+        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.fileSizeSum}}</mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"
+               (click)="selection.toggle(row)">
+      </mat-row>
+    </mat-table>
+  </div>
+</div>

@@ -1,0 +1,210 @@
+<div class="container content mt-5 mb-5">
+  <div class="row white-font">
+    <div class="col-12">
+      <div class="form-group row">
+        <div class="col-12 text-right">
+          <a (click)="stashChanges()" class="cursorPointer">
+            <i class="fa fa-times white-font"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row white-font">
+    <div class="col-12">
+      <h4>
+        Neue VM anlegen
+      </h4>
+      <p>
+        Bitte wählen Sie eine virtuelle Maschine zum Hochladen aus.
+      </p>
+      <br>
+    </div>
+  </div>
+  <form class="form-horizontal" action="" method="POST" (ngSubmit)="createVm()" [formGroup]="createVmForm">
+    <div class="row white-font">
+      <div class="col-12">
+        <div class="form-group row">
+          <div class="col-12">
+            <h4>Virtuelle Maschine</h4>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="control-label description col-12 col-md-4 col-lg-3 col-xl-3" for="vmx">.vmx-Datei *</label>
+          <div class="col-12 col-md-8">
+            <input accept=".vmx" type='file' (change)="onSelectFile($event); hasChanged()" id="vmx">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="control-label description col-12 col-md-4 col-lg-3 col-xl-3" for="vmdk">.vmdk-Datei *</label>
+          <div class="col-12 col-md-8">
+            <input accept=".vmdk" type='file' (change)="onSelectFile($event); hasChanged()" id="vmdk">
+          </div>
+        </div>
+        <div class="form-group row mt-5">
+          <label class="control-label col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 description" for="vmname">Name *</label>
+          <div class="col-12 col-sm-8 col-md-8 col-lg-9">
+            <input type="text" class="form-control" id="vmname" name="name" formControlName="imageName"
+            [ngClass]="{ 'is-invalid': submitted && form.imageName.errors }" (change)="hasChanged()">
+            <div *ngIf="submitted && form.imageName.errors" class="invalid">
+              <span *ngIf="form.imageName.errors.required"><i class="fa fa-exclamation-triangle"></i> VM-Name darf nicht leer sein</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group-row">
+          <h6>Hinweis</h6>
+          <p>
+            Haben Sie noch keine eigene virtuelle Maschine erstellt, können Sie sich in der Übersicht
+            eine virtuelle Maschine als Vorlage herunterladen, diese an Ihre Bedürfnisse anpassen und
+            anschließend über diesen Assistenzen hochladen.
+          </p>
+          <p>
+            Wenn Sie die VM einer bestehenden Veranstaltung aktualisieren möchten, öffnen Sie die
+            Detailansicht der bestehenden VM und wählen Sie 'Neue VM-Version hochladen'. Dadurch bleiben
+            bestehende Berechtigungen, sowie Verknüpfungen zu Veranstaltungen erhalten.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row white-font mt-5">
+      <div class="col-12">
+        <hr class="whiteHr">
+        <h4>
+          Metadaten
+        </h4>
+        <p>
+          Fügen Sie eine Beschreibung hinzu.
+        </p>
+      </div>
+    </div>
+    <div class="row white-font">
+      <div class="col-12">
+        <div class="form-group row">
+          <label class="control-label col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3 description" for="betriebsystem">Betriebssystem *</label>
+          <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+            <select id="betriebsystem" class="form-control text-box" formControlName="osId" (change)="hasChanged()">
+              <option *ngFor="let os of osList; let i = index" [value]="i+1">{{os}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="control-label col-12  col-lg-3 col-xl-3 description" for="beschreibung">Beschreibung *</label>
+          <div class="col-12 col-lg-9">
+            <textarea name="beschreibung" class="form-control" formControlName="description" id="beschreibung"
+            [ngClass]="{ 'is-invalid': submitted && form.description.errors }" (change)="hasChanged()"></textarea>
+            <div *ngIf="submitted && form.description.errors" class="invalid">
+              <span *ngIf="form.description.errors.required"><i class="fa fa-exclamation-triangle"></i> Beschreibung darf nicht leer sein</span>
+            </div>
+          </div>
+        </div>
+        <!--<div class="form-group-row">
+          <label><input type="checkbox" checked (changed)="hasChanged()"> VM enthält lizenzpflichtige Software</label>
+          <br>
+          <label><input type="checkbox" (changed)="hasChanged()"> Vorlage erstellen</label>
+          <br>
+        </div>-->
+      </div>
+    </div>
+    <div class="row white-font mt-5">
+      <div class="col-12">
+        <hr class="whiteHr">
+        <h4>
+          Berechtigungen festlegen
+        </h4>
+        <p>
+          Legen Sie hier die gewünschten Berechtigungen fest.
+        </p>
+      </div>
+    </div>
+    <div class="row white-font">
+      <div class="col-12">
+        <table class="table table-striped white-font">
+          <thead>
+          <tr>
+            <th></th>
+            <th>Benutzer</th>
+            <th>Verlinken</th>
+            <th>Download</th>
+            <th>Bearbeiten</th>
+            <th>Admin</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of permissions;let i = index" class="darkcontent">
+              <td><i class="fa fa-minus fontawesomeicons" (click)="deleteUser(i); hasChanged()"></i></td>
+              <td>{{user.userName}}</td>
+              <td><input type="checkbox" [checked]="user.link" (change)="setLink($event, i); hasChanged()"></td>
+              <td><input type="checkbox" [checked]="user.download" (change)="setDownload($event, i); hasChanged()"></td>
+              <td><input type="checkbox" [checked]="user.edit" (change)="setEdit($event, i); hasChanged()"></td>
+              <td><input type="checkbox" [checked]="user.admin" (change)="setAdmin($event, i); hasChanged()"></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="form-group row mt-5">
+          <div class="col-12 col-md-9">
+            <input id="user" type="text" id="newUserName" class="form-control"
+            name="newUserName" (keydown.enter)="$event.preventDefault()" matInput [formControl]="userControl"
+            [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+          <label class="control-label col-12 col-md-3 push" for="newUserName" (click)="addUser()">
+            <b><i class="fa fa-plus fontawesomeicons"></i> Benutzer hinzufügen</b>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row white-font">
+      <div class="col-12 mt-5">
+        <h4>
+          Standardberechtigungen
+        </h4>
+        <p>
+          Hier können Sie die Rechte für nicht in der Liste angegebene Nutzer festlegen
+        </p>
+
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="verlinken-vm" value="" formControlName="link"
+                 (change)="hasChanged()">
+          <label class="form-check-label" for="verlinken-vm">Verlinken</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="download-vm" value="" formControlName="download"
+                  (change)="hasChanged()">
+          <label class="form-check-label" for="download-vm">Download</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="bearbeiten-vm" value="" formControlName="edit"
+                  (change)="hasChanged()">
+          <label class="form-check-label" for="bearbeiten-vm">Bearbeiten</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="checkbox" id="admin-vm" value="" formControlName="admin"
+                 (change)="hasChanged()">
+          <label class="form-check-label" for="admin-vm">Admin</label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group row mt-3">
+          <div class="col-5">
+            <button class="button text-box" id="abbrechen" (click)="stashChanges()">
+              <i class="fa fa-times-circle"></i>
+              <b> Abbrechen </b>
+            </button>
+          </div>
+          <div class=" offset-1 col-6 text-right">
+            <button type="submit" class="button text-box ml-4"  [ngClass]="{ 'invalid': submitted && this.createVmForm.invalid}">
+              <i class="fa fa-check-circle"></i>
+              <b> Fertigstellen</b></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+

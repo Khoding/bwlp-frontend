@@ -1,0 +1,110 @@
+<div class="container-fluid mt-5 content white-font smallFluidContainer">
+  <div class="row">
+    <div class="col-12">
+      <h4>
+        Übersicht Veranstaltungen
+      </h4>
+      <p>
+        Hier können Sie Veranstaltungen anlegen, bearbeiten und l&ouml;schen.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h4>
+        Suchen
+      </h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group row">
+        <div class="col-12 col-md-5 col-xl-5">
+          <input type="text" class="form-control mr-5" id="search" (keyup)="applyFilter($event.target.value)">
+        </div>
+        <div class="col-12 col-md-5 col-xl-3 mt-3 mt-md-0">
+          <select id="searchselect" class="form-control" disabled>
+            <option>Alle anzeigen</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-2 col-xl-2 mt-3 mt-md-0">
+          <span class="mt-2"><strong>Sichtbar: {{amountOfEvents}}</strong></span>
+        </div>
+        <div class="col-12 col-md-12 col-xl-2 text-right mt-3 mt-xl-0">
+          <a class="button text-box" routerLink="/veranstaltungen/newveranstaltung"><i class="fa fa-plus-circle"></i><b> Neue
+            Veranstaltung</b></a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 text-right">
+      <a class="deletebutton text-box"(click)="deleteEvent()">
+        <i class="fa fa-trash"></i><b> Veranstaltung löschen</b>
+      </a>
+    </div>
+  </div>
+</div> <!-- container -->
+<div class="container-fluid mt-3 smallFluidContainer">
+  <div class="row mt-3">
+
+    <mat-table class="mat-table-list" [dataSource]="lectures">
+      <!-- Checkbox Column -->
+      <ng-container matColumnDef="select">
+        <mat-header-cell class="checkboxSpalte" *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" color="warn">
+          </mat-checkbox>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row" class="checkboxSpalte">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.lectureName}}</mat-cell>
+      </ng-container>
+
+      <!-- Besitzer Column -->
+      <ng-container matColumnDef="besitzer">
+        <mat-header-cell *matHeaderCellDef> Besitzer </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.ownerId}}</mat-cell>
+      </ng-container>
+
+      <!-- Startdatum Column -->
+      <ng-container matColumnDef="startdatum">
+        <mat-header-cell *matHeaderCellDef> Startdatum </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.startTime}}</mat-cell>
+      </ng-container>
+
+      <!-- Ablaufdatum Column -->
+      <ng-container matColumnDef="ablaufdatum">
+        <mat-header-cell *matHeaderCellDef> Ablaufdatum </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.endTime}}</mat-cell>
+      </ng-container>
+
+      <!--Aktiviert Column-->
+      <ng-container matColumnDef="aktiviert">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Aktiviert </mat-header-cell>
+        <mat-cell  *matCellDef="let element" class="kleineSpalte mat-cell-list"[routerLink]="['/veranstaltungen', element.lectureId]"><input type="checkbox" [checked]="element.isEnabled" disabled></mat-cell>
+      </ng-container>
+      <!--VM gültig Column-->
+      <ng-container matColumnDef="vmgueltig">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> VM gültig </mat-header-cell>
+        <mat-cell  class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]"><input type="checkbox" [checked]="element.isImageVersionUsable" disabled></mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"
+               (click)="selection.toggle(row)">
+      </mat-row>
+    </mat-table>
+  </div>
+</div>

@@ -1,0 +1,254 @@
+<div class="container content mt-5 mb-5">
+  <div class="row white-font">
+    <div class="col-12">
+      <div class="form-group row">
+        <div class="col-12 text-right">
+        <a (click)="stashChanges()" class="cursorPointer">
+          <i class="fa fa-times white-font"></i>
+        </a>
+        </div>
+      </div>
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active toggle-menu" data-toggle="tab" href="#uebersicht"><b>Übersicht</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link toggle-menu" data-toggle="tab"
+             href="#vmversionen"><b>VM-Versionen</b></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link toggle-menu" data-toggle="tab" href="#berechtigungen"><b>Berechtigungen</b></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="row white-font">
+    <div class="col-12">
+      <form [formGroup]="editVMForm" (ngSubmit)="editedVM()">
+      <div class="tab-content">
+        <div class="container tab-pane active mt-3" id="uebersicht">
+          <div class="form-group row" *ngIf="edit; else name">
+            <div class="col-12">
+              <input type="text" class="form-control vmName" id="name-vm" name="name-vm" formControlName="imageName" (change)="hasChanged()"
+                     [ngClass]="{ 'is-invalid': submitted && form.imageName.errors }">
+              <div *ngIf="submitted && form.imageName.errors" class="invalid">
+                <span *ngIf="form.imageName.errors.required"><i class="fa fa-exclamation-triangle"></i> VM-Name darf nicht leer sein</span>
+              </div>
+            </div>
+          </div>
+          <ng-template #name>
+            <div class="form-group row"><h3><b>{{this.virtuellemaschine.imageName}}</b></h3></div>
+          </ng-template>
+          <div class="form-group row">
+          <label class="control-label col-12 col-md-3 description"
+                 for="beschreibung-virtuellemaschine"><b>Beschreibung</b></label>
+          <div class="col-12 col-md-9">
+            <textarea id="beschreibung-virtuellemaschine"
+                      class="form-control" formControlName="description" (change)="hasChanged()"
+                      [ngClass]="{ 'is-invalid': submitted && form.description.errors }" *ngIf="edit; else beschreibung">
+            </textarea>
+            <div *ngIf="submitted && form.description.errors" class="invalid">
+              <span *ngIf="form.description.errors.required"><i class="fa fa-exclamation-triangle"></i> Beschreibung darf nicht leer sein</span>
+            </div>
+          </div>
+        </div>
+          <ng-template #beschreibung>
+              <p>{{this.virtuellemaschine.description}}</p>
+          </ng-template>
+          <div class="form-group row">
+            <label class="control-label col-12 col-sm-5 col-md-3 description" for="besitzer-virtuellemaschine"><b>Besitzer</b></label>
+            <div class="col-10 col-sm-4 col-md-4">
+              <span id="besitzer-virtuellemaschine">{{virtuellemaschine.ownerId}}</span>
+            </div>
+            <div class="col-2 col-sm-3 col-md-5" *ngIf="this.admin">
+              <a (click)="changeOwner()" class="edit cursorPointer"><i class="fa fa-pencil-square-o"></i><b> Ändern</b></a>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="control-label col-5 col-md-3 description" for="erstellt-virtuellemaschine"><b>Erstellt
+              am</b></label>
+            <div class="col-7 col-md-9">
+              <span id="erstellt-virtuellemaschine">{{virtuellemaschine.createTime}}</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="control-label col-5 col-md-3 description" for="geaendertam-virtuellemaschine"><b>Geändert
+              am</b></label>
+            <div class="col-7 col-md-3">
+              <span id="geaendertam-virtuellemaschine">{{virtuellemaschine.updateTime}}</span>
+            </div>
+            <label class="control-label col-5 col-md-1 description"
+                   for="geaendertdurch-virtuellemaschine"><b>durch</b></label>
+            <div class="col-7 col-md-5">
+              <span id="geaendertdurch-virtuellemaschine">{{virtuellemaschine.updaterId}}</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="control-label col-12 col-sm-5 col-md-3 description"
+                   for="betriebsystem-virtuellemaschine"><b>Betriebssystem</b></label>
+            <div class="col-12 col-sm-7 col-md-6" *ngIf="edit; else os">
+              <select formControlName="osId" id="betriebsystem-virtuellemaschine" class="form-control text-box" (change)="hasChanged()">
+                <option *ngFor="let os of osList; let i = index" [value]="i+1">{{os}}</option>
+              </select>
+            </div>
+            <ng-template #os>
+              <div class="col-12 col-md-9">
+                <p>{{this.virtuellemaschine.osId}}</p>
+              </div>
+            </ng-template>
+          </div>
+          <div class="form-group row">
+            <label class="control-label col-5 col-md-3 description"
+                   for="freigabemodus-virtuellemaschine"><b>Freigabemodus</b></label>
+            <div class="col-4 col-md-4">
+              <span id="freigabemodus-virtuellemaschine">{{shareModes[virtuellemaschine.shareMode]}}</span>
+            </div>
+            <label class="col-4 offset-5 offset-md-0 col-md-3">
+              <input type="checkbox" name="vorlage" disabled [checked]="virtuellemaschine.isTemplate"><span class="grey-font"> Vorlage</span>
+            </label>
+          </div>
+          <div class="form-group row">
+            <label class="control-label col-5 col-md-3 description"
+                   for="versionid-virtuellemaschine"><b>Versions-ID</b></label>
+            <div class="col-7 col-md-9">
+              <span id="versionid-virtuellemaschine">{{virtuellemaschine.latestVersionId}}</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="control-label col-5 col-md-3 description" for="vmid-virtuellemaschine"><b>VM-ID</b></label>
+            <div class="col-7 col-md-9">
+              <span id="vmid-virtuellemaschine">{{virtuellemaschine.imageBaseId}}</span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="control-label col-5 col-md-3 description"
+                   for="virtualisierer-virtuellemaschine"><b>Virtualisierer</b></label>
+            <div class="col-7 col-md-9">
+              <span id="virtualisierer-virtuellemaschine">{{virtuellemaschine.virtId}}</span>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="container tab-pane mt-3" id="vmversionen">
+          <div class="form-group row">
+            <div class="col-12 table-wrapper-scroll-y my-custom-scrollbar">
+              <table class="table white-font">
+                <thead>
+                  <tr>
+                    <th *ngIf="edit"></th>
+                    <th>Erstellungszeitpunkt</th>
+                    <th>Ablaufszeitpunkt</th>
+                    <th>Ersteller</th>
+                    <th>Verwendbar</th>
+                    <th>Größe</th>
+                    <th>Interne ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="darkcontent" *ngFor="let version of virtuellemaschine.versions">
+                    <td *ngIf="edit"><i class="fa fa-minus fontawesomeicons" (click)="deleteImageVersion(version.versionId)"></i></td>
+                    <td>{{ version.createTime }}</td>
+                    <td>{{ version.expireTime }}</td>
+                    <td>{{ version.uploaderId }}</td>
+                    <td><input type="checkbox" [checked]="version.isValid" disabled></td>
+                    <td>{{ version.fileSize }}</td>
+                    <td>{{ version.versionId }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="container tab-pane mt-3" id="berechtigungen">
+          <div class="form-group row">
+            <div class="col-12 ">
+              <table class="table white-font">
+                <thead>
+                <tr>
+                  <th *ngIf="edit"></th>
+                  <th>Benutzer</th>
+                  <th>Verlinken</th>
+                  <th>Download</th>
+                  <th>Bearbeiten</th>
+                  <th>Admin</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let user of permissions;let i = index" class="darkcontent">
+                  <td *ngIf="edit"><i class="fa fa-minus fontawesomeicons" (click)="deleteUser(i); hasChanged();"></i></td>
+                  <td>{{user.userName}}</td>
+                  <td><input type="checkbox" [checked]="user.link" (change)="hasChanged(); setLink($event, i);"></td>
+                  <td><input type="checkbox" [checked]="user.download" (change)="hasChanged(); setDownload($event, i);"></td>
+                  <td><input type="checkbox" [checked]="user.edit" (change)="hasChanged(); setEdit($event, i);"></td>
+                  <td><input type="checkbox" [checked]="user.admin" (change)="hasChanged(); setAdmin($event, i);"></td>
+                </tr>
+                </tbody>
+              </table>
+              <div class="form-group row mt-5" *ngIf="edit">
+                <div class="col-12 col-md-9">
+                  <input id="user" type="text" id="newUserName" class="form-control"
+                  name="newUserName" (keydown.enter)="$event.preventDefault()" matInput [formControl]="userControl"
+                  [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                      {{option}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </div>
+                <label class="control-label col-12 col-md-3 push" for="newUserName" (click)="addUser()">
+                  <b><i class="fa fa-plus fontawesomeicons"></i> Benutzer hinzufügen</b>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row mt-5">
+            <div class="col-12">
+              <h5>Andere Nutzer</h5>
+              <p>
+                Hier können Sie die Rechte für nicht in der Liste angegebene Nutzer festlegen
+              </p>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="verlinken-vm" formControlName="link" *ngIf="admin; else defaultlink"
+                       [checked]="virtuellemaschine.defaultPermissions.link" (change)="hasChanged();">
+                <ng-template #defaultlink><input [checked]="virtuellemaschine.defaultPermissions.link" disabled type="checkbox">&nbsp;</ng-template>
+                <label class="form-check-label" for="verlinken-vm">Verlinken</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="download-vm" formControlName="download"
+                       [checked]="virtuellemaschine.defaultPermissions.download" (change)="hasChanged();" *ngIf="admin; else defaultdownload">
+                <ng-template #defaultdownload><input [checked]="virtuellemaschine.defaultPermissions.download" disabled type="checkbox">&nbsp;</ng-template>
+                <label class="form-check-label" for="download-vm">Download</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="bearbeiten-vm" formControlName="edit"
+                       [checked]="virtuellemaschine.defaultPermissions.edit" (change)="hasChanged();" *ngIf="admin; else defaultedit">
+                <ng-template #defaultedit><input [checked]="virtuellemaschine.defaultPermissions.edit" disabled type="checkbox">&nbsp;</ng-template>
+                <label class="form-check-label" for="bearbeiten-vm">Bearbeiten</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" id="admin-vm" formControlName="admin"
+                       [checked]="virtuellemaschine.defaultPermissions.admin" (change)="hasChanged();" *ngIf="admin; else defaultadmin">
+                <ng-template #defaultadmin><input [checked]="virtuellemaschine.defaultPermissions.admin" disabled type="checkbox">&nbsp;</ng-template>
+                <label class="form-check-label" for="admin-vm">Admin</label>
+              </div>
+            </div>
+          </div>
+        </div>
+          <div class="form-group row mt-5">
+            <div class="col-12 col-sm-12 col-md-8">
+              <button disabled class="butdis text-box" type="button" *ngIf="download"><i class="fa fa-download"></i> Downloaden</button>
+              <button disabled class="butdis text-box" type="button" *ngIf="edit"><i class="fa fa-upload"></i> Neue Version hochladen</button>
+            </div>
+            <div class="col-12 col-sm-12 col-md-4 text-right mt-3 mt-md-0">
+              <button type="submit" class="text-box" [disabled]="!change" *ngIf="edit"
+                      [ngClass]="{ 'butdis': !change, 'button': change, 'invalid': submitted && this.editVMForm.invalid}">
+                <i class="fa fa-check-circle"></i> Speichern</button>
+              <!--<a class="button text-box disabled" href=""></a>-->
+            </div>
+          </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>

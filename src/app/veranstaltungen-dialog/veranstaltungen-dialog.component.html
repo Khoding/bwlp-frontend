@@ -1,0 +1,14 @@
+<h1 mat-dialog-title>Veranstaltungen löschen</h1>
+<hr class="whiteHr">
+<div mat-dialog-content>
+  <p>Möchten Sie die folgenden Veranstaltungen wirklich löschen?</p>
+  <ul>
+    <li *ngFor="let event of this.data.veranstaltungen">{{event.lectureName}}</li>
+  </ul>
+</div>
+
+<div mat-dialog-actions class="mt-5" class="offset-7">
+  <button class="text-box success mb-3" [mat-dialog-close]="true"><i class="fa fa-check"></i><b> Ja</b></button>
+  <button class="text-box danger mb-3" [mat-dialog-close]="false"><i class="fa fa-times"></i><b> Nein</b></button>
+</div>
+

@@ -1,0 +1,56 @@
+<div mat-dialog-content>
+  <form [formGroup]="setSatelliteAddress" (ngSubmit)="onClick()">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group row">
+          <div class="col-10 ">
+            <h4>Satellitenserver auswählen</h4>
+          </div>
+          <div class="col-2 text-right">
+            <i class="fa fa-times fontawesomeicons" (click)="onNoClick()"></i>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-12">
+            <h5>Vorgegebene Server</h5>
+          </div>
+        </div>
+        <div class="form-group row" *ngFor="let sattelite of this.user.satellites">
+          <div class="form-check form-check-inline">
+            <div class="col-12">
+              <input class="form-check-input" id="sattelite" type="radio" formControlName="sattelite" value="{{sattelite.addressList[1]}}">
+              <label class="form-check-label" for="sattelite">{{ sattelite.displayName }}</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-12">
+            <hr class="whiteHr">
+            <h5>Server-Adresse selbst eingeben</h5>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="form-check form-check-inline">
+            <div class="col-1">
+              <input class="form-check-input" type="radio" id="serveradresse" formControlName="sattelite" value="testaccount">
+            </div>
+            <div class="col-11">
+              <input type="text" id="adresse" class="form-control" formControlName="address" *ngIf="this.setSatelliteAddress.controls.sattelite.value == 'testaccount'; else ntest">
+            <ng-template #ntest>
+              <input type="text" class="form-control"disabled>
+            </ng-template>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-12 text-right">
+            <button class="button text-box darkFont" type="submit"><b>Weiter</b></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+

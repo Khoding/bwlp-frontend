@@ -1,0 +1,83 @@
+<h1 mat-dialog-title>Verknüpfte VM ändern</h1>
+<hr class="whiteHr">
+<div mat-dialog-content>
+  <p>Wählen Sie eine VM aus, die Sie mit dieser Veranstaltung verknüpfen wollen:</p>
+  <form [formGroup]="changeVmForm">
+    <div class="form-group row">
+      <label for="search" class="col-12 col-xl-2"><b>Suche</b></label>
+      <div class="col-12 col-xl-10">
+        <input type="text" class="form-control mr-5 mr-lg-0" id="search" (keydown.enter)="$event.preventDefault()" (keyup)="applyFilter($event.target.value)">
+      </div>
+    </div>
+    <div class="mt-4">
+      <mat-table class="createLecture" [dataSource]="vms">
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+          <mat-header-cell class="checkboxSpalte" *matHeaderCellDef>
+          </mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element" class="checkboxSpalte">
+            <input type="radio" value="{{element.latestVersionId}}" formControlName="imageVersionId" (change)="hasChanged()">
+          </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.imageName}}</mat-cell>
+        </ng-container>
+
+        <!-- Betriebssystem Column -->
+        <ng-container matColumnDef="betriebssystem">
+          <mat-header-cell *matHeaderCellDef> OS</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.osId}}</mat-cell>
+        </ng-container>
+
+        <!-- Besitzer Column -->
+        <ng-container matColumnDef="besitzer">
+          <mat-header-cell *matHeaderCellDef> Besitzer</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.ownerId}}</mat-cell>
+        </ng-container>
+
+        <!-- Geändert Column -->
+        <ng-container matColumnDef="geaendert">
+          <mat-header-cell *matHeaderCellDef> Geändert</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list"
+                    *matCellDef="let element">{{element.updateTime}}</mat-cell>
+        </ng-container>
+
+        <!-- Ablaufdatum Column -->
+        <ng-container matColumnDef="ablaufdatum">
+          <mat-header-cell *matHeaderCellDef> Ablaufdatum</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list"
+                    *matCellDef="let element">{{element.expireTime}}</mat-cell>
+        </ng-container>
+
+        <!-- Größe Column -->
+        <ng-container matColumnDef="groesse">
+          <mat-header-cell *matHeaderCellDef> Größe</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.fileSize}}</mat-cell>
+        </ng-container>
+
+        <!--Verwendbar Column-->
+        <ng-container matColumnDef="verwendbar">
+          <mat-header-cell *matHeaderCellDef> Verwendbar</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element"><input type="checkbox"
+                                                                                [checked]="element.isValid"
+                                                                                disabled></mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+      </mat-table>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions class="mt-5" class="offset-5">
+  <button class="text-box button mb-3" (click)="onNoClick()"><b> Abbrechen</b></button>
+  <button class="text-box mb-3" [disabled]="!change"
+          [ngClass]="{ 'butdis': !change, 'button': change}"
+          (click)="submit()"><b> VM festlegen</b></button>
+</div>
+
+

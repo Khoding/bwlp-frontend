@@ -1,0 +1,53 @@
+<div *ngIf="router.url != '/'">
+  <nav class="navbar navbar-expand-lg white-font">
+    <div class="navbar-header">
+      <button class="navbar-toggler"  data-toggle="collapse" data-target="#nav-content">
+                    <span class="navbar-toggler-icon"> <i class="fa fa-bars navbarToggler"></i></span>
+      </button>
+      <a class="navbar-brand" routerLink="/vms">
+        <img src="assets/images/lehrpool-nrw.png" alt="logo" title="Logo" class="navLogo">
+      </a>
+    </div>
+    <div class="collapse navbar-collapse" id="nav-content">
+      <ul class="navbar-nav">
+        <li class="navbar-item">
+          <a class="nav-link myNav" routerLink="/vms" routerLinkActive="highlightItem" id="navbardrop">
+            VMs
+          </a>
+        </li>
+        <li class="navbar-item">
+          <a class="nav-link myNav" routerLink="/veranstaltungen" routerLinkActive="highlightItem" id="navbardrop">
+            Veranstaltungen
+          </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="navbar-item dropdown">
+          <a class="nav-link dropdown-toggle myNav cursorPointer" id="ueberdrop" data-toggle="dropdown">
+            Über
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item myDrop" routerLink="/nutzungsvereinbarung" routerLinkActive="highlightItem">
+              Nutzungsvereinbarung
+            </a>
+            <a class="dropdown-item myDrop" routerLink="/datenschutzerklaerung" routerLinkActive="highlightItem">
+              Datenschutzerklärung
+            </a>
+            <a class="dropdown-item myDrop"
+               href="https://elearning.hochschule-rhein-waal.de/dokuwiki/doku.php?id=hsrw:services:lehrpool.nrw:lehrpool.nrw"
+               target="_blank">
+              E-Learning Wiki &nbsp;
+              <i class="fa fa-external-link"></i>
+            </a>
+          </div>
+        </li>
+        <li class="navbar-item">
+          <a class="nav-link myNav" routerLink="" (click)="logout()">
+            <i class="fa fa-sign-out"></i>
+            Abmelden
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
