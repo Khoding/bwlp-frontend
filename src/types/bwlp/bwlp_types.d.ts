@@ -4,6 +4,8 @@
 // DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 //
 
+declare type Int64 = import("node-int64");
+
 declare enum AuthorizationError {
   GENERIC_ERROR = 0,
   NOT_AUTHENTICATED = 1,
