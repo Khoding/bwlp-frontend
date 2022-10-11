@@ -1,5 +1,4 @@
 import { VmsService } from './../vms.service';
-import { ImageSummaryRead } from './../vm';
 import { ChangeVmComponent } from './../change-vm/change-vm.component';
 import { LecturePermissions } from './../veranstaltung';
 import { Component, Injectable, OnInit } from '@angular/core';
@@ -200,20 +199,21 @@ export class VeranstaltungComponent implements OnInit {
           this.users = users;
           this.thriftService.getOsList().subscribe(
             (osList: OperatingSystem[]) => {
-              this.vmsService.getVms().then(
+              this.thriftService.getVms().then(
                 (vms: ImageSummaryRead[]) => {
                   vms.forEach(vm => {
-                    vm.osId = osList[vm.osId - 1].osName;
-                    vm.updateTime = this.datePipe.transform(vm.updateTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    vm.expireTime = this.datePipe.transform(vm.expireTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    vm.createTime = this.datePipe.transform(vm.createTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    vm.uploadTime = this.datePipe.transform(vm.uploadTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    for (let i = 0; i < users.length; i++) {
-                      if (vm.ownerId === users[i].userId) {
-                        vm.ownerId = users[i].lastName + ', ' + users[i].firstName;
-                        i = users.length;
-                      }
-                    }
+                    // TODO: In Frontend implementieren
+                    // vm.osId = osList[vm.osId - 1].osName;
+                    // vm.updateTime = this.datePipe.transform(vm.updateTime * 1000, 'dd.MM.yyyy, HH:mm');
+                    // vm.expireTime = this.datePipe.transform(vm.expireTime * 1000, 'dd.MM.yyyy, HH:mm');
+                    // vm.createTime = this.datePipe.transform(vm.createTime * 1000, 'dd.MM.yyyy, HH:mm');
+                    // vm.uploadTime = this.datePipe.transform(vm.uploadTime * 1000, 'dd.MM.yyyy, HH:mm');
+                    // for (let i = 0; i < users.length; i++) {
+                    //   if (vm.ownerId === users[i].userId) {
+                    //     vm.ownerId = users[i].lastName + ', ' + users[i].firstName;
+                    //     i = users.length;
+                    //   }
+                    // }
                   });
                   // tslint:disable-next-line: prefer-for-of
                   for (let i = 0; i < vms.length; i++) {

@@ -2,7 +2,6 @@ import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { ImageSummaryRead } from '../vm';
 import { UserInfo } from './../user';
 import { VmsService } from '../vms.service';
 import { ThriftService } from '../thrift.service';
@@ -68,23 +67,24 @@ export class VirtuelleMaschinenComponent implements OnInit {
           this.users = users;
           this.thriftService.getOsList().subscribe(
             (osList: OperatingSystem[]) => {
-              this.vmsService.getVms().then(
+              this.thriftService.getVms().then(
                 (vms: ImageSummaryRead[]) => {
                   vms.forEach(vm => {
+                    // TODO: In Frontend implementieren
                     // this.vmsService.getOsList().subscribe(
                     // (osList: OperatingSystems[]) => {
-                    vm.osId = osList[vm.osId - 1].osName;
+                    // vm.osId = osList[vm.osId - 1].osName;
                     // });
-                    vm.updateTime = this.datePipe.transform(vm.updateTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    vm.expireTime = this.datePipe.transform(vm.expireTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    vm.createTime = this.datePipe.transform(vm.createTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    vm.uploadTime = this.datePipe.transform(vm.uploadTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    for (let i = 0; i < users.length; i++) {
-                      if (vm.ownerId === users[i].userId) {
-                        vm.ownerId = users[i].lastName + ', ' + users[i].firstName;
-                        i = users.length;
-                      }
-                    }
+                    // vm.updateTime = this.datePipe.transform(vm.updateTime * 1000, 'dd.MM.yyyy, HH:mm');
+                    // vm.expireTime = this.datePipe.transform(vm.expireTime * 1000, 'dd.MM.yyyy, HH:mm');
+                    // vm.createTime = this.datePipe.transform(vm.createTime * 1000, 'dd.MM.yyyy, HH:mm');
+                    // vm.uploadTime = this.datePipe.transform(vm.uploadTime * 1000, 'dd.MM.yyyy, HH:mm');
+                    // for (let i = 0; i < users.length; i++) {
+                    //   if (vm.ownerId === users[i].userId) {
+                    //     vm.ownerId = users[i].lastName + ', ' + users[i].firstName;
+                    //     i = users.length;
+                    //   }
+                    // }
                   });
                   this.vms = new MatTableDataSource<ImageSummaryRead>(vms);
                   this.amountVms();
