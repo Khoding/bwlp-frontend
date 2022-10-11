@@ -23,4 +23,8 @@ export class ThriftService {
   async getVms(): Promise<ImageSummaryRead[]> {
     return await this.client.getImageList(this.userToken, null, 0);
   }
+
+  async getVm(id: string): Promise<ImageDetailsRead> {
+    return await this.client.getImageDetails(this.userToken, id);
+  }
 }
