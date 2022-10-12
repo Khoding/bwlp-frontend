@@ -189,7 +189,7 @@ export class CreateVmComponent implements OnInit {
     this.newImage.shareMode = 0;
     this.newImage.virtId = 'vmware';
     this.newImage.osId = this.form.osId.value;
-    this.vmService.postVm(this.newImage.imageName).then((imageId: string) => {
+    this.thriftService.postVm(this.newImage.imageName).then((imageId: string) => {
       this.vmService.requestImageVersionUpload({ imageBaseId: imageId, fileSize: this.fileSize }).subscribe((result: any) => {
         console.log(result);
       });

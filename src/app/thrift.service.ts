@@ -33,4 +33,8 @@ export class ThriftService {
     return from(this.client.getImagePermissions(this.userToken, id))
             .pipe(map(permissions => new Map(Object.entries(permissions))));
   }
+
+  async postVm(name: string): Promise<string> {
+    return this.client.createImage(this.userToken, name);
+  }
 }

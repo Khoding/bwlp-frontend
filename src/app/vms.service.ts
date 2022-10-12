@@ -12,11 +12,6 @@ export class VmsService {
   constructor(private http: HttpClient) {}
 
   //#region POST
-  async postVm(name: string): Promise<string> {
-    return this.http.post<string>(`${this.apiBaseURL}/vm`, {imageName: name},
-    { headers: new HttpHeaders({Authorization: JSON.parse(sessionStorage.getItem('user')).sessionId})}).toPromise();
-  }
-
   requestImageVersionUpload(requestInformations: {}): Observable<any> {
     return this.http.post<any>(`${this.apiBaseURL}/vm/upload`, requestInformations,
     { headers: new HttpHeaders({Authorization: JSON.parse(sessionStorage.getItem('user')).sessionId})});
