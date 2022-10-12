@@ -37,4 +37,8 @@ export class ThriftService {
   async postVm(name: string): Promise<string> {
     return this.client.createImage(this.userToken, name);
   }
+
+  requestImageVersionUpload(requestInformations: { imageBaseId: string, fileSize: Int64 }): Observable<any> {
+    return from(this.client.requestImageVersionUpload(this.userToken, requestInformations.imageBaseId, requestInformations.fileSize, null, null))
+  }
 }

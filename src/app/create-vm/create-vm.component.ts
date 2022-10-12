@@ -27,7 +27,7 @@ export class CreateVmComponent implements OnInit {
   createVmForm: FormGroup;
   users: UserInfo[];
   osList = [];
-  fileSize: number;
+  fileSize: Int64;
 
   // um den Dateinamen anzuzeigen
   url = '';
@@ -190,7 +190,7 @@ export class CreateVmComponent implements OnInit {
     this.newImage.virtId = 'vmware';
     this.newImage.osId = this.form.osId.value;
     this.thriftService.postVm(this.newImage.imageName).then((imageId: string) => {
-      this.vmService.requestImageVersionUpload({ imageBaseId: imageId, fileSize: this.fileSize }).subscribe((result: any) => {
+      this.thriftService.requestImageVersionUpload({ imageBaseId: imageId, fileSize: this.fileSize }).subscribe((result: any) => {
         console.log(result);
       });
       this.vmService.updateImageBase(this.newImage, imageId).subscribe((result: any) => {

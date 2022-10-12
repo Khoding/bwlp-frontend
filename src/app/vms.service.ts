@@ -11,13 +11,6 @@ export class VmsService {
 
   constructor(private http: HttpClient) {}
 
-  //#region POST
-  requestImageVersionUpload(requestInformations: {}): Observable<any> {
-    return this.http.post<any>(`${this.apiBaseURL}/vm/upload`, requestInformations,
-    { headers: new HttpHeaders({Authorization: JSON.parse(sessionStorage.getItem('user')).sessionId})});
-  }
-  //#endregion POST
-
   //#region DELETE
   deleteVms(id: string): Observable<string> {
     return this.http.delete<string>(`${this.apiBaseURL}/vms/${id}`,
