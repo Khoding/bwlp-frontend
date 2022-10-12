@@ -11,13 +11,6 @@ export class VmsService {
 
   constructor(private http: HttpClient) {}
 
-  //#region GET
-  getPermissions(id: string): Observable<Map<any, ImagePermissions>> {
-    return this.http.get<any>(`${this.apiBaseURL}/vms/permissions/${id}`,
-    { headers: new HttpHeaders({Authorization: JSON.parse(sessionStorage.getItem('user')).sessionId})});
-  }
-  //#endregion GET
-
   //#region POST
   async postVm(name: string): Promise<string> {
     return this.http.post<string>(`${this.apiBaseURL}/vm`, {imageName: name},

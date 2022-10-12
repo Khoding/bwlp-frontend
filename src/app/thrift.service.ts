@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { from } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,10 @@ export class ThriftService {
 
   async getVm(id: string): Promise<ImageDetailsRead> {
     return await this.client.getImageDetails(this.userToken, id);
+  }
+
+  getPermissions(id: string): Observable<Map<string, ImagePermissions>> {
+    return from(this.client.getImagePermissions(this.userToken, id))
+            .pipe(map(permissions => new Map(Object.entries(permissions))));
   }
 }
