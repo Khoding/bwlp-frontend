@@ -1,9 +1,8 @@
 import { VmsService } from './../vms.service';
 import { ChangeVmComponent } from './../change-vm/change-vm.component';
-import { LecturePermissions } from './../veranstaltung';
 import { Component, Injectable, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LectureRead, LectureWrite, Location } from '../veranstaltung';
+import { LectureWrite } from '../veranstaltung';
 import { UserInfo } from './../user';
 import { Input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -49,7 +48,7 @@ export class ChecklistDatabase {
     return this.dataChange.value;
   }
 
-  constructor(private veranstaltungenService: VeranstaltungenService) {
+  constructor(private veranstaltungenService: VeranstaltungenService, private thriftService: ThriftService) {
     if (sessionStorage.getItem('user') != null) {
       this.initialize();
     }
@@ -57,7 +56,7 @@ export class ChecklistDatabase {
   }
 
   initialize() {
-    this.veranstaltungenService.getLocations().subscribe((locations: Location[]) => {
+    this.thriftService.getLocations().subscribe((locations: Location[]) => {
       /* Erstellt die Knoten mit Hilfe des Json Objektes
       Als Ergebnis kommt eine Liste mit 'TodoItemNode' */
       const data = this.treeStructure(locations, 0);
@@ -238,27 +237,28 @@ export class VeranstaltungComponent implements OnInit {
       (users: UserInfo[]) => {
         this.users = users;
         if (id != null) {
-          this.veranstaltungsService.getEvent(id).then(
+          this.thriftService.getEvent(id).then(
             (lecture: LectureRead) => {
-              lecture.updateTime = this.datePipe.transform(lecture.updateTime * 1000, 'dd.MM.yyyy, HH:mm');
-              lecture.createTime = this.datePipe.transform(lecture.createTime * 1000, 'dd.MM.yyyy, HH:mm');
-              lecture.startTime = new Date(lecture.startTime * 1000);
-              lecture.endTime = new Date(lecture.endTime * 1000);
+              //TODO: put into frontend
+              // lecture.updateTime = this.datePipe.transform(lecture.updateTime * 1000, 'dd.MM.yyyy, HH:mm');
+              // lecture.createTime = this.datePipe.transform(lecture.createTime * 1000, 'dd.MM.yyyy, HH:mm');
+              // lecture.startTime = new Date(lecture.startTime * 1000);
+              // lecture.endTime = new Date(lecture.endTime * 1000);
               // tslint:disable-next-line: prefer-for-of
               for (let i = 0; i < this.users.length; i++) {
                 if (lecture.ownerId === users[i].userId) {
-                  lecture.ownerId = users[i].lastName + ', ' + users[i].firstName;
+                  // lecture.ownerId = users[i].lastName + ', ' + users[i].firstName;
                   this.currentOwner = this.users[i].userId;
                 } else {
                   this.possibleOwners.push(this.users[i]);
                 }
-                if (lecture.updaterId === users[i].userId) {
-                  lecture.updaterId = users[i].lastName + ', ' + users[i].firstName;
-                }
+                // if (lecture.updaterId === users[i].userId) {
+                //   lecture.updaterId = users[i].lastName + ', ' + users[i].firstName;
+                // }
               }
               this.lecture = lecture;
-              this.veranstaltungsService.getPermissions(id).subscribe(
-                (permissionMap: Map<any, LecturePermissions>) => {
+              this.thriftService.getLecturePermissions(id).subscribe(
+                (permissionMap: Map<string, LecturePermissions>) => {
                   this.users.forEach(user => {
                     if (permissionMap[user.userId] !== undefined) {
                       this.permissions.push({

@@ -124,7 +124,7 @@ export class VirtuelleMaschineComponent implements OnInit {
                 // }
               });
               this.virtuellemaschine = vm;
-              this.thriftService.getPermissions(id).subscribe(
+              this.thriftService.getVmPermissions(id).subscribe(
                 (permissionMap: Map<any, ImagePermissions>) => {
                   this.users.forEach(user => {
                     if (permissionMap[user.userId] !== undefined) {

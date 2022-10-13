@@ -17,6 +17,7 @@ export class ThriftService {
     this.client = new SatelliteServerClient(protocol);
   }
 
+  //#region VM 
   getOsList(): Observable<OperatingSystem[]> {
     return from(this.client.getOperatingSystems());  
   }
@@ -29,7 +30,7 @@ export class ThriftService {
     return await this.client.getImageDetails(this.userToken, id);
   }
 
-  getPermissions(id: string): Observable<Map<string, ImagePermissions>> {
+  getVmPermissions(id: string): Observable<Map<string, ImagePermissions>> {
     return from(this.client.getImagePermissions(this.userToken, id))
             .pipe(map(permissions => new Map(Object.entries(permissions))));
   }
@@ -61,4 +62,24 @@ export class ThriftService {
   setImageOwner(id: string, newOwnerId: string): Observable<void> {
     return from(this.client.setImageOwner(this.userToken, id, newOwnerId));
   }
+  //#endregion VM
+
+  //#region Lecture
+  async getEvents(): Promise<LectureSummary[]> {
+    return this.client.getLectureList(this.userToken, 0);
+  }
+
+  async getEvent(id: string): Promise<LectureRead> {
+    return this.client.getLectureDetails(this.userToken, id);
+  }
+
+  getLocations(): Observable<Location[]> {
+    return from(this.client.getLocations());
+  }
+
+  getLecturePermissions(id: string): Observable<Map<string, LecturePermissions>> {
+    return from(this.client.getLecturePermissions(this.userToken, id))
+            .pipe(map(permissions => new Map(Object.entries(permissions))));
+  }
+  //#endregion Lecture
 }

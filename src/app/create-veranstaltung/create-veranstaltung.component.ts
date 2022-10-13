@@ -5,7 +5,7 @@ import { map, startWith } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatDialog, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { LectureWrite, Location } from '../veranstaltung';
+import { LectureWrite } from '../veranstaltung';
 import { UserInfo } from './../user';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VmsService } from '../vms.service';
@@ -41,14 +41,14 @@ export class ChecklistDatabase {
     return this.dataChange.value;
   }
 
-  constructor(private veranstaltungenService: VeranstaltungenService) {
+  constructor(private veranstaltungenService: VeranstaltungenService, private thriftService: ThriftService) {
     if (sessionStorage.getItem('user') != null) {
       this.initialize();
     }
   }
 
   initialize() {
-    this.veranstaltungenService.getLocations().subscribe((locations: Location[]) => {
+    this.thriftService.getLocations().subscribe((locations: Location[]) => {
       /* Erstellt die Knoten mit Hilfe des Json Objektes
       Als Ergebnis kommt eine Liste mit 'TodoItemNode' */
       const data = this.treeStructure(locations, 0);
