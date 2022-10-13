@@ -193,18 +193,16 @@ export class CreateVmComponent implements OnInit {
       this.thriftService.requestImageVersionUpload({ imageBaseId: imageId, fileSize: this.fileSize }).subscribe((result: any) => {
         console.log(result);
       });
-      this.vmService.updateImageBase(this.newImage, imageId).subscribe((result: any) => {
+      this.thriftService.updateImageBase(this.newImage, imageId).subscribe(() => {
         // tslint:disable: no-shadowed-variable
         // tslint:disable: prefer-const
         let map = {};
         this.permissions.forEach(permission => {
           map[permission.userId] = { link: permission.link, download: permission.download, edit: permission.edit, admin: permission.admin };
         });
-        const userPermissions = { imageBaseId: imageId, permissions: map };
-        this.vmService.setPermissions(userPermissions).subscribe((result: any) => {
+        this.thriftService.setVmPermissions(imageId, map).subscribe((result: any) => {
           console.log(result);
         });
-        console.log(result);
         this.router.navigate([`/vms/${imageId}`]);
       });
     });

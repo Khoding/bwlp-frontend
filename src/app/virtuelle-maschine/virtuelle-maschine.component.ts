@@ -1,7 +1,6 @@
 import { ImagePermissions } from './../vm';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ImageBaseWrite } from '../vm';
 import { UserInfo } from './../user';
 import { VmsService } from '../vms.service';
 import { Observable } from 'rxjs';
@@ -285,18 +284,16 @@ export class VirtuelleMaschineComponent implements OnInit {
     this.editVM.virtId = this.virtuellemaschine.virtId;
     this.editVM.osId = this.form.osId.value;
     const id = this.route.snapshot.paramMap.get('id');
-    this.vmsService.updateImageBase(this.editVM, id).subscribe((result: any) => {
+    this.thriftService.updateImageBase(this.editVM, id).subscribe(() => {
       // tslint:disable: no-shadowed-variable
       // tslint:disable: prefer-const
       let map = {};
       this.permissions.forEach(permission => {
         map[permission.userId] = { link: permission.link, download: permission.download, edit: permission.edit, admin: permission.admin };
       });
-      const userPermissions = { imageBaseId: id, permissions: map };
-      this.vmsService.setPermissions(userPermissions).subscribe((result: any) => {
+      this.thriftService.setVmPermissions(id, map).subscribe((result: any) => {
         console.log(result);
       });
-      console.log(result);
       this.router.navigate([`/vms`]);
     });
   }
@@ -311,9 +308,8 @@ export class VirtuelleMaschineComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(newOwner => {
       if (newOwner !== undefined) {
-        const owner = { imageBaseId: this.route.snapshot.paramMap.get('id'), newOwnerId: newOwner };
-        this.vmsService.setImageOwner(owner).subscribe((result: any) => {
-          console.log(result);
+        const imageBaseId = this.route.snapshot.paramMap.get('id');
+        this.thriftService.setImageOwner(imageBaseId, newOwner).subscribe(() => {
           this.router.navigate([`/vms`]);
         });
       }

@@ -49,4 +49,16 @@ export class ThriftService {
   deleteVmVersion(id: string): Observable<void> {
     return from(this.client.deleteImageVersion(this.userToken, id));
   }
+
+  updateImageBase(vm: ImageBaseWrite, id: string): Observable<void> {
+    return from(this.client.updateImageBase(this.userToken, id, vm));
+  }
+
+  setVmPermissions(id: string, permissions: { [k: string]: ImagePermissions }): Observable<void> {
+    return from(this.client.writeImagePermissions(this.userToken, id, permissions));
+  }
+
+  setImageOwner(id: string, newOwnerId: string): Observable<void> {
+    return from(this.client.setImageOwner(this.userToken, id, newOwnerId));
+  }
 }
