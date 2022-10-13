@@ -41,4 +41,12 @@ export class ThriftService {
   requestImageVersionUpload(requestInformations: { imageBaseId: string, fileSize: Int64 }): Observable<any> {
     return from(this.client.requestImageVersionUpload(this.userToken, requestInformations.imageBaseId, requestInformations.fileSize, null, null))
   }
+
+  deleteVms(id: string): Observable<void> {
+    return from(this.client.deleteImageBase(this.userToken, id));
+  }
+
+  deleteVmVersion(id: string): Observable<void> {
+    return from(this.client.deleteImageVersion(this.userToken, id));
+  }
 }

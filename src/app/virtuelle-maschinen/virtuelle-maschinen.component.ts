@@ -111,10 +111,7 @@ export class VirtuelleMaschinenComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
         this.selection.selected.forEach(item => {
-          this.vmsService.deleteVms(item.imageBaseId).subscribe(
-            (response: string) => {
-              console.log(response);
-            });
+          this.thriftService.deleteVms(item.imageBaseId).subscribe();
         });
       }
       this.getVms();

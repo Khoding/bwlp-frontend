@@ -11,18 +11,6 @@ export class VmsService {
 
   constructor(private http: HttpClient) {}
 
-  //#region DELETE
-  deleteVms(id: string): Observable<string> {
-    return this.http.delete<string>(`${this.apiBaseURL}/vms/${id}`,
-    { headers: new HttpHeaders({Authorization: JSON.parse(sessionStorage.getItem('user')).sessionId})});
-  }
-
-  deleteVmVersion(id: string): Observable<string> {
-    return this.http.delete<string>(`${this.apiBaseURL}/vms/version/${id}`,
-    { headers: new HttpHeaders({Authorization: JSON.parse(sessionStorage.getItem('user')).sessionId})});
-  }
-  //#endregion DELETE
-
   //#region PUT
   updateImageBase(vm: ImageBaseWrite, id: string) {
     return this.http.put<any>(`${this.apiBaseURL}/vms/${id}`, vm,

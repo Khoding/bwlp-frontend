@@ -262,10 +262,7 @@ export class VirtuelleMaschineComponent implements OnInit {
 
   // VM-Version kann gelöscht werden
   deleteImageVersion(id: string) {
-    this.vmsService.deleteVmVersion(id).subscribe(
-      (response: string) => {
-        console.log(response);
-      });
+    this.thriftService.deleteVmVersion(id).subscribe();
     this.getVm();
   }
 
