@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UserInfo } from './../user';
-import { VmsService } from '../vms.service';
 import { ThriftService } from '../thrift.service';
 import { UserService } from './../user.service';
 import { DatePipe } from '@angular/common';
@@ -29,7 +28,6 @@ export class VirtuelleMaschinenComponent implements OnInit {
     'version', 'gesamtgroesse'];
 
   constructor(
-    private vmsService: VmsService,
     private thriftService: ThriftService,
     private userService: UserService,
     private datePipe: DatePipe,

@@ -2,7 +2,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, MatTableDataSource} from '@angular/material';
 import {ChangeOwnerData} from '../virtuelle-maschine/virtuelle-maschine.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ImageSummaryRead} from '../vm';
 
 @Component({
   selector: 'app-change-owner',

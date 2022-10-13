@@ -5,16 +5,14 @@ import { map, startWith } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatDialog, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { LectureWrite } from '../veranstaltung';
 import { UserInfo } from './../user';
 import { ActivatedRoute, Router } from '@angular/router';
-import { VmsService } from '../vms.service';
 import { ThriftService } from '../thrift.service';
 import { UserService } from './../user.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { VeranstaltungenService } from '../veranstaltungen.service';
 import { DatePipe } from '@angular/common';
 import { AenderungenVerwerfenDialogComponent } from './../aenderungen-verwerfen-dialog/aenderungen-verwerfen-dialog.component';
+import Int64 from 'node-int64';
 
 //#region Baumstruktur
 export class TodoItemNode {
@@ -41,7 +39,7 @@ export class ChecklistDatabase {
     return this.dataChange.value;
   }
 
-  constructor(private veranstaltungenService: VeranstaltungenService, private thriftService: ThriftService) {
+  constructor(private thriftService: ThriftService) {
     if (sessionStorage.getItem('user') != null) {
       this.initialize();
     }
@@ -128,7 +126,7 @@ export class CreateVeranstaltungComponent implements OnInit {
 
   constructor(
     private database: ChecklistDatabase, private route: ActivatedRoute, private router: Router,
-    private vmsService: VmsService, private formBuilder: FormBuilder, private veranstaltungsServive: VeranstaltungenService,
+    private formBuilder: FormBuilder,
     private datePipe: DatePipe, private thriftService: ThriftService, private userService: UserService, public dialog: MatDialog
   ) {
     //#region Baum related
@@ -492,17 +490,17 @@ export class CreateVeranstaltungComponent implements OnInit {
     this.newLecture.autoUpdate = this.form.autoUpdate.value;
     this.newLecture.isEnabled = this.form.isEnabled.value;
     this.newLecture.locationIds = this.selectedRooms.sort();
-    this.newLecture.startTime = (new Date('' + (this.form.startDay.value as string) + 'T' +
-      (this.form.startTime.value as string) + ':00').getTime() / 1000);
-    this.newLecture.endTime = (new Date('' + (this.form.endDay.value as string) + 'T' +
-      (this.form.endTime.value as string) + ':00').getTime() / 1000);
+    this.newLecture.startTime = new Int64((new Date('' + (this.form.startDay.value as string) + 'T' +
+      (this.form.startTime.value as string) + ':00').getTime() / 1000));
+    this.newLecture.endTime = new Int64((new Date('' + (this.form.endDay.value as string) + 'T' +
+      (this.form.endTime.value as string) + ':00').getTime() / 1000));
     this.newLecture.isExam = this.form.isExam.value;
     this.newLecture.hasInternetAccess = this.form.hasInternetAccess.value;
     this.newLecture.defaultPermissions.edit = this.form.edit.value;
     this.newLecture.defaultPermissions.admin = this.form.admin.value;
     this.newLecture.limitToLocations = this.form.limitToLocations.value;
     this.newLecture.hasUsbAccess = this.form.hasUsbAccess.value;
-    this.veranstaltungsServive.postEvent(this.newLecture).then((lecture: any) => {
+    this.thriftService.postEvent(this.newLecture).then((lecture: string) => {
       if (this.permissions.length > 0) {
         // tslint:disable: prefer-const
         // tslint:disable-next-line: no-shadowed-variable
@@ -510,9 +508,7 @@ export class CreateVeranstaltungComponent implements OnInit {
         this.permissions.forEach(permission => {
           map[permission.userId] = { edit: permission.edit, admin: permission.admin };
         });
-        const userPermissions = { lectureId: lecture, permissions: map };
-        this.veranstaltungsServive.setPermissions(userPermissions).subscribe((result: any) => {
-          console.log(result);
+        this.thriftService.setLecturePermissions(lecture, map).subscribe(() => {
           this.router.navigate([`/veranstaltungen/${lecture}`]);
         });
       } else {

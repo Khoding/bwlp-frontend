@@ -1,8 +1,6 @@
 import { Router } from '@angular/router';
 import { UserService } from './../user.service';
-import { VmsService } from './../vms.service';
 import { ThriftService } from '../thrift.service';
-import { ImageBaseWrite } from './../vm';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
@@ -36,7 +34,6 @@ export class CreateVmComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private vmService: VmsService,
     private thriftService: ThriftService,
     private userService: UserService,
     private router: Router,

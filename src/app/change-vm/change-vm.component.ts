@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { ImageSummaryRead } from '../vm';
 import { ChangeVmData } from '../veranstaltung/veranstaltung.component';
 
 @Component({

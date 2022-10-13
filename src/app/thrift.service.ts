@@ -81,5 +81,25 @@ export class ThriftService {
     return from(this.client.getLecturePermissions(this.userToken, id))
             .pipe(map(permissions => new Map(Object.entries(permissions))));
   }
+
+  async postEvent(lecture: LectureWrite): Promise<string> {
+    return this.client.createLecture(this.userToken, lecture);
+  }
+
+  deleteEvent(id: string): Observable<void> {
+    return from(this.client.deleteLecture(this.userToken, id));
+  }
+
+  setLecturePermissions(id: string, permissions: { [k: string]: LecturePermissions }): Observable<void> {
+    return from(this.client.writeLecturePermissions(this.userToken, id, permissions));
+  }
+
+  updateLecture(lecture: LectureWrite, id: string): Observable<void> {
+    return from(this.client.updateLecture(this.userToken, id, lecture));
+  }
+
+  setLectureOwner(id: string, newOwnerId: string): Observable<void> {
+    return from(this.client.setLectureOwner(this.userToken, id, newOwnerId));
+  }
   //#endregion Lecture
 }

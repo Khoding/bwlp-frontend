@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
-import { VeranstaltungenService } from '../veranstaltungen.service';
 import { UserService } from './../user.service';
 import { UserInfo } from './../user';
 import { DatePipe } from '@angular/common';
@@ -27,7 +26,6 @@ export class VeranstaltungenComponent implements OnInit {
   displayedColumns = ['select', 'name', 'besitzer', 'startdatum', 'ablaufdatum', 'aktiviert', 'vmgueltig'];
 
   constructor(
-    private veranstaltungsService: VeranstaltungenService,
     private thriftService: ThriftService,
     private userService: UserService,
     private datePipe: DatePipe,
@@ -100,10 +98,7 @@ export class VeranstaltungenComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result === true) {
         this.selection.selected.forEach(item => {
-          this.veranstaltungsService.deleteEvent(item.lectureId).subscribe(
-            (response: string) => {
-              console.log(response);
-            });
+          this.thriftService.deleteEvent(item.lectureId).subscribe();
         });
       }
       this.selection = new SelectionModel<LectureSummary>(true, []);

@@ -1,8 +1,6 @@
-import { VmsService } from './../vms.service';
 import { ChangeVmComponent } from './../change-vm/change-vm.component';
 import { Component, Injectable, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LectureWrite } from '../veranstaltung';
 import { UserInfo } from './../user';
 import { Input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
@@ -11,12 +9,12 @@ import { map, startWith } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatDialog, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { VeranstaltungenService } from '../veranstaltungen.service';
 import { UserService } from './../user.service';
 import { ThriftService } from '../thrift.service';
 import { DatePipe } from '@angular/common';
 import { ChangeOwnerComponent } from '../change-owner/change-owner.component';
 import { AenderungenVerwerfenDialogComponent } from '../aenderungen-verwerfen-dialog/aenderungen-verwerfen-dialog.component';
+import Int64 from 'node-int64';
 
 export interface ChangeVmData {
   vms;
@@ -48,7 +46,7 @@ export class ChecklistDatabase {
     return this.dataChange.value;
   }
 
-  constructor(private veranstaltungenService: VeranstaltungenService, private thriftService: ThriftService) {
+  constructor(private thriftService: ThriftService) {
     if (sessionStorage.getItem('user') != null) {
       this.initialize();
     }
@@ -146,8 +144,8 @@ export class VeranstaltungComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute, private database: ChecklistDatabase,
-    private veranstaltungsService: VeranstaltungenService, private userService: UserService, private datePipe: DatePipe,
-    private formBuilder: FormBuilder, private router: Router, public dialog: MatDialog, private vmsService: VmsService,
+    private userService: UserService, private datePipe: DatePipe,
+    private formBuilder: FormBuilder, private router: Router, public dialog: MatDialog,
     private thriftService: ThriftService
   ) {
     //#region Baum related
@@ -566,10 +564,10 @@ export class VeranstaltungComponent implements OnInit {
     this.editLecture.imageVersionId = this.lecture.imageVersionId;
     this.editLecture.autoUpdate = this.form.autoUpdate.value;
     this.editLecture.isEnabled = this.form.isEnabled.value;
-    this.editLecture.startTime = (new Date('' + (this.form.startDay.value as string) + 'T' +
-      (this.form.startTime.value as string) + ':00').getTime() / 1000);
-    this.editLecture.endTime = (new Date('' + (this.form.endDay.value as string) + 'T' +
-      (this.form.endTime.value as string) + ':00').getTime() / 1000);
+    this.editLecture.startTime = new Int64((new Date('' + (this.form.startDay.value as string) + 'T' +
+      (this.form.startTime.value as string) + ':00').getTime() / 1000));
+    this.editLecture.endTime = new Int64((new Date('' + (this.form.endDay.value as string) + 'T' +
+      (this.form.endTime.value as string) + ':00').getTime() / 1000));
     this.editLecture.isExam = this.form.isExam.value;
     this.editLecture.hasInternetAccess = this.form.hasInternetAccess.value;
     this.editLecture.defaultPermissions.edit = this.form.edit.value;
@@ -578,18 +576,14 @@ export class VeranstaltungComponent implements OnInit {
     this.editLecture.hasUsbAccess = this.form.hasUsbAccess.value;
     this.editLecture.locationIds = this.lecture.locationIds.sort();
     const id = this.route.snapshot.paramMap.get('id');
-    this.veranstaltungsService.updateLecture(this.editLecture, id).subscribe((result: any) => {
+    this.thriftService.updateLecture(this.editLecture, id).subscribe(() => {
       // tslint:disable: no-shadowed-variable
       // tslint:disable: prefer-const
       let map = {};
       this.permissions.forEach(permission => {
         map[permission.userId] = { edit: permission.edit, admin: permission.admin };
       });
-      const userPermissions = { lectureId: id, permissions: map };
-      this.veranstaltungsService.setPermissions(userPermissions).subscribe((result: any) => {
-        console.log(result);
-      });
-      console.log(result);
+      this.thriftService.setLecturePermissions(id, map).subscribe();
       this.router.navigate([`/veranstaltungen`]);
     });
   }
@@ -604,9 +598,8 @@ export class VeranstaltungComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(newOwner => {
       if (newOwner !== undefined) {
-        const owner = { lectureId: this.route.snapshot.paramMap.get('id'), newOwnerId: newOwner };
-        this.veranstaltungsService.setLectureOwner(owner).subscribe((result: any) => {
-          console.log(result);
+        const lectureId = this.route.snapshot.paramMap.get('id');
+        this.thriftService.setLectureOwner(lectureId, newOwner).subscribe(() => {
           this.router.navigate([`/veranstaltungen`]);
         });
       }

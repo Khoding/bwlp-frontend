@@ -1,8 +1,6 @@
-import { ImagePermissions } from './../vm';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserInfo } from './../user';
-import { VmsService } from '../vms.service';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
@@ -54,7 +52,6 @@ export class VirtuelleMaschineComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private vmsService: VmsService,
     private thriftService: ThriftService,
     private userService: UserService,
     private datePipe: DatePipe,
