@@ -4,7 +4,6 @@ import { UserInfo } from './../user';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
-import { UserService } from './../user.service';
 import { ThriftService } from '../thrift.service';
 import { DatePipe } from '@angular/common';
 import { ChangeOwnerComponent } from '../change-owner/change-owner.component';
@@ -53,7 +52,6 @@ export class VirtuelleMaschineComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private thriftService: ThriftService,
-    private userService: UserService,
     private datePipe: DatePipe,
     private formBuilder: FormBuilder,
     public dialog: MatDialog
@@ -82,7 +80,7 @@ export class VirtuelleMaschineComponent implements OnInit {
   // Holt die Daten einer einzelnen VM vom Server
   getVm() {
     const id = this.route.snapshot.paramMap.get('id');
-    this.userService.getUserList().then(
+    this.thriftService.getUserList().subscribe(
       (users: UserInfo[]) => {
         this.users = users;
         if (id != null) {

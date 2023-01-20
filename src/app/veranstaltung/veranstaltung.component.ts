@@ -9,7 +9,6 @@ import { map, startWith } from 'rxjs/operators';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatDialog, MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
-import { UserService } from './../user.service';
 import { ThriftService } from '../thrift.service';
 import { DatePipe } from '@angular/common';
 import { ChangeOwnerComponent } from '../change-owner/change-owner.component';
@@ -144,7 +143,7 @@ export class VeranstaltungComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute, private database: ChecklistDatabase,
-    private userService: UserService, private datePipe: DatePipe,
+    private datePipe: DatePipe,
     private formBuilder: FormBuilder, private router: Router, public dialog: MatDialog,
     private thriftService: ThriftService
   ) {
@@ -191,7 +190,7 @@ export class VeranstaltungComponent implements OnInit {
     if (sessionStorage.getItem('user') == null) {
       this.router.navigate([`/`]);
     } else {
-      this.userService.getUserList().then(
+      this.thriftService.getUserList().subscribe(
         (users: UserInfo[]) => {
           this.users = users;
           this.thriftService.getOsList().subscribe(
@@ -231,7 +230,7 @@ export class VeranstaltungComponent implements OnInit {
   // Um die richtige Veranstaltung aus der data.ts mittels ID zu suchen & anzuzeigen
   getLecture() {
     const id = this.route.snapshot.paramMap.get('id');
-    this.userService.getUserList().then(
+    this.thriftService.getUserList().subscribe(
       (users: UserInfo[]) => {
         this.users = users;
         if (id != null) {

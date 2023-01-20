@@ -9,12 +9,14 @@ import { map } from 'rxjs/operators';
 export class ThriftService {
   private apiBaseURL = 'http://192.168.200.20:9070';
   private client: SatelliteServerClient;
+  private masterClient: MasterServerClient;
   private userToken = "059D4BFCB742B841CA319CD35B7358FC";
 
   constructor() {
     const transport: Thrift.Transport = new Thrift.Transport(this.apiBaseURL);
     const protocol: Thrift.Protocol = new Thrift.Protocol(transport);
     this.client = new SatelliteServerClient(protocol);
+    //this.masterClient = new MasterServerClient(protocol);
   }
 
   //#region VM 
@@ -102,4 +104,23 @@ export class ThriftService {
     return from(this.client.setLectureOwner(this.userToken, id, newOwnerId));
   }
   //#endregion Lecture
+
+  //#region Login
+  /*login(user: string, password: string): Observable<ClientSessionData> {
+    return from(this.masterClient.localAccountLogin(user, password));
+  }*/
+  // use fake login by simply passing the token
+  login(): string {
+    return this.userToken;
+  }
+  //#endregion Login
+
+  //#region User
+  getUserList(): Observable<UserInfo[]> {
+    this.client.getSupportedFeatures().then((res) => {
+      console.log(res);
+    })
+    return from(this.client.getUserList(this.userToken, 0));
+  }
+  //#endregion User
 }

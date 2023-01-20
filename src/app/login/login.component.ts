@@ -1,9 +1,9 @@
-import { UserData } from './../user';
 import { Component, OnInit } from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {LoginDialogComponent} from '../login-dialog/login-dialog.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LoginService} from '../login.service';
+import { ThriftService } from '../thrift.service';
 import {Router} from '@angular/router';
 
 @Component({
@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   constructor(public dialog: MatDialog,
               private formBuilder: FormBuilder,
               private loginservice: LoginService,
+              private thriftService: ThriftService,
               private router: Router) { }
 
   openDialog(): void {
@@ -54,15 +55,22 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-    this.loginservice.login(this.form.username.value, this.form.password.value).then((userData: UserData) => {
-      sessionStorage.setItem('user', JSON.stringify(userData));
+    /*this.thriftService.login(this.form.username.value, this.form.password.value).subscribe((clientSessionData: ClientSessionData) => {
+      sessionStorage.setItem('user', JSON.stringify(clientSessionData));
       this.loginfailed = false;
       this.satfailed = false;
       this.openDialog();
     }, error => {
       console.log(error.error);
       this.loginfailed = true;
-    });
+    });*/
+    // use temporary solution for login
+    sessionStorage.setItem('user', JSON.stringify(new ClientSessionData({ sessionId: '',  authToken: this.thriftService.login(), satellites: null, userInfo: null })))
+    console.log(JSON.parse(sessionStorage.getItem('user')));
+    this.thriftService.getVm('1').then((res) => {
+      console.log('this' + res);
+    })
+    this.router.navigate([`/vms`]);
   }
 
 }

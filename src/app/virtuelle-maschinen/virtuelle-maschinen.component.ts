@@ -4,7 +4,6 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UserInfo } from './../user';
 import { ThriftService } from '../thrift.service';
-import { UserService } from './../user.service';
 import { DatePipe } from '@angular/common';
 import { VirtuelleMaschinenDialogComponent } from '../virtuelle-maschinen-dialog/virtuelle-maschinen-dialog.component';
 
@@ -29,7 +28,6 @@ export class VirtuelleMaschinenComponent implements OnInit {
 
   constructor(
     private thriftService: ThriftService,
-    private userService: UserService,
     private datePipe: DatePipe,
     private router: Router,
     public dialog: MatDialog
@@ -60,7 +58,7 @@ export class VirtuelleMaschinenComponent implements OnInit {
     if (sessionStorage.getItem('user') == null) {
       this.router.navigate([`/`]);
     } else {
-      this.userService.getUserList().then(
+      this.thriftService.getUserList().subscribe(
         (users: UserInfo[]) => {
           this.users = users;
           this.thriftService.getOsList().subscribe(
@@ -90,7 +88,7 @@ export class VirtuelleMaschinenComponent implements OnInit {
             });
         },
         error => {
-          console.log(error.error.error);
+          console.log(error.error);
           this.router.navigate([`/`]);
         });
     }

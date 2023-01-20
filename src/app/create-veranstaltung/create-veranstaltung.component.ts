@@ -8,7 +8,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { UserInfo } from './../user';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ThriftService } from '../thrift.service';
-import { UserService } from './../user.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
 import { AenderungenVerwerfenDialogComponent } from './../aenderungen-verwerfen-dialog/aenderungen-verwerfen-dialog.component';
@@ -127,7 +126,7 @@ export class CreateVeranstaltungComponent implements OnInit {
   constructor(
     private database: ChecklistDatabase, private route: ActivatedRoute, private router: Router,
     private formBuilder: FormBuilder,
-    private datePipe: DatePipe, private thriftService: ThriftService, private userService: UserService, public dialog: MatDialog
+    private datePipe: DatePipe, private thriftService: ThriftService, public dialog: MatDialog
   ) {
     //#region Baum related
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
@@ -175,7 +174,7 @@ export class CreateVeranstaltungComponent implements OnInit {
   // Ebenfalls werden die Benutzer abgerufen, da diese für die Anzeige der VMs und der Benutzerrechte
   // unverzichtbar sind. Außerdem wird die OS Listee vom Server abgerufen.
   getVms() {
-    this.userService.getUserList().then(
+    this.thriftService.getUserList().subscribe(
       (users: UserInfo[]) => {
         this.users = users;
         this.users.forEach(user => {

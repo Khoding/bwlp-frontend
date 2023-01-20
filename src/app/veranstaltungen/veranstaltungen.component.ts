@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
-import { UserService } from './../user.service';
 import { UserInfo } from './../user';
 import { DatePipe } from '@angular/common';
 import { MatDialog, } from '@angular/material/dialog';
@@ -27,7 +26,6 @@ export class VeranstaltungenComponent implements OnInit {
 
   constructor(
     private thriftService: ThriftService,
-    private userService: UserService,
     private datePipe: DatePipe,
     private router: Router,
     public dialog: MatDialog
@@ -58,7 +56,7 @@ export class VeranstaltungenComponent implements OnInit {
   // Die Veranstaltungen werden vom NodeJS abgerufen
   // Alle Veranstaltungen werden in die Tabelle geladen
   getLectures() {
-    this.userService.getUserList().then(
+    this.thriftService.getUserList().subscribe(
       (users: UserInfo[]) => {
         this.users = users;
         this.thriftService.getEvents().then(

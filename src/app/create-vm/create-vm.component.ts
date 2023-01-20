@@ -1,5 +1,4 @@
 import { Router } from '@angular/router';
-import { UserService } from './../user.service';
 import { ThriftService } from '../thrift.service';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -35,7 +34,6 @@ export class CreateVmComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private thriftService: ThriftService,
-    private userService: UserService,
     private router: Router,
     public dialog: MatDialog
   ) { }
@@ -60,7 +58,7 @@ export class CreateVmComponent implements OnInit {
 
   // Ruft Informationen für Benutzer und Betriebssysteme ab
   getInformations() {
-    this.userService.getUserList().then(
+    this.thriftService.getUserList().subscribe(
       (users: UserInfo[]) => {
         this.users = users;
         this.users.forEach(user => {

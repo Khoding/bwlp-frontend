@@ -11,10 +11,6 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
-  async login(usern: string, passwd: string): Promise<UserData> {
-    return await this.http.post<any>(`${this.apiBaseURL}/login`, {username: usern, password: passwd}).toPromise();
-  }
-
   async logout(): Promise<any> {
     return await this.http.post<any>(`${this.apiBaseURL}/logout`,
     { headers: new HttpHeaders({Authorization: JSON.parse(sessionStorage.getItem('user')).sessionId})}).toPromise();
