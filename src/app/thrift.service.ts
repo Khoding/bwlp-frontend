@@ -7,16 +7,14 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ThriftService {
-  private apiBaseURL = 'http://192.168.200.20:9070';
+  private apiBaseURL = 'http://localhost:9070';
   private client: SatelliteServerClient;
-  private masterClient: MasterServerClient;
   private userToken = "059D4BFCB742B841CA319CD35B7358FC";
 
   constructor() {
     const transport: Thrift.Transport = new Thrift.Transport(this.apiBaseURL);
     const protocol: Thrift.Protocol = new Thrift.Protocol(transport);
     this.client = new SatelliteServerClient(protocol);
-    //this.masterClient = new MasterServerClient(protocol);
   }
 
   //#region VM 
