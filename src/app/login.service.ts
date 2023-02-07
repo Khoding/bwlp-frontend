@@ -11,11 +11,6 @@ export class LoginService {
 
   constructor(private http: HttpClient) {}
 
-  async logout(): Promise<any> {
-    return await this.http.post<any>(`${this.apiBaseURL}/logout`,
-    { headers: new HttpHeaders({Authorization: JSON.parse(sessionStorage.getItem('user')).sessionId})}).toPromise();
-  }
-
   async setSat(user: UserData, satellite: string): Promise<any> {
     return await this.http.post<any>(`${this.apiBaseURL}/SatAddr`, {userData: user, satAddr: satellite}).toPromise();
   }
