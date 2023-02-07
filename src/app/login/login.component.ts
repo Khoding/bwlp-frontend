@@ -3,8 +3,8 @@ import {MatDialog} from '@angular/material';
 import {LoginDialogComponent} from '../login-dialog/login-dialog.component';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {LoginService} from '../login.service';
-import { ThriftService } from '../thrift.service';
 import {Router} from '@angular/router';
+import { ThriftService } from '../thrift.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   constructor(public dialog: MatDialog,
               private formBuilder: FormBuilder,
               private loginservice: LoginService,
-              private thriftService: ThriftService,
+              private thriftservice: ThriftService,
               private router: Router) { }
 
   openDialog(): void {
@@ -28,8 +28,7 @@ export class LoginComponent implements OnInit {
       width: '600px',
     });
     dialogRef.afterClosed().subscribe(address => {
-      const user = JSON.parse(sessionStorage.getItem('user'));
-      this.loginservice.setSat(user, address).then((token: any) => {
+      this.thriftservice.setSat(address).then((token: any) => {
           this.router.navigate([`/vms`]);
         }, error => {
           console.log(error.error);
@@ -40,7 +39,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      token: ['', Validators.required]
+      password: ['', Validators.required]
     });
   }
 
@@ -54,7 +53,7 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-    /*this.thriftService.login(this.form.username.value, this.form.password.value).subscribe((clientSessionData: ClientSessionData) => {
+    this.loginservice.login('bwlp-test@uni-freiburg.de', this.form.password.value).subscribe((clientSessionData: ClientSessionData) => {
       sessionStorage.setItem('user', JSON.stringify(clientSessionData));
       this.loginfailed = false;
       this.satfailed = false;
@@ -62,9 +61,8 @@ export class LoginComponent implements OnInit {
     }, error => {
       console.log(error.error);
       this.loginfailed = true;
-    });*/
-    // use temporary solution for login
-    sessionStorage.setItem('user', JSON.stringify(new ClientSessionData({ sessionId: '',  authToken: this.form.token.value, satellites: null, userInfo: null })))
+    });
+    
     console.log(JSON.parse(sessionStorage.getItem('user')));
     this.router.navigate([`/vms`]);
   }

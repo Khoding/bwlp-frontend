@@ -7,15 +7,15 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ThriftService {
-  private apiBaseURL = 'http://localhost:9070';
+  // TODO: Make sure a valid satellite has been selected before performing any actions
+  private apiBaseURL = '198.162.200.1';
   private client: SatelliteServerClient;
-  private masterClient: MasterServerClient;
 
   constructor() {
+    // satellite client
     const transport: Thrift.Transport = new Thrift.Transport(this.apiBaseURL);
     const protocol: Thrift.Protocol = new Thrift.Protocol(transport);
     this.client = new SatelliteServerClient(protocol);
-    this.masterClient = new MasterServerClient(protocol);
   }
 
   //#region VM 
@@ -104,13 +104,6 @@ export class ThriftService {
   }
   //#endregion Lecture
 
-  //#region Login
-  login(user: string, password: string): Observable<ClientSessionData> {
-    return from(this.masterClient.localAccountLogin(user, password));
-  }
-
-  //#endregion Login
-
   //#region User
   getUserList(): Observable<UserInfo[]> {
     this.client.getSupportedFeatures().then((res) => {
@@ -119,4 +112,10 @@ export class ThriftService {
     return from(this.client.getUserList(JSON.parse(sessionStorage.getItem('user')).authToken, 0));
   }
   //#endregion User
+
+  async setSat(address: string): Promise<void> {
+    const transport: Thrift.Transport = new Thrift.Transport(address);
+    const protocol: Thrift.Protocol = new Thrift.Protocol(transport);
+    this.client = new SatelliteServerClient(protocol);
+  }
 }
