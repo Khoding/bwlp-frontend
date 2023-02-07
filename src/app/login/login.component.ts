@@ -40,8 +40,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      token: ['', Validators.required]
     });
   }
 
@@ -65,11 +64,8 @@ export class LoginComponent implements OnInit {
       this.loginfailed = true;
     });*/
     // use temporary solution for login
-    sessionStorage.setItem('user', JSON.stringify(new ClientSessionData({ sessionId: '',  authToken: this.thriftService.login(), satellites: null, userInfo: null })))
+    sessionStorage.setItem('user', JSON.stringify(new ClientSessionData({ sessionId: '',  authToken: this.form.token.value, satellites: null, userInfo: null })))
     console.log(JSON.parse(sessionStorage.getItem('user')));
-    this.thriftService.getVm('1').then((res) => {
-      console.log('this' + res);
-    })
     this.router.navigate([`/vms`]);
   }
 
