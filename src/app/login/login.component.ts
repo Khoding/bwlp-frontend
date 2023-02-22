@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
-  // Methode zum Einloggen eines Testaccounts
+  // login with fixed testaccount user
   login() {
     this.submitted = true;
     if (this.loginForm.invalid) {
@@ -55,6 +55,7 @@ export class LoginComponent implements OnInit {
     }
     this.loginservice.login('bwlp-test@uni-freiburg.de', this.form.password.value).subscribe((clientSessionData: ClientSessionData) => {
       sessionStorage.setItem('user', JSON.stringify(clientSessionData));
+      console.log(JSON.parse(sessionStorage.getItem('user')));
       this.loginfailed = false;
       this.satfailed = false;
       this.openDialog();
@@ -62,9 +63,6 @@ export class LoginComponent implements OnInit {
       console.log(error.error);
       this.loginfailed = true;
     });
-    
-    console.log(JSON.parse(sessionStorage.getItem('user')));
-    this.router.navigate([`/vms`]);
   }
 
 }

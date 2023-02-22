@@ -1,8 +1,7 @@
 import { UserData, Satellite } from './../user';
 import { Component, OnInit } from '@angular/core';
 import {MatDialogRef} from '@angular/material';
-import { LoginService } from '../login.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-login-dialog',
@@ -17,18 +16,15 @@ export class LoginDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<LoginDialogComponent>,
-    private loginservice: LoginService,
     private formBuilder: FormBuilder,
     ) { }
 
-  // Trägt auf den NodeJS Server den User in die Liste der angemeldeten User ein
-  // Enthält zudem auf welchem Satellite-Server sich der User verbindet
-  // Momentan noch Hardgecoded wegen der Testumgebung
+  // return thrift interface of selected sat server
   onClick(): void {
     if (this.setSatelliteAddress.controls.sattelite.value === 'testaccount') {
       this.dialogRef.close(this.setSatelliteAddress.controls.address.value);
     } else {
-      this.dialogRef.close(this.setSatelliteAddress.controls.sattelite.value);
+      this.dialogRef.close(`https://${this.setSatelliteAddress.controls.sattelite.value}/thrift/`);
     }
   }
 

@@ -16,10 +16,10 @@
             <h5>Vorgegebene Server</h5>
           </div>
         </div>
-        <div class="form-group row" *ngFor="let sattelite of this.user.satellites">
+        <div class="form-group row" *ngFor="let sattelite of this.user.satellites; let i=index">
           <div class="form-check form-check-inline">
             <div class="col-12">
-              <input class="form-check-input" id="sattelite" type="radio" formControlName="sattelite" value="{{sattelite.addressList[1]}}">
+              <input class="form-check-input" id="sattelite_{{ i }}" type="radio" formControlName="sattelite" value="{{sattelite.addressList[0]}}">
               <label class="form-check-label" for="sattelite">{{ sattelite.displayName }}</label>
             </div>
           </div>
