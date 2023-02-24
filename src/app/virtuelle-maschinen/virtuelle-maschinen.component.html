@@ -73,7 +73,7 @@
       <!-- Betriebssystem Column -->
       <ng-container matColumnDef="betriebssystem">
         <mat-header-cell *matHeaderCellDef> OS </mat-header-cell>
-        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.osId}}</mat-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{osList[element.osId - 1].osName}}</mat-cell>
       </ng-container>
 
       <!-- Besitzer Column -->
@@ -85,13 +85,13 @@
       <!-- Geändert Column -->
       <ng-container matColumnDef="geaendert">
         <mat-header-cell *matHeaderCellDef> Geändert </mat-header-cell>
-        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.updateTime}}</mat-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.updateTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
       </ng-container>
 
       <!-- Ablaufdatum Column -->
       <ng-container matColumnDef="ablaufdatum">
         <mat-header-cell *matHeaderCellDef> Ablaufdatum </mat-header-cell>
-        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.expireTime}}</mat-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.expireTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
       </ng-container>
 
       <!-- Größe Column -->

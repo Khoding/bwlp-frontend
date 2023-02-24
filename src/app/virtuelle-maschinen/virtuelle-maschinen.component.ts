@@ -15,11 +15,11 @@ export interface VmDialogData {
   selector: 'app-virtuelle-maschinen',
   templateUrl: './virtuelle-maschinen.component.html',
   styleUrls: ['./virtuelle-maschinen.component.css'],
-  providers: [DatePipe]
 })
 export class VirtuelleMaschinenComponent implements OnInit {
   vms: MatTableDataSource<ImageSummaryRead>;
   users: UserInfo[];
+  osList: OperatingSystem[];
   selection = new SelectionModel<ImageSummaryRead>(true, []);
   amountOfVms: number;
 
@@ -28,7 +28,6 @@ export class VirtuelleMaschinenComponent implements OnInit {
 
   constructor(
     private thriftService: ThriftService,
-    private datePipe: DatePipe,
     private router: Router,
     public dialog: MatDialog
   ) { }
@@ -63,26 +62,19 @@ export class VirtuelleMaschinenComponent implements OnInit {
           this.users = users;
           this.thriftService.getOsList().subscribe(
             (osList: OperatingSystem[]) => {
+              this.osList = osList;
               this.thriftService.getVms().then(
                 (vms: ImageSummaryRead[]) => {
                   vms.forEach(vm => {
-                    // TODO: In Frontend implementieren
-                    // this.vmsService.getOsList().subscribe(
-                    // (osList: OperatingSystems[]) => {
-                    // vm.osId = osList[vm.osId - 1].osName;
-                    // });
-                    // vm.updateTime = this.datePipe.transform(vm.updateTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    // vm.expireTime = this.datePipe.transform(vm.expireTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    // vm.createTime = this.datePipe.transform(vm.createTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    // vm.uploadTime = this.datePipe.transform(vm.uploadTime * 1000, 'dd.MM.yyyy, HH:mm');
-                    // for (let i = 0; i < users.length; i++) {
-                    //   if (vm.ownerId === users[i].userId) {
-                    //     vm.ownerId = users[i].lastName + ', ' + users[i].firstName;
-                    //     i = users.length;
-                    //   }
-                    // }
+                    // TODO: make transformation to owner name from id display only (?)
+                    for (let i = 0; i < users.length; i++) {
+                      if (vm.ownerId === users[i].userId) {
+                        vm.ownerId = users[i].lastName + ', ' + users[i].firstName;
+                        i = users.length;
+                      }
+                    }
                   });
-                  this.vms = new MatTableDataSource<ImageSummaryRead>(vms);
+                  this.vms = new MatTableDataSource(vms);
                   this.amountVms();
                 });
             });
