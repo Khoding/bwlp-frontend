@@ -12,7 +12,10 @@ export class ThriftService {
   private client: SatelliteServerClient;
 
   constructor() {
-    // satellite client
+    // get satellite address from session storage if present
+    if (sessionStorage.getItem('sat') !== null) {
+      this.apiBaseURL = sessionStorage.getItem('sat');
+    }
     const transport: Thrift.Transport = new Thrift.Transport(this.apiBaseURL);
     const protocol: Thrift.Protocol = new Thrift.Protocol(transport);
     this.client = new SatelliteServerClient(protocol);
