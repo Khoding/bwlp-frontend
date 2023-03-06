@@ -59,7 +59,7 @@
               <label class="control-label col-12 col-sm-5 col-md-3 col-lg-3 col-xl-3 description"
                      for="besitzer-veranstaltung"><b>Besitzer</b></label>
               <div class="col-10 col-sm-4 col-md-5 col-lg-4  col-xl-3">
-                <span id="besitzer-veranstaltung">{{lecture.ownerId}}</span>
+                <span id="besitzer-veranstaltung">{{lecture.ownerId | matchId: users}}</span>
               </div>
               <div class="col-2 col-sm-3 col-md-4 col-lg-5 col-xl-6" *ngIf="admin">
                 <a (click)="changeOwner()" class="edit cursorPointer"><i class="fa fa-pencil-square-o"></i><b> Ändern</b></a>
@@ -86,7 +86,7 @@
               <label class="control-label col-5 col-md-3 description" for="erstellt-am-veranstaltung"><b>Erstellt
                 am</b></label>
               <div class="col-7 col-md-9">
-                <span id="erstellt-am-veranstaltung">{{lecture.createTime}}</span>
+                <span id="erstellt-am-veranstaltung">{{lecture.createTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</span>
               </div>
             </div>
             <div class="form-group row">
@@ -94,12 +94,12 @@
                      for="geaendert-am-veranstaltung"><b>Geändert
                 am</b></label>
               <div class="col-7 col-md-3 col-lg-3 col-xl-2">
-                <span id="geaendert-am-veranstaltung">{{lecture.updateTime}}</span>
+                <span id="geaendert-am-veranstaltung">{{lecture.updateTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</span>
               </div>
               <label class="control-label col-5 col-md-2 col-lg-1 col-xl-1 description"
                      for="geaendert-durch-veranstaltung"><b>durch</b></label>
               <div class="col-7 col-md-4 col-lg-5 col-xl-6">
-                <span id="geaendert-durch-veranstaltung">{{lecture.updaterId}}</span>
+                <span id="geaendert-durch-veranstaltung">{{lecture.updaterId | matchId: users}}</span>
               </div>
             </div>
             <div class="form-group row" *ngIf="edit; else verknuepft">
@@ -138,7 +138,7 @@
               </div>
               <ng-template #startday>
                 <div class="col-7 col-sm-5 col-md-5 col-lg-3 col-xl-2">
-                  <p>{{this.datePipe.transform(lecture.startTime, 'dd.MM.yyyy')}}</p>
+                  <p>{{lecture.startTime * 1000 | date:'dd.MM.yyyy'}}</p>
                 </div>
               </ng-template>
               <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2 " *ngIf="edit; else starttime">
@@ -147,7 +147,7 @@
               </div>
               <ng-template #starttime>
                 <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2 ">
-                 <p>{{this.datePipe.transform(lecture.startTime, 'HH:mm')}}</p>
+                 <p>{{lecture.startTime * 1000 | date:'HH:mm'}}</p>
                 </div>
               </ng-template>
               <div class="col-12 offset-md-3 offset-lg-0 col-lg-2 col-xl-3 mt-1 invalid"
@@ -168,7 +168,7 @@
               </div>
               <ng-template #endday>
                 <div class="col-7 col-sm-5 col-md-5 col-lg-3 col-xl-2">
-                  <p>{{this.datePipe.transform(lecture.endTime, 'dd.MM.yyyy')}}</p>
+                  <p>{{lecture.endTime * 1000 | date:'dd.MM.yyyy'}}</p>
                 </div>
               </ng-template>
               <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2" *ngIf="edit; else endtime">
@@ -177,7 +177,7 @@
               </div>
               <ng-template #endtime>
                 <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2">
-                  <p>{{this.datePipe.transform(lecture.endTime, 'HH:mm')}}</p>
+                  <p>{{lecture.endTime * 1000 | date:'HH:mm'}}</p>
                 </div>
               </ng-template>
               <div class="col-12 col-md-4 offset-md-3 offset-lg-0 col-lg-4 mt-2 mt-lg-0">

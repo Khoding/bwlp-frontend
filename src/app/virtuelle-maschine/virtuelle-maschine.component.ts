@@ -86,38 +86,13 @@ export class VirtuelleMaschineComponent implements OnInit {
         if (id != null) {
           this.thriftService.getVm(id).then(
             (vm: ImageDetailsRead) => {
-              // TODO: Begehbung von Bad Practice (ins Frontend)
               this.thriftService.getOsList().subscribe(
                 (osList: OperatingSystem[]) => {
-                  // vm.osId = osList[vm.osId - 1].osName;
                   osList.forEach(os => {
                     this.osList.push(os.osName);
                   });
                 });
-              // vm.updateTime = this.datePipe.transform(vm.updateTime * 1000, 'dd.MM.yyyy, HH:mm');
-              // vm.createTime = this.datePipe.transform(vm.createTime * 1000, 'dd.MM.yyyy, HH:mm');
-              // tslint:disable-next-line: prefer-for-of
-              for (let i = 0; i < this.users.length; i++) {
-                if (vm.ownerId === this.users[i].userId) {
-                  this.currentOwner = this.users[i].userId;
-                  // vm.ownerId = this.users[i].lastName + ', ' + this.users[i].firstName;
-                } else {
-                  this.possibleOwners.push(this.users[i]);
-                }
-                if (vm.updaterId === this.users[i].userId) {
-                  // vm.updaterId = this.users[i].lastName + ', ' + this.users[i].firstName;
-                }
-              }
-              vm.versions.forEach(version => {
-                // version.createTime = this.datePipe.transform(version.createTime * 1000, 'dd.MM.yyyy, HH:mm');
-                // version.expireTime = this.datePipe.transform(version.expireTime * 1000, 'dd.MM.yyyy, HH:mm');
-                // for (let i = 0; i < this.users.length; i++) {
-                //   if (version.uploaderId === this.users[i].userId) {
-                //     version.uploaderId = this.users[i].lastName + ', ' + this.users[i].firstName;
-                //     i = this.users.length;
-                //   }
-                // }
-              });
+
               this.virtuellemaschine = vm;
               this.thriftService.getVmPermissions(id).subscribe(
                 (permissionMap: Map<any, ImagePermissions>) => {

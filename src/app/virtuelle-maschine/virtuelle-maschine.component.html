@@ -58,7 +58,7 @@
           <div class="form-group row">
             <label class="control-label col-12 col-sm-5 col-md-3 description" for="besitzer-virtuellemaschine"><b>Besitzer</b></label>
             <div class="col-10 col-sm-4 col-md-4">
-              <span id="besitzer-virtuellemaschine">{{virtuellemaschine.ownerId}}</span>
+              <span id="besitzer-virtuellemaschine">{{virtuellemaschine.ownerId | matchId: users}}</span>
             </div>
             <div class="col-2 col-sm-3 col-md-5" *ngIf="this.admin">
               <a (click)="changeOwner()" class="edit cursorPointer"><i class="fa fa-pencil-square-o"></i><b> Ändern</b></a>
@@ -68,19 +68,19 @@
             <label class="control-label col-5 col-md-3 description" for="erstellt-virtuellemaschine"><b>Erstellt
               am</b></label>
             <div class="col-7 col-md-9">
-              <span id="erstellt-virtuellemaschine">{{virtuellemaschine.createTime}}</span>
+              <span id="erstellt-virtuellemaschine">{{virtuellemaschine.createTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</span>
             </div>
           </div>
           <div class="form-group row">
             <label class="control-label col-5 col-md-3 description" for="geaendertam-virtuellemaschine"><b>Geändert
               am</b></label>
             <div class="col-7 col-md-3">
-              <span id="geaendertam-virtuellemaschine">{{virtuellemaschine.updateTime}}</span>
+              <span id="geaendertam-virtuellemaschine">{{virtuellemaschine.updateTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</span>
             </div>
             <label class="control-label col-5 col-md-1 description"
                    for="geaendertdurch-virtuellemaschine"><b>durch</b></label>
             <div class="col-7 col-md-5">
-              <span id="geaendertdurch-virtuellemaschine">{{virtuellemaschine.updaterId}}</span>
+              <span id="geaendertdurch-virtuellemaschine">{{virtuellemaschine.updaterId | matchId: users}}</span>
             </div>
           </div>
           <div class="form-group row">
@@ -93,7 +93,7 @@
             </div>
             <ng-template #os>
               <div class="col-12 col-md-9">
-                <p>{{this.virtuellemaschine.osId}}</p>
+                <p>{{osList[this.virtuellemaschine.osId]}}</p>
               </div>
             </ng-template>
           </div>
@@ -148,9 +148,9 @@
                 <tbody>
                   <tr class="darkcontent" *ngFor="let version of virtuellemaschine.versions">
                     <td *ngIf="edit"><i class="fa fa-minus fontawesomeicons" (click)="deleteImageVersion(version.versionId)"></i></td>
-                    <td>{{ version.createTime }}</td>
-                    <td>{{ version.expireTime }}</td>
-                    <td>{{ version.uploaderId }}</td>
+                    <td>{{ version.createTime * 1000 | date:'dd.MM.yyyy, HH:mm' }}</td>
+                    <td>{{ version.expireTime * 1000 | date:'dd.MM.yyyy, HH:mm' }}</td>
+                    <td>{{ version.uploaderId | matchId: users}}</td>
                     <td><input type="checkbox" [checked]="version.isValid" disabled></td>
                     <td>{{ version.fileSize }}</td>
                     <td>{{ version.versionId }}</td>
