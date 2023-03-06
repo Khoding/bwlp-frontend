@@ -75,19 +75,19 @@
       <!-- Besitzer Column -->
       <ng-container matColumnDef="besitzer">
         <mat-header-cell *matHeaderCellDef> Besitzer </mat-header-cell>
-        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.ownerId}}</mat-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.ownerId | matchId: users}}</mat-cell>
       </ng-container>
 
       <!-- Startdatum Column -->
       <ng-container matColumnDef="startdatum">
         <mat-header-cell *matHeaderCellDef> Startdatum </mat-header-cell>
-        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.startTime}}</mat-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.startTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
       </ng-container>
 
       <!-- Ablaufdatum Column -->
       <ng-container matColumnDef="ablaufdatum">
         <mat-header-cell *matHeaderCellDef> Ablaufdatum </mat-header-cell>
-        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.endTime}}</mat-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.endTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
       </ng-container>
 
       <!--Aktiviert Column-->

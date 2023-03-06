@@ -65,15 +65,6 @@ export class VirtuelleMaschinenComponent implements OnInit {
               this.osList = osList;
               this.thriftService.getVms().then(
                 (vms: ImageSummaryRead[]) => {
-                  vms.forEach(vm => {
-                    // TODO: make transformation to owner name from id display only (?)
-                    for (let i = 0; i < users.length; i++) {
-                      if (vm.ownerId === users[i].userId) {
-                        vm.ownerId = users[i].lastName + ', ' + users[i].firstName;
-                        i = users.length;
-                      }
-                    }
-                  });
                   this.vms = new MatTableDataSource(vms);
                   this.amountVms();
                 });

@@ -3,7 +3,6 @@ import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
 import { UserInfo } from './../user';
-import { DatePipe } from '@angular/common';
 import { MatDialog, } from '@angular/material/dialog';
 import { VeranstaltungenDialogComponent } from '../veranstaltungen-dialog/veranstaltungen-dialog.component';
 import { ThriftService } from '../thrift.service';
@@ -15,7 +14,6 @@ export interface DialogData {
   selector: 'app-veranstaltungen',
   templateUrl: './veranstaltungen.component.html',
   styleUrls: ['./veranstaltungen.component.css'],
-  providers: [DatePipe]
 })
 export class VeranstaltungenComponent implements OnInit {
   lectures: MatTableDataSource<LectureSummary>;
@@ -26,7 +24,6 @@ export class VeranstaltungenComponent implements OnInit {
 
   constructor(
     private thriftService: ThriftService,
-    private datePipe: DatePipe,
     private router: Router,
     public dialog: MatDialog
   ) { }
@@ -61,18 +58,6 @@ export class VeranstaltungenComponent implements OnInit {
         this.users = users;
         this.thriftService.getEvents().then(
           (lectures: LectureSummary[]) => {
-            lectures.forEach(lecture => {
-              // TODO: should be in frontend
-              // lecture.startTime = this.datePipe.transform(lecture.startTime * 1000, 'dd.MM.yyyy, HH:mm');
-              // lecture.endTime = this.datePipe.transform(lecture.endTime * 1000, 'dd.MM.yyyy, HH:mm');
-              // lecture.lastUsed = this.datePipe.transform(lecture.lastUsed * 1000, 'dd.MM.yyyy, HH:mm');
-              // for (let i = 0; i < users.length; i++) {
-              //   if (lecture.ownerId === users[i].userId) {
-              //     lecture.ownerId = users[i].lastName + ', ' + users[i].firstName;
-              //     i = users.length;
-              //   }
-              // }
-            });
             this.lectures = new MatTableDataSource<LectureSummary>(lectures);
             this.amountEvents();
           });

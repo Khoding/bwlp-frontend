@@ -27,6 +27,7 @@ import { VirtuelleMaschinenDialogComponent } from './virtuelle-maschinen-dialog/
 import { ChangeOwnerComponent } from './change-owner/change-owner.component';
 import { AenderungenVerwerfenDialogComponent } from './aenderungen-verwerfen-dialog/aenderungen-verwerfen-dialog.component';
 import { ChangeVmComponent } from './change-vm/change-vm.component';
+import { MatchIdPipe } from './match-id.pipe';
 
 const myRoutes: Routes = [
   {path: '', component: LoginComponent},
@@ -57,7 +58,8 @@ const myRoutes: Routes = [
       VirtuelleMaschinenDialogComponent,
       ChangeOwnerComponent,
       AenderungenVerwerfenDialogComponent,
-      ChangeVmComponent
+      ChangeVmComponent,
+      MatchIdPipe
    ],
    entryComponents: [
       LoginDialogComponent,

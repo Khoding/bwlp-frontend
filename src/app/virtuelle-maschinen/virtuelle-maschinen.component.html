@@ -79,7 +79,7 @@
       <!-- Besitzer Column -->
       <ng-container matColumnDef="besitzer">
         <mat-header-cell *matHeaderCellDef> Besitzer </mat-header-cell>
-        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.ownerId}}</mat-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.ownerId | matchId: users}}</mat-cell>
       </ng-container>
 
       <!-- Geändert Column -->
