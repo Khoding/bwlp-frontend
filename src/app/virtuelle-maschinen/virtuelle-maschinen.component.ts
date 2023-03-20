@@ -1,10 +1,11 @@
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UserInfo } from './../user';
 import { ThriftService } from '../thrift.service';
 import { VirtuelleMaschinenDialogComponent } from '../virtuelle-maschinen-dialog/virtuelle-maschinen-dialog.component';
+import { MatSort, Sort } from '@angular/material/sort';
 
 export interface VmDialogData {
   vms;
@@ -22,8 +23,12 @@ export class VirtuelleMaschinenComponent implements OnInit {
   selection = new SelectionModel<ImageSummaryRead>(true, []);
   amountOfVms: number;
 
-  displayedColumns = ['select', 'name', 'betriebssystem', 'besitzer', 'geaendert', 'ablaufdatum', 'groesse', 'verwendbar', 'vorlage',
+  displayedColumns = ['select', 'imageName', 'betriebssystem', 'besitzer', 'geaendert', 'ablaufdatum', 'groesse', 'verwendbar', 'vorlage',
     'version', 'gesamtgroesse'];
+
+    @ViewChild(MatSort, {static:false}) set matSort(sort: MatSort) {
+      this.vms.sort = sort;
+    }
 
   constructor(
     private thriftService: ThriftService,

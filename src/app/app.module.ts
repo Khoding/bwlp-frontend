@@ -29,6 +29,7 @@ import { AenderungenVerwerfenDialogComponent } from './aenderungen-verwerfen-dia
 import { ChangeVmComponent } from './change-vm/change-vm.component';
 import { MatchIdPipe } from './match-id-pipe/match-id.pipe';
 import { SizePipe } from './size-pipe/size.pipe';
+import { MatSortModule } from '@angular/material';
 
 const myRoutes: Routes = [
   {path: '', component: LoginComponent},
@@ -86,7 +87,8 @@ const myRoutes: Routes = [
       MatAutocompleteModule,
       MatTreeModule,
       MatIconModule,
-      MatRadioModule
+      MatRadioModule,
+      MatSortModule
    ],
    providers: [],
    bootstrap: [

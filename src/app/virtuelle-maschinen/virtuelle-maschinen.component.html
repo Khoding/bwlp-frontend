@@ -47,10 +47,10 @@
 </div> <!-- container -->
 <div class="container-fluid mt-3 smallFluidContainer">
   <div class="row mt-3">
-    <mat-table class="mat-table-list" #table [dataSource]="vms">
+    <mat-table class="mat-table-list" #table [dataSource]="vms" matSort #tbsort="matSort">
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
-        <mat-header-cell class="checkboxSpalte" *matHeaderCellDef >
+        <mat-header-cell class="checkboxSpalte" *matHeaderCellDef>
           <mat-checkbox (change)="$event ? masterToggle() : null"
                         [checked]="selection.hasValue() && isAllSelected()"
                         [indeterminate]="selection.hasValue() && !isAllSelected()" color="warn">
@@ -65,20 +65,20 @@
       </ng-container>
 
       <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <ng-container matColumnDef="imageName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
         <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.imageName}}</mat-cell>
       </ng-container>
 
       <!-- Betriebssystem Column -->
       <ng-container matColumnDef="betriebssystem">
-        <mat-header-cell *matHeaderCellDef> OS </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> OS </mat-header-cell>
         <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{osList[element.osId - 1].osName}}</mat-cell>
       </ng-container>
 
       <!-- Besitzer Column -->
       <ng-container matColumnDef="besitzer">
-        <mat-header-cell *matHeaderCellDef> Besitzer </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Besitzer </mat-header-cell>
         <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.ownerId | matchId: users}}</mat-cell>
       </ng-container>
 

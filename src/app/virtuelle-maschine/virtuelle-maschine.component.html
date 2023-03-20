@@ -152,7 +152,7 @@
                     <td>{{ version.expireTime * 1000 | date:'dd.MM.yyyy, HH:mm' }}</td>
                     <td>{{ version.uploaderId | matchId: users}}</td>
                     <td><input type="checkbox" [checked]="version.isValid" disabled></td>
-                    <td>{{ version.fileSize }}</td>
+                    <td>{{ version.fileSize | size}}</td>
                     <td>{{ version.versionId }}</td>
                   </tr>
                 </tbody>
