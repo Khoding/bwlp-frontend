@@ -4,7 +4,6 @@ import { MatDialog, MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UserInfo } from './../user';
 import { ThriftService } from '../thrift.service';
-import { DatePipe } from '@angular/common';
 import { VirtuelleMaschinenDialogComponent } from '../virtuelle-maschinen-dialog/virtuelle-maschinen-dialog.component';
 
 export interface VmDialogData {

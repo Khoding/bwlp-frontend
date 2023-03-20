@@ -97,7 +97,7 @@
       <!-- Größe Column -->
       <ng-container matColumnDef="groesse">
         <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Größe </mat-header-cell>
-        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.fileSize}}</mat-cell>
+        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.fileSize | size}}</mat-cell>
       </ng-container>
 
       <!--Verwendbar Column-->
@@ -121,7 +121,7 @@
       <!-- Gesamtgröße Column -->
       <ng-container matColumnDef="gesamtgroesse">
         <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Gesamtgröße </mat-header-cell>
-        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.fileSizeSum}}</mat-cell>
+        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.fileSizeSum | size}}</mat-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
