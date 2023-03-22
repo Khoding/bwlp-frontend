@@ -47,7 +47,7 @@
 </div> <!-- container -->
 <div class="container-fluid mt-3 smallFluidContainer">
   <div class="row mt-3">
-    <mat-table class="mat-table-list" #table [dataSource]="vms" matSort #tbsort="matSort">
+    <mat-table class="mat-table-list" #table [dataSource]="vms" matSort>
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
         <mat-header-cell class="checkboxSpalte" *matHeaderCellDef>
@@ -56,7 +56,7 @@
                         [indeterminate]="selection.hasValue() && !isAllSelected()" color="warn">
           </mat-checkbox>
         </mat-header-cell>
-        <mat-cell class="mat-cell-list" *matCellDef="let row" class="checkboxSpalte">
+        <mat-cell class="mat-cell-list" *matCellDef="let row" class="checkboxSpalte">{{row.ownerId | matchId:users:row}}
           <mat-checkbox (click)="$event.stopPropagation()"
                         (change)="$event ? selection.toggle(row) : null"
                         [checked]="selection.isSelected(row)">
@@ -71,56 +71,56 @@
       </ng-container>
 
       <!-- Betriebssystem Column -->
-      <ng-container matColumnDef="betriebssystem">
+      <ng-container matColumnDef="osId">
         <mat-header-cell *matHeaderCellDef mat-sort-header> OS </mat-header-cell>
         <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{osList[element.osId - 1].osName}}</mat-cell>
       </ng-container>
 
-      <!-- Besitzer Column -->
-      <ng-container matColumnDef="besitzer">
+      <!-- Besitzer Column -->  
+      <ng-container matColumnDef="ownerId">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Besitzer </mat-header-cell>
-        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.ownerId | matchId: users}}</mat-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.ownerId}}</mat-cell>
       </ng-container>
 
       <!-- Geändert Column -->
-      <ng-container matColumnDef="geaendert">
-        <mat-header-cell *matHeaderCellDef> Geändert </mat-header-cell>
+      <ng-container matColumnDef="updateTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Geändert </mat-header-cell>
         <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.updateTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
       </ng-container>
 
       <!-- Ablaufdatum Column -->
-      <ng-container matColumnDef="ablaufdatum">
-        <mat-header-cell *matHeaderCellDef> Ablaufdatum </mat-header-cell>
+      <ng-container matColumnDef="expireTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Ablaufdatum </mat-header-cell>
         <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.expireTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
       </ng-container>
 
       <!-- Größe Column -->
-      <ng-container matColumnDef="groesse">
-        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Größe </mat-header-cell>
+      <ng-container matColumnDef="fileSize">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Größe </mat-header-cell>
         <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.fileSize | size}}</mat-cell>
       </ng-container>
 
       <!--Verwendbar Column-->
-      <ng-container matColumnDef="verwendbar">
-        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Verwendbar </mat-header-cell>
+      <ng-container matColumnDef="isValid">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Verwendbar </mat-header-cell>
         <mat-cell *matCellDef="let element" class="kleineSpalte mat-cell-list"[routerLink]="['/vms', element.imageBaseId]"><input type="checkbox" [checked]="element.isValid" disabled></mat-cell>
       </ng-container>
 
       <!--Vorlage Column-->
-      <ng-container matColumnDef="vorlage">
-        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Vorlage </mat-header-cell>
+      <ng-container matColumnDef="isTemplate">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Vorlage </mat-header-cell>
         <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]"><input type="checkbox" [checked]="element.isTemplate" disabled></mat-cell>
       </ng-container>
 
       <!-- Version Column -->
-      <ng-container matColumnDef="version">
-        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Version </mat-header-cell>
+      <ng-container matColumnDef="versionCount">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Version </mat-header-cell>
         <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.versionCount}}</mat-cell>
       </ng-container>
 
       <!-- Gesamtgröße Column -->
-      <ng-container matColumnDef="gesamtgroesse">
-        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Gesamtgröße </mat-header-cell>
+      <ng-container matColumnDef="fileSizeSum">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Gesamtgröße </mat-header-cell>
         <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.imageBaseId]">{{element.fileSizeSum | size}}</mat-cell>
       </ng-container>
 

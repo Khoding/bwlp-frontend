@@ -23,8 +23,8 @@ export class VirtuelleMaschinenComponent implements OnInit {
   selection = new SelectionModel<ImageSummaryRead>(true, []);
   amountOfVms: number;
 
-  displayedColumns = ['select', 'imageName', 'betriebssystem', 'besitzer', 'geaendert', 'ablaufdatum', 'groesse', 'verwendbar', 'vorlage',
-    'version', 'gesamtgroesse'];
+  displayedColumns = ['select', 'imageName', 'osId', 'ownerId', 'updateTime', 'expireTime', 'fileSize', 'isValid', 'isTemplate',
+    'versionCount', 'fileSizeSum'];
 
     @ViewChild(MatSort, {static:false}) set matSort(sort: MatSort) {
       this.vms.sort = sort;
