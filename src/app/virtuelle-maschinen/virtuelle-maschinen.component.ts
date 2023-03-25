@@ -22,6 +22,7 @@ export class VirtuelleMaschinenComponent implements OnInit {
   osList: OperatingSystem[];
   selection = new SelectionModel<ImageSummaryRead>(true, []);
   amountOfVms: number;
+  defaultFilterPredicate?: (record: any, filter: string) => boolean;
 
   displayedColumns = ['select', 'imageName', 'osId', 'ownerId', 'updateTime', 'expireTime', 'fileSize', 'isValid', 'isTemplate',
     'versionCount', 'fileSizeSum'];
@@ -56,6 +57,30 @@ export class VirtuelleMaschinenComponent implements OnInit {
     this.getVms();
   }
 
+  // use osName for sorting instead of osId
+  // (using username instead of userId is handled by overriding the table value in the view)
+  setSorting() {
+    this.vms.sortingDataAccessor = (row: ImageSummaryRead, columnName: string) : string => {
+      switch(columnName) {
+        case 'osId':
+          return this.osList[row.osId - 1].osName;
+        default:
+          return row[columnName];
+      }
+    }
+  }
+
+  // add osId resolution to default filtering behavior
+  setFilter() {
+    this.defaultFilterPredicate = this.vms.filterPredicate;
+    this.vms.filterPredicate = (record: ImageSummaryRead, filter: string) => {
+      filter = filter.trim().toLowerCase();
+      const osName: string = this.osList[record.osId - 1].osName.trim().toLowerCase();
+      
+      return this.defaultFilterPredicate(record, filter) || osName.indexOf(filter) != -1;
+    }
+  }
+
   // Liefert eine Liste mit allen VMs auf dem Server zurück
   getVms() {
     if (sessionStorage.getItem('user') == null) {
@@ -71,6 +96,8 @@ export class VirtuelleMaschinenComponent implements OnInit {
                 (vms: ImageSummaryRead[]) => {
                   this.vms = new MatTableDataSource(vms);
                   this.amountVms();
+                  this.setSorting();
+                  this.setFilter();
                 });
             });
         },
