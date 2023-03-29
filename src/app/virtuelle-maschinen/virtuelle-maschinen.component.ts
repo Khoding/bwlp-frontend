@@ -5,7 +5,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { UserInfo } from './../user';
 import { ThriftService } from '../thrift.service';
 import { VirtuelleMaschinenDialogComponent } from '../virtuelle-maschinen-dialog/virtuelle-maschinen-dialog.component';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 
 export interface VmDialogData {
   vms;

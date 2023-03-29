@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { UserInfo } from './../user';
 import { MatDialog, } from '@angular/material/dialog';
 import { VeranstaltungenDialogComponent } from '../veranstaltungen-dialog/veranstaltungen-dialog.component';
 import { ThriftService } from '../thrift.service';
+import { MatSort } from '@angular/material';
 
 export interface DialogData {
   veranstaltungen;
@@ -20,7 +21,11 @@ export class VeranstaltungenComponent implements OnInit {
   users: UserInfo[];
   selection = new SelectionModel<LectureSummary>(true, []);
   amountOfEvents: number;
-  displayedColumns = ['select', 'name', 'besitzer', 'startdatum', 'ablaufdatum', 'aktiviert', 'vmgueltig'];
+  displayedColumns = ['select', 'lectureName', 'ownerId', 'startTime', 'endTime', 'isEnabled', 'isImageVersionUsable'];
+
+  @ViewChild(MatSort, {static:false}) set matSort(sort: MatSort) {
+    this.lectures.sort = sort;
+  }
 
   constructor(
     private thriftService: ThriftService,

@@ -49,7 +49,7 @@
 <div class="container-fluid mt-3 smallFluidContainer">
   <div class="row mt-3">
 
-    <mat-table class="mat-table-list" [dataSource]="lectures">
+    <mat-table class="mat-table-list" [dataSource]="lectures" matSort>
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
         <mat-header-cell class="checkboxSpalte" *matHeaderCellDef>
@@ -58,7 +58,7 @@
                         [indeterminate]="selection.hasValue() && !isAllSelected()" color="warn">
           </mat-checkbox>
         </mat-header-cell>
-        <mat-cell *matCellDef="let row" class="checkboxSpalte">
+        <mat-cell *matCellDef="let row" class="checkboxSpalte">{{row.ownerId | matchId:users:row}}
           <mat-checkbox (click)="$event.stopPropagation()"
                         (change)="$event ? selection.toggle(row) : null"
                         [checked]="selection.isSelected(row)">
@@ -67,37 +67,37 @@
       </ng-container>
 
       <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+      <ng-container matColumnDef="lectureName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
         <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.lectureName}}</mat-cell>
       </ng-container>
 
       <!-- Besitzer Column -->
-      <ng-container matColumnDef="besitzer">
-        <mat-header-cell *matHeaderCellDef> Besitzer </mat-header-cell>
+      <ng-container matColumnDef="ownerId">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Besitzer </mat-header-cell>
         <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.ownerId | matchId: users}}</mat-cell>
       </ng-container>
 
       <!-- Startdatum Column -->
-      <ng-container matColumnDef="startdatum">
-        <mat-header-cell *matHeaderCellDef> Startdatum </mat-header-cell>
+      <ng-container matColumnDef="startTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Startdatum </mat-header-cell>
         <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.startTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
       </ng-container>
 
       <!-- Ablaufdatum Column -->
-      <ng-container matColumnDef="ablaufdatum">
-        <mat-header-cell *matHeaderCellDef> Ablaufdatum </mat-header-cell>
+      <ng-container matColumnDef="endTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Ablaufdatum </mat-header-cell>
         <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.endTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
       </ng-container>
 
       <!--Aktiviert Column-->
-      <ng-container matColumnDef="aktiviert">
-        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> Aktiviert </mat-header-cell>
+      <ng-container matColumnDef="isEnabled">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Aktiviert </mat-header-cell>
         <mat-cell  *matCellDef="let element" class="kleineSpalte mat-cell-list"[routerLink]="['/veranstaltungen', element.lectureId]"><input type="checkbox" [checked]="element.isEnabled" disabled></mat-cell>
       </ng-container>
       <!--VM gültig Column-->
-      <ng-container matColumnDef="vmgueltig">
-        <mat-header-cell class="kleineSpalte" *matHeaderCellDef> VM gültig </mat-header-cell>
+      <ng-container matColumnDef="isImageVersionUsable">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> VM gültig </mat-header-cell>
         <mat-cell  class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]"><input type="checkbox" [checked]="element.isImageVersionUsable" disabled></mat-cell>
       </ng-container>
 
