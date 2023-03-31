@@ -58,7 +58,7 @@
           <div class="form-group row">
             <label class="control-label col-12 col-sm-5 col-md-3 description" for="besitzer-virtuellemaschine"><b>Besitzer</b></label>
             <div class="col-10 col-sm-4 col-md-4">
-              <span id="besitzer-virtuellemaschine">{{virtuellemaschine.ownerId | matchId: users}}</span>
+              <span #vmOwner id="besitzer-virtuellemaschine" (click)="setFilterValue(vmOwner.innerText)">{{virtuellemaschine.ownerId | matchId: users}}</span>
             </div>
             <div class="col-2 col-sm-3 col-md-5" *ngIf="this.admin">
               <a (click)="changeOwner()" class="edit cursorPointer"><i class="fa fa-pencil-square-o"></i><b> Ändern</b></a>
@@ -93,7 +93,7 @@
             </div>
             <ng-template #os>
               <div class="col-12 col-md-9">
-                <p>{{osList[this.virtuellemaschine.osId]}}</p>
+                <p #osName (click)="setFilterValue(osName.innerText)">{{osList[this.virtuellemaschine.osId - 1]}}</p>
               </div>
             </ng-template>
           </div>

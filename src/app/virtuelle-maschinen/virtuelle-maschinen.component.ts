@@ -22,6 +22,7 @@ export class VirtuelleMaschinenComponent implements OnInit {
   osList: OperatingSystem[];
   selection = new SelectionModel<ImageSummaryRead>(true, []);
   amountOfVms: number;
+  passedFilter: string;
   defaultFilterPredicate?: (record: any, filter: string) => boolean;
 
   displayedColumns = ['select', 'imageName', 'osId', 'ownerId', 'updateTime', 'expireTime', 'fileSize', 'isValid', 'isTemplate',
@@ -55,6 +56,7 @@ export class VirtuelleMaschinenComponent implements OnInit {
   // Alle VMs werden in die Tabelle geladen
   ngOnInit() {
     this.getVms();
+    this.passedFilter = history.state.data;
   }
 
   // use osName for sorting instead of osId
@@ -75,10 +77,16 @@ export class VirtuelleMaschinenComponent implements OnInit {
     this.defaultFilterPredicate = this.vms.filterPredicate;
     this.vms.filterPredicate = (record: ImageSummaryRead, filter: string) => {
       filter = filter.trim().toLowerCase();
-      const osName: string = this.osList[record.osId - 1].osName.trim().toLowerCase();
+      // check for undefined to get rid of console error
+      const osEntry = this.osList[record.osId - 1];
+      const osName: string = osEntry ? osEntry.osName.trim().toLowerCase() : 'unknown';
       
       return this.defaultFilterPredicate(record, filter) || osName.indexOf(filter) != -1;
     }
+    // apply filter with delay in case a filter value was passed over
+    setTimeout(()=> {
+      this.applyFilter(this.passedFilter);
+    }, 0);
   }
 
   // Liefert eine Liste mit allen VMs auf dem Server zurück

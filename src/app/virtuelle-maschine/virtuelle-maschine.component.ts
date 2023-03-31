@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { map, startWith } from 'rxjs/operators';
 import { ThriftService } from '../thrift.service';
-import { DatePipe } from '@angular/common';
 import { ChangeOwnerComponent } from '../change-owner/change-owner.component';
 import { MatDialog } from '@angular/material';
 import { AenderungenVerwerfenDialogComponent } from '../aenderungen-verwerfen-dialog/aenderungen-verwerfen-dialog.component';
@@ -19,7 +18,6 @@ export interface ChangeOwnerData {
   selector: 'app-virtuelle-maschine',
   templateUrl: './virtuelle-maschine.component.html',
   styleUrls: ['./virtuelle-maschine.component.css'],
-  providers: [DatePipe]
 })
 export class VirtuelleMaschineComponent implements OnInit {
   // Wird benötigt um anhand der ID aus der URL die richtige VM anzuzeigen
@@ -52,7 +50,6 @@ export class VirtuelleMaschineComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private thriftService: ThriftService,
-    private datePipe: DatePipe,
     private formBuilder: FormBuilder,
     public dialog: MatDialog
   ) {
@@ -284,6 +281,11 @@ export class VirtuelleMaschineComponent implements OnInit {
         });
       }
     });
+  }
+
+  // return to vm list while passing a value to filter for
+  setFilterValue(filterValue: string) {
+    this.router.navigate(['/vms'],{state:{data:filterValue}});
   }
 
   // Änderungen verwerfen
