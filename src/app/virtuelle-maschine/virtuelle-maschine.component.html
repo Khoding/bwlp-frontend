@@ -57,7 +57,7 @@
           </ng-template>
           <div class="form-group row">
             <label class="control-label col-12 col-sm-5 col-md-3 description" for="besitzer-virtuellemaschine"><b>Besitzer</b></label>
-            <div class="col-10 col-sm-4 col-md-4">
+            <div class="col-10 col-sm-4 col-md-4 btn-link">
               <span #vmOwner id="besitzer-virtuellemaschine" (click)="setFilterValue(vmOwner.innerText)">{{virtuellemaschine.ownerId | matchId: users}}</span>
             </div>
             <div class="col-2 col-sm-3 col-md-5" *ngIf="this.admin">
@@ -92,7 +92,7 @@
               </select>
             </div>
             <ng-template #os>
-              <div class="col-12 col-md-9">
+              <div class="col-12 col-md-9 btn-link">
                 <p #osName (click)="setFilterValue(osName.innerText)">{{osList[this.virtuellemaschine.osId - 1]}}</p>
               </div>
             </ng-template>
@@ -116,7 +116,7 @@
           </div>
           <div class="form-group row">
             <label class="control-label col-5 col-md-3 description" for="vmid-virtuellemaschine"><b>VM-ID</b></label>
-            <div class="col-7 col-md-9">
+            <div class="col-7 col-md-9 btn-link">
               <span #vmId (click)="setFilterValue(vmId.innerText, 'veranstaltungen')" id="vmid-virtuellemaschine">{{virtuellemaschine.imageBaseId}}</span>
             </div>
           </div>
