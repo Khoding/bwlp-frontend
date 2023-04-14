@@ -59,7 +59,7 @@
               <label class="control-label col-12 col-sm-5 col-md-3 col-lg-3 col-xl-3 description"
                      for="besitzer-veranstaltung"><b>Besitzer</b></label>
               <div class="col-10 col-sm-4 col-md-5 col-lg-4  col-xl-3">
-                <span id="besitzer-veranstaltung">{{lecture.ownerId | matchId: users}}</span>
+                <span #owner (click)="setFilterValue(owner.innerText)" id="besitzer-veranstaltung">{{lecture.ownerId | matchId: users}}</span>
               </div>
               <div class="col-2 col-sm-3 col-md-4 col-lg-5 col-xl-6" *ngIf="admin">
                 <a (click)="changeOwner()" class="edit cursorPointer"><i class="fa fa-pencil-square-o"></i><b> Ändern</b></a>

@@ -21,6 +21,7 @@ export class VeranstaltungenComponent implements OnInit {
   users: UserInfo[];
   selection = new SelectionModel<LectureSummary>(true, []);
   amountOfEvents: number;
+  passedFilter: string;
   displayedColumns = ['select', 'lectureName', 'ownerId', 'startTime', 'endTime', 'isEnabled', 'isImageVersionUsable'];
 
   @ViewChild(MatSort, {static:false}) set matSort(sort: MatSort) {
@@ -53,6 +54,14 @@ export class VeranstaltungenComponent implements OnInit {
     } else {
       this.getLectures();
     }
+    this.passedFilter = history.state.data;
+  }
+
+  // make sorting case insensitive
+  setSorting() {
+    this.lectures.sortingDataAccessor = (row: LectureSummary, columnName: string) : string => {
+        return row[columnName].toLowerCase();
+      }
   }
 
   // Die Veranstaltungen werden vom NodeJS abgerufen
@@ -65,6 +74,12 @@ export class VeranstaltungenComponent implements OnInit {
           (lectures: LectureSummary[]) => {
             this.lectures = new MatTableDataSource<LectureSummary>(lectures);
             this.amountEvents();
+            this.setSorting();
+
+            // apply filter with delay in case a filter value was passed over
+            setTimeout(()=> {
+              this.applyFilter(this.passedFilter);
+            }, 0);
           });
       },
       error => {
@@ -96,8 +111,10 @@ export class VeranstaltungenComponent implements OnInit {
 
   // Filtert die Tabelle nach dem String, welcher in der Suchleiste eingegeben wird
   applyFilter(filterValue: string) {
-    this.lectures.filter = filterValue.trim().toLowerCase();
-    this.amountEvents();
+    if (filterValue) {
+      this.lectures.filter = filterValue.trim().toLowerCase();
+      this.amountEvents();
+    }
   }
 
   // Setzt die Anzahl der angezigten Veranstaltungen in der Tabelle

@@ -20,7 +20,7 @@
     <div class="col-12">
       <div class="form-group row">
         <div class="col-12 col-md-5 col-xl-5">
-          <input type="text" class="form-control mr-5" id="search" (keyup)="applyFilter($event.target.value)">
+          <input type="text" class="form-control mr-5" id="search" (keyup)="applyFilter($event.target.value)" value="{{passedFilter}}">
         </div>
         <div class="col-12 col-md-5 col-xl-3 mt-3 mt-md-0">
           <select id="searchselect" class="form-control" disabled>

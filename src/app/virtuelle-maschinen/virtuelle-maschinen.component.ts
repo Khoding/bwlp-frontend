@@ -65,9 +65,9 @@ export class VirtuelleMaschinenComponent implements OnInit {
     this.vms.sortingDataAccessor = (row: ImageSummaryRead, columnName: string) : string => {
       switch(columnName) {
         case 'osId':
-          return this.osList[row.osId - 1].osName;
+          return this.osList[row.osId - 1].osName.toLowerCase();
         default:
-          return row[columnName];
+          return row[columnName].toLowerCase();
       }
     }
   }
@@ -139,8 +139,10 @@ export class VirtuelleMaschinenComponent implements OnInit {
 
   // Filtert die Tabelle nach dem String, welcher in der Suchleiste eingegeben wird
   applyFilter(filterValue: string) {
-    this.vms.filter = filterValue.trim().toLowerCase();
-    this.amountVms();
+    if (filterValue) {
+      this.vms.filter = filterValue.trim().toLowerCase();
+      this.amountVms();
+    }
   }
 
   // Setzt die Anzahl der angezigten VMs in der Tabelle

@@ -623,4 +623,9 @@ export class VeranstaltungComponent implements OnInit {
     }
 
   }
+
+  // return to lecture list while passing a value to use as a filter
+  setFilterValue(filterValue: string) {
+    this.router.navigate(['/veranstaltungen'],{state:{data:filterValue}});
+  }
 }
