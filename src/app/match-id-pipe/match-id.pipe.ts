@@ -10,7 +10,8 @@ export class MatchIdPipe implements PipeTransform {
     // doesn't need to run it everytime
 
     // return immediately if value was cached before
-    if (value.includes(', ')) {
+    // return on !value to get rid of errors (can't be a valid entry)
+    if (!value || value.includes(', ')) {
       return value
     }
     for (let i = 0; i < users.length; i++) {

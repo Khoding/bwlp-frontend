@@ -30,6 +30,7 @@ import { ChangeVmComponent } from './change-vm/change-vm.component';
 import { MatchIdPipe } from './match-id-pipe/match-id.pipe';
 import { SizePipe } from './size-pipe/size.pipe';
 import { MatSortModule } from '@angular/material';
+import { CombinedTableComponent } from './combined-table/combined-table.component';
 
 const myRoutes: Routes = [
   {path: '', component: LoginComponent},
@@ -40,7 +41,8 @@ const myRoutes: Routes = [
   {path: 'vms/:id', component: VirtuelleMaschineComponent},
   {path: 'veranstaltungen', component: VeranstaltungenComponent},
   {path: 'veranstaltungen/newveranstaltung', component: CreateVeranstaltungComponent},
-  {path: 'veranstaltungen/:id', component: VeranstaltungComponent }
+  {path: 'veranstaltungen/:id', component: VeranstaltungComponent },
+  {path: 'tb', component: CombinedTableComponent}
 ];
 @NgModule({
    declarations: [
@@ -62,7 +64,8 @@ const myRoutes: Routes = [
       AenderungenVerwerfenDialogComponent,
       ChangeVmComponent,
       MatchIdPipe,
-      SizePipe
+      SizePipe,
+      CombinedTableComponent
    ],
    entryComponents: [
       LoginDialogComponent,

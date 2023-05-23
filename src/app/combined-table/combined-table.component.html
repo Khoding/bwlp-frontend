@@ -1,0 +1,178 @@
+<div class="container-fluid mt-5 content white-font smallFluidContainer">
+    <div class="row">
+      <div class="col-12">
+        <h4>
+          Übersicht Veranstaltungen
+        </h4>
+        <p>
+          Hier können Sie Veranstaltungen anlegen, bearbeiten und l&ouml;schen.
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <h4>
+          Suchen
+        </h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group row">
+          <div class="col-12 col-md-5 col-xl-5">
+            <input type="text" class="form-control mr-5" id="search" (keyup)="applyFilter($event.target.value)" value="{{passedFilter}}">
+          </div>
+          <div class="col-12 col-md-5 col-xl-3 mt-3 mt-md-0">
+            <select id="searchselect" class="form-control" disabled>
+              <option>Alle anzeigen</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-2 col-xl-2 mt-3 mt-md-0">
+            <span class="mt-2"><strong>Sichtbar: {{amountOfEvents}}</strong></span>
+          </div>
+          <div class="col-12 col-md-12 col-xl-2 text-right mt-3 mt-xl-0">
+            <a class="button text-box" routerLink="/veranstaltungen/newveranstaltung"><i class="fa fa-plus-circle"></i><b> Neue
+              Veranstaltung</b></a>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-right">
+        <a class="deletebutton text-box"(click)="deleteEvent()">
+          <i class="fa fa-trash"></i><b> Veranstaltung löschen</b>
+        </a>
+      </div>
+    </div>
+</div> <!-- container -->
+
+
+<div class="container-fluid mt-3 smallFluidContainer">
+  <div *ngIf="displayMode== 'lectures'" class="col-12 col-md-12 col-xl-2 text-left mt-3 mt-xl-0">
+    <a class="button text-box" (click)="toggleDisplay()"><i class="fa fa-arrows-h"></i><b> Virtuelle Maschinen</b></a>
+  </div>
+  <div *ngIf="displayMode == 'vms'" class="col-12 col-md-12 col-xl-2 text-left mt-3 mt-xl-0">
+    <a class="button text-box" (click)="toggleDisplay()"><i class="fa fa-arrows-h"></i><b> Veranstaltungen</b></a>
+  </div>
+
+  <mat-table class="mat-table-list" [dataSource]="entries" matSort>
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="select">
+      <mat-header-cell class="checkboxSpalte" *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null"
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()" color="warn">
+        </mat-checkbox>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row" class="checkboxSpalte">
+        <mat-checkbox (click)="$event.stopPropagation()"
+          (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+      </mat-cell>
+    </ng-container>
+  
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="lectureName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture.lectureId]">{{element.lecture.lectureName}}</mat-cell>
+      </ng-container>
+
+      <!-- Besitzer Column -->
+      <ng-container matColumnDef="ownerId">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Besitzer </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture.lectureId]">{{element.lecture.ownerId | matchId: users}}</mat-cell>
+      </ng-container>
+
+      <!-- Startdatum Column -->
+      <ng-container matColumnDef="startTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Startdatum </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.startTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
+      </ng-container>
+
+      <!-- Ablaufdatum Column -->
+      <ng-container matColumnDef="endTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Ablaufdatum </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]">{{element.endTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
+      </ng-container>
+
+      <!--Aktiviert Column-->
+      <ng-container matColumnDef="isEnabled">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Aktiviert </mat-header-cell>
+        <mat-cell  *matCellDef="let element" class="kleineSpalte mat-cell-list"[routerLink]="['/veranstaltungen', element.lectureId]"><input type="checkbox" [checked]="element.isEnabled" disabled></mat-cell>
+      </ng-container>
+      <!--VM gültig Column-->
+      <ng-container matColumnDef="isImageVersionUsable">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> VM gültig </mat-header-cell>
+        <mat-cell  class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lectureId]"><input type="checkbox" [checked]="element.isImageVersionUsable" disabled></mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="imageName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.vm?.imageBaseId]">{{element.vm?.imageName}}</mat-cell>
+      </ng-container>
+
+      <!-- Betriebssystem Column -->
+      <ng-container matColumnDef="osId">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> OS </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.vm?.imageBaseId]">{{osList[element.vm?.osId - 1]?.osName}}</mat-cell>
+      </ng-container>
+
+      <!-- Besitzer Column -->  
+      <ng-container matColumnDef="vmOwnerId">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Besitzer </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.vm?.imageBaseId]">{{element.vm?.ownerId | matchId:users}}</mat-cell>
+      </ng-container>
+
+      <!-- Geändert Column -->
+      <ng-container matColumnDef="updateTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Geändert </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.vm?.imageBaseId]">{{element.vm?.updateTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
+      </ng-container>
+
+      <!-- Ablaufdatum Column -->
+      <ng-container matColumnDef="expireTime">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Ablaufdatum </mat-header-cell>
+        <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.vm?.imageBaseId]">{{element.vm?.expireTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
+      </ng-container>
+
+      <!-- Größe Column -->
+      <ng-container matColumnDef="fileSize">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Größe </mat-header-cell>
+        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.vm?.imageBaseId]">{{element.vm?.fileSize | size}}</mat-cell>
+      </ng-container>
+
+      <!--Verwendbar Column-->
+      <ng-container matColumnDef="isValid">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Verwendbar </mat-header-cell>
+        <mat-cell *matCellDef="let element" class="kleineSpalte mat-cell-list"[routerLink]="['/vms', element.vm?.imageBaseId]"><input type="checkbox" [checked]="element.vm?.isValid" disabled></mat-cell>
+      </ng-container>
+
+      <!--Vorlage Column-->
+      <ng-container matColumnDef="isTemplate">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Vorlage </mat-header-cell>
+        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.vm?.imageBaseId]"><input type="checkbox" [checked]="element.vm?.isTemplate" disabled></mat-cell>
+      </ng-container>
+
+      <!-- Version Column -->
+      <ng-container matColumnDef="versionCount">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Version </mat-header-cell>
+        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.vm?.imageBaseId]">{{element.vm?.versionCount}}</mat-cell>
+      </ng-container>
+
+      <!-- Gesamtgröße Column -->
+      <ng-container matColumnDef="fileSizeSum">
+        <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Gesamtgröße </mat-header-cell>
+        <mat-cell class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/vms', element.vm?.imageBaseId]">{{element.vm?.fileSizeSum | size}}</mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns[displayMode]"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns[displayMode];"
+                (click)="selection.toggle(row)">
+      </mat-row>
+  </mat-table>
+</div>
+  

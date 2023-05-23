@@ -47,6 +47,9 @@
   </div>
 </div> <!-- container -->
 <div class="container-fluid mt-3 smallFluidContainer">
+  <div class="col-12 col-md-12 col-xl-2 text-left mt-3 mt-xl-0">
+    <a class="button text-box" (click)="applyFilter('')"><i class="fa fa-arrows-h"></i><b> Virtuelle Maschinen</b></a>
+  </div>
   <div class="row mt-3">
 
     <mat-table class="mat-table-list" [dataSource]="lectures" matSort>
