@@ -8,6 +8,7 @@ import { VeranstaltungenDialogComponent } from '../veranstaltungen-dialog/verans
 import { ThriftService } from '../thrift.service';
 import { MatSort } from '@angular/material';
 import { TableEntry } from '../table-entry';
+import { VirtuelleMaschinenDialogComponent } from '../virtuelle-maschinen-dialog/virtuelle-maschinen-dialog.component';
 
 export interface DialogData {
   veranstaltungen;
@@ -26,8 +27,8 @@ export class CombinedTableComponent implements OnInit {
   selection = new SelectionModel<TableEntry>(true, []);
   amountOfEvents: number;
   passedFilter: string;
-  displayMode: string = 'vms';
-  filterMode: string = 'vms';
+  displayMode: string;
+  filterMode: string;
   displayedColumns = {
     'lectures': ['select', 'lectureName', 'ownerId', 'startTime', 'endTime', 'isEnabled', 'isImageVersionUsable'],
     'vms': ['select', 'imageName', 'osId', 'vmOwnerId', 'updateTime', 'expireTime', 'fileSize', 'isValid', 'isTemplate',
@@ -78,9 +79,11 @@ export class CombinedTableComponent implements OnInit {
     if (sessionStorage.getItem('user') == null) {
       this.router.navigate([`/`]);
     } else {
-      this.getLectures();
+      this.getEntries();
     }
     this.passedFilter = history.state.data;
+    this.displayMode = history.state.display ? history.state.display : 'lectures';
+    this.filterMode = this.displayMode;
   }
 
   // custom sorting for case insensitivity and resolving ids
@@ -113,7 +116,7 @@ export class CombinedTableComponent implements OnInit {
     }
   }
 
-  // add osId resolution to default filtering behavior
+  // add osId resolution to default filtering behavior + some custom behavior
   setFilter() {
     this.defaultFilterPredicate = this.entries.filterPredicate;
     this.entries.filterPredicate = (record: TableEntry, filter: string) => {
@@ -127,11 +130,15 @@ export class CombinedTableComponent implements OnInit {
         return false;
       }
 
-      // check for undefined to get rid of console error
-      const osEntry = this.osList[(record.vm ? record.vm.osId : -1) - 1];
-      const osName: string = osEntry ? osEntry.osName.trim().toLowerCase() : 'unknown';
-      
-      return this.defaultFilterPredicate(objectToFilter, filter) || osName.indexOf(filter) != -1;
+      if (objectToFilter instanceof ImageSummaryRead) {
+        const osEntry = this.osList[objectToFilter.osId - 1];
+        const osName: string = osEntry ? osEntry.osName.trim().toLowerCase() : 'unknown';
+        if (osName.indexOf(filter) != -1) {
+          return true
+        }
+      }
+
+      return this.defaultFilterPredicate(objectToFilter, filter);
     }
     // apply filter with delay in case a filter value was passed over
     setTimeout(()=> {
@@ -140,7 +147,7 @@ export class CombinedTableComponent implements OnInit {
   }
 
   // images and lectures are requested from the server and then paired
-  getLectures() {
+  getEntries() {
     this.thriftService.getUserList().subscribe(
       (users: UserInfo[]) => {
         this.users = users;
@@ -163,7 +170,6 @@ export class CombinedTableComponent implements OnInit {
 
                 this.entries = new MatTableDataSource(tableEntries);
                 this.getOsList();
-                this.amountEvents();
                 this.setSorting();
                 this.setFilter();
   
@@ -206,7 +212,28 @@ export class CombinedTableComponent implements OnInit {
         });
       }
       this.selection = new SelectionModel<TableEntry>(true, []);
-      this.getLectures();
+      this.getEntries();
+    });
+  }
+
+  // Löscht jede VM die vom Benutzer ausgewählt wurde
+  // Wenn der Benutzer nicht ausreichende Rechte zum Löschen besitzt, wird die VM auch nicht gelöscht.
+  deleteVm() {
+
+    const dialogRef = this.dialog.open(VirtuelleMaschinenDialogComponent, {
+      width: '500px',
+      data: {
+        vms: this.selection.selected
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.selection.selected.forEach(item => {
+          this.thriftService.deleteVms(item.vm.imageBaseId).subscribe();
+        });
+      }
+      this.getEntries();
+      this.selection = new SelectionModel<TableEntry>(true, []);
     });
   }
 
@@ -217,8 +244,8 @@ export class CombinedTableComponent implements OnInit {
       this.filterMode = this.displayMode;
 
       this.entries.filter = filterValue.trim().toLowerCase();
-      this.amountEvents();
     }
+    this.amountEvents();
   }
 
   // Setzt die Anzahl der angezigten Veranstaltungen in der Tabelle

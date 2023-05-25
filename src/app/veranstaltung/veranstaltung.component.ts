@@ -569,7 +569,7 @@ export class VeranstaltungComponent implements OnInit {
         map[permission.userId] = { edit: permission.edit, admin: permission.admin };
       });
       this.thriftService.setLecturePermissions(id, map).subscribe();
-      this.router.navigate([`/veranstaltungen`]);
+      this.router.navigate([`/tb`],{state:{display:`lectures`}});
     });
   }
 
@@ -585,7 +585,7 @@ export class VeranstaltungComponent implements OnInit {
       if (newOwner !== undefined) {
         const lectureId = this.route.snapshot.paramMap.get('id');
         this.thriftService.setLectureOwner(lectureId, newOwner).subscribe(() => {
-          this.router.navigate([`/veranstaltungen`]);
+          this.router.navigate([`/tb`],{state:{display:`lectures`}});
         });
       }
     });
@@ -615,17 +615,17 @@ export class VeranstaltungComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.router.navigate([`/veranstaltungen`]);
+          this.router.navigate([`/tb`],{state:{display:`lectures`}});
         }
       });
     } else {
-      this.router.navigate([`/veranstaltungen`]);
+      this.router.navigate([`/tb`],{state:{display:`lectures`}});
     }
 
   }
 
   // return to lecture list while passing a value to use as a filter
   setFilterValue(filterValue: string) {
-    this.router.navigate(['/veranstaltungen'],{state:{data:filterValue}});
+    this.router.navigate(['/tb'],{state:{data:filterValue, display:'lectures'}});
   }
 }

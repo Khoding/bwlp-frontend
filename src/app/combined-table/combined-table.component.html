@@ -1,11 +1,19 @@
 <div class="container-fluid mt-5 content white-font smallFluidContainer">
     <div class="row">
-      <div class="col-12">
+      <div *ngIf="displayMode=='lectures'" class="col-12">
         <h4>
           Übersicht Veranstaltungen
         </h4>
         <p>
           Hier können Sie Veranstaltungen anlegen, bearbeiten und l&ouml;schen.
+        </p>
+      </div>
+      <div *ngIf="displayMode=='vms'" class="col-12">
+        <h4>
+          Übersicht Virtuelle Maschinen
+        </h4>
+        <p>
+          Hier können Sie virtuelle Maschinen anlegen, bearbeiten und l&ouml;schen.
         </p>
       </div>
     </div>
@@ -30,18 +38,29 @@
           <div class="col-12 col-md-2 col-xl-2 mt-3 mt-md-0">
             <span class="mt-2"><strong>Sichtbar: {{amountOfEvents}}</strong></span>
           </div>
-          <div class="col-12 col-md-12 col-xl-2 text-right mt-3 mt-xl-0">
+          <div *ngIf="displayMode=='lectures'" class="col-12 col-md-12 col-xl-2 text-right mt-3 mt-xl-0">
             <a class="button text-box" routerLink="/veranstaltungen/newveranstaltung"><i class="fa fa-plus-circle"></i><b> Neue
               Veranstaltung</b></a>
+          </div>
+          <div *ngIf="displayMode=='vms'" class="col-12 col-md-12 col-xl-2 text-right mt-3 mt-xl-0">
+            <a class="button text-box" routerLink="/veranstaltungen/newvm"><i class="fa fa-plus-circle"></i><b> Neue
+              virtuelle Maschine</b></a>
           </div>
   
         </div>
       </div>
     </div>
-    <div class="row">
+    <div *ngIf="displayMode=='lectures'" class="row">
       <div class="col-12 text-right">
         <a class="deletebutton text-box"(click)="deleteEvent()">
-          <i class="fa fa-trash"></i><b> Veranstaltung löschen</b>
+          <i class="fa fa-trash"></i><b> Auswahl löschen</b>
+        </a>
+      </div>
+    </div>
+    <div *ngIf="displayMode=='vms'" class="row">
+      <div class="col-12 text-right">
+        <a class="deletebutton text-box"(click)="deleteVm()">
+          <i class="fa fa-trash"></i><b> Auswahl löschen</b>
         </a>
       </div>
     </div>
@@ -77,36 +96,36 @@
     <!-- Name Column -->
     <ng-container matColumnDef="lectureName">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-      <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture.lectureId]">{{element.lecture.lectureName}}</mat-cell>
+      <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture?.lectureId]">{{element.lecture.lectureName}}</mat-cell>
     </ng-container>
 
     <!-- Besitzer Column -->
     <ng-container matColumnDef="ownerId">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Besitzer </mat-header-cell>
-      <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture.lectureId]">{{element.lecture.ownerId | matchId:users:element.lecture}}</mat-cell>
+      <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture?.lectureId]">{{element.lecture.ownerId | matchId:users:element.lecture}}</mat-cell>
     </ng-container>
 
     <!-- Startdatum Column -->
     <ng-container matColumnDef="startTime">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Startdatum </mat-header-cell>
-      <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture.lectureId]">{{element.lecture.startTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
+      <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture?.lectureId]">{{element.lecture.startTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
     </ng-container>
 
     <!-- Ablaufdatum Column -->
     <ng-container matColumnDef="endTime">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Ablaufdatum </mat-header-cell>
-      <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture.lectureId]">{{element.lecture.endTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
+      <mat-cell class="mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture?.lectureId]">{{element.lecture.endTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
     </ng-container>
 
     <!--Aktiviert Column-->
     <ng-container matColumnDef="isEnabled">
       <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> Aktiviert </mat-header-cell>
-      <mat-cell  *matCellDef="let element" class="kleineSpalte mat-cell-list"[routerLink]="['/veranstaltungen', element.lecture.lectureId]"><input type="checkbox" [checked]="element.lecture.isEnabled" disabled></mat-cell>
+      <mat-cell  *matCellDef="let element" class="kleineSpalte mat-cell-list"[routerLink]="['/veranstaltungen', element.lecture?.lectureId]"><input type="checkbox" [checked]="element.lecture.isEnabled" disabled></mat-cell>
     </ng-container>
     <!--VM gültig Column-->
     <ng-container matColumnDef="isImageVersionUsable">
       <mat-header-cell class="kleineSpalte" *matHeaderCellDef mat-sort-header> VM gültig </mat-header-cell>
-      <mat-cell  class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture.lectureId]"><input type="checkbox" [checked]="element.lecture.isImageVersionUsable" disabled></mat-cell>
+      <mat-cell  class="kleineSpalte mat-cell-list" *matCellDef="let element" [routerLink]="['/veranstaltungen', element.lecture?.lectureId]"><input type="checkbox" [checked]="element.lecture.isImageVersionUsable" disabled></mat-cell>
     </ng-container>
 
     <!-- Name Column -->

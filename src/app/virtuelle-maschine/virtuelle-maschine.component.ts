@@ -261,7 +261,7 @@ export class VirtuelleMaschineComponent implements OnInit {
       this.thriftService.setVmPermissions(id, map).subscribe((result: any) => {
         console.log(result);
       });
-      this.router.navigate([`/vms`]);
+      this.router.navigate([`/tb`],{state:{display:`vms`}});
     });
   }
 
@@ -277,7 +277,7 @@ export class VirtuelleMaschineComponent implements OnInit {
       if (newOwner !== undefined) {
         const imageBaseId = this.route.snapshot.paramMap.get('id');
         this.thriftService.setImageOwner(imageBaseId, newOwner).subscribe(() => {
-          this.router.navigate([`/vms`]);
+          this.router.navigate([`/tb`],{state:{display:`vms`}});
         });
       }
     });
@@ -285,7 +285,7 @@ export class VirtuelleMaschineComponent implements OnInit {
 
   // return to vm list while passing a value to use as a filter
   setFilterValue(filterValue: string, targetList: string = 'vms') {
-    this.router.navigate([`/${targetList}`],{state:{data:filterValue}});
+    this.router.navigate([`/tb`],{state:{data:filterValue, display:`${targetList}`}});
   }
 
   // Änderungen verwerfen
@@ -296,11 +296,11 @@ export class VirtuelleMaschineComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.router.navigate([`/vms`]);
+          this.router.navigate([`/tb`],{state:{display:`vms`}});
         }
       });
     } else {
-      this.router.navigate([`/vms`]);
+      this.router.navigate([`/tb`],{state:{display:`vms`}});
     }
 
   }

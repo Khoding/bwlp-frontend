@@ -9,8 +9,6 @@ import { NavigationsleisteComponent } from './navigationsleiste/navigationsleist
 import { LoginComponent } from './login/login.component';
 import { NutzungsvereinbarungComponent } from './nutzungsvereinbarung/nutzungsvereinbarung.component';
 import { DatenschutzerklaerungComponent } from './datenschutzerklaerung/datenschutzerklaerung.component';
-import { VirtuelleMaschinenComponent } from './virtuelle-maschinen/virtuelle-maschinen.component';
-import { VeranstaltungenComponent } from './veranstaltungen/veranstaltungen.component';
 import { VeranstaltungComponent} from './veranstaltung/veranstaltung.component';
 import { VirtuelleMaschineComponent} from './virtuelle-maschine/virtuelle-maschine.component';
 import { CreateVmComponent } from './create-vm/create-vm.component';
@@ -36,10 +34,8 @@ const myRoutes: Routes = [
   {path: '', component: LoginComponent},
   {path: 'nutzungsvereinbarung', component: NutzungsvereinbarungComponent},
   {path: 'datenschutzerklaerung', component: DatenschutzerklaerungComponent},
-  {path: 'vms', component: VirtuelleMaschinenComponent},
   {path: 'vms/newvm', component: CreateVmComponent},
   {path: 'vms/:id', component: VirtuelleMaschineComponent},
-  {path: 'veranstaltungen', component: VeranstaltungenComponent},
   {path: 'veranstaltungen/newveranstaltung', component: CreateVeranstaltungComponent},
   {path: 'veranstaltungen/:id', component: VeranstaltungComponent },
   {path: 'tb', component: CombinedTableComponent}
@@ -51,8 +47,6 @@ const myRoutes: Routes = [
       LoginComponent,
       NutzungsvereinbarungComponent,
       DatenschutzerklaerungComponent,
-      VirtuelleMaschinenComponent,
-      VeranstaltungenComponent,
       VeranstaltungComponent,
       VirtuelleMaschineComponent,
       CreateVmComponent,
