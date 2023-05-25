@@ -27,11 +27,13 @@ export class CombinedTableComponent implements OnInit {
   amountOfEvents: number;
   passedFilter: string;
   displayMode: string = 'vms';
+  filterMode: string = 'vms';
   displayedColumns = {
     'lectures': ['select', 'lectureName', 'ownerId', 'startTime', 'endTime', 'isEnabled', 'isImageVersionUsable'],
     'vms': ['select', 'imageName', 'osId', 'vmOwnerId', 'updateTime', 'expireTime', 'fileSize', 'isValid', 'isTemplate',
     'versionCount', 'fileSizeSum']
   };
+  defaultFilterPredicate?: (record: any, filter: string) => boolean;
     
   @ViewChild(MatSort, {static:false}) set matSort(sort: MatSort) {
     this.entries.sort = sort;
@@ -58,6 +60,8 @@ export class CombinedTableComponent implements OnInit {
   }
 
   // toggles between displaying virtual machines and lectures
+  // the idea is that if you toggle the view pairs of corresponding
+  // vm/lecture will always share the same spot on the list
   toggleDisplay() {
     switch (this.displayMode) {
       case 'vms':
@@ -109,6 +113,32 @@ export class CombinedTableComponent implements OnInit {
     }
   }
 
+  // add osId resolution to default filtering behavior
+  setFilter() {
+    this.defaultFilterPredicate = this.entries.filterPredicate;
+    this.entries.filterPredicate = (record: TableEntry, filter: string) => {
+      filter = filter.trim().toLowerCase();
+
+      // filter out empty entries regardless of the filter keyword
+      // using filterMode instead of displayMode ensures entries won't get filtered out
+      // by toggling the view, meaning the pairing of lectures/vms stays intact
+      const objectToFilter = this.filterMode == 'vms' ? record.vm : record.lecture;
+      if (!objectToFilter) {
+        return false;
+      }
+
+      // check for undefined to get rid of console error
+      const osEntry = this.osList[(record.vm ? record.vm.osId : -1) - 1];
+      const osName: string = osEntry ? osEntry.osName.trim().toLowerCase() : 'unknown';
+      
+      return this.defaultFilterPredicate(objectToFilter, filter) || osName.indexOf(filter) != -1;
+    }
+    // apply filter with delay in case a filter value was passed over
+    setTimeout(()=> {
+      this.applyFilter(this.passedFilter);
+    }, 0);
+  }
+
   // images and lectures are requested from the server and then paired
   getLectures() {
     this.thriftService.getUserList().subscribe(
@@ -135,6 +165,7 @@ export class CombinedTableComponent implements OnInit {
                 this.getOsList();
                 this.amountEvents();
                 this.setSorting();
+                this.setFilter();
   
                 // apply filter with delay in case a filter value was passed over
                 setTimeout(()=> {
@@ -182,6 +213,9 @@ export class CombinedTableComponent implements OnInit {
   // Filtert die Tabelle nach dem String, welcher in der Suchleiste eingegeben wird
   applyFilter(filterValue: string) {
     if (filterValue) {
+      // remember what entries the user wanted to filter
+      this.filterMode = this.displayMode;
+
       this.entries.filter = filterValue.trim().toLowerCase();
       this.amountEvents();
     }
