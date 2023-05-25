@@ -9,10 +9,13 @@ import { ThriftService } from '../thrift.service';
 import { MatSort } from '@angular/material';
 import { TableEntry } from '../table-entry';
 import { VirtuelleMaschinenDialogComponent } from '../virtuelle-maschinen-dialog/virtuelle-maschinen-dialog.component';
-import { filter } from 'rxjs/operators';
 
 export interface DialogData {
   veranstaltungen;
+}
+
+export interface VmDialogData {
+  vms;
 }
 
 @Component({

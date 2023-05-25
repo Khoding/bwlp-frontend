@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
-import {VmDialogData} from '../virtuelle-maschinen/virtuelle-maschinen.component';
+import {VmDialogData} from '../combined-table/combined-table.component';
 
 
 @Component({

@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {DialogData} from '../veranstaltungen/veranstaltungen.component';
+import {DialogData} from '../combined-table/combined-table.component';
 
 @Component({
   selector: 'app-veranstaltungen-dialog',

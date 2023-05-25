@@ -3,7 +3,7 @@
 <div mat-dialog-content>
   <p>Möchten Sie die folgenden virtuellen Maschinen inklusive ihrer Versionen wirklich löschen?</p>
   <ul>
-    <li *ngFor="let vm of this.data.vms">{{vm.imageName}}</li>
+    <li *ngFor="let vm of this.data.vms">{{vm.vm.imageName}}</li>
   </ul>
 </div>
 
