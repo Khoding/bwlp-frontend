@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     dialogRef.afterClosed().subscribe(address => {
       this.thriftservice.setSat(address).then((token: any) => {
           sessionStorage.setItem('sat', address);
-          this.router.navigate([`/vms`]);
+          this.router.navigate([`/tb`]);
         }, error => {
           console.log(error.error);
           this.satfailed = true;

@@ -217,11 +217,11 @@ export class CreateVmComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.router.navigate([`/vms`]);
+          this.router.navigate([`/tb`]);
         }
       });
     } else {
-      this.router.navigate([`/vms`]);
+      this.router.navigate([`/tb`]);
     }
   }
 }
