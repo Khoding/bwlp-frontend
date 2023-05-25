@@ -28,11 +28,12 @@
       <div class="col-12">
         <div class="form-group row">
           <div class="col-12 col-md-5 col-xl-5">
-            <input type="text" class="form-control mr-5" id="search" (keyup)="applyFilter($event.target.value)" value="{{passedFilter}}">
+            <input #filter type="text" class="form-control mr-5" id="search" (keydown)="applyFilter($event.target.value)" value="{{passedFilter}}">
           </div>
           <div class="col-12 col-md-5 col-xl-3 mt-3 mt-md-0">
-            <select id="searchselect" class="form-control" disabled>
-              <option>Alle anzeigen</option>
+            <select #columnfilter (input)="columnFilter = filterableColumns[displayMode][columnfilter.value]" (change)="applyFilter(filter.value)" id="searchselect" class="form-control">
+              <option>Beliebiges Feld</option>
+              <option *ngFor="let header of Object.keys(filterableColumns[displayMode])">{{header}}</option>
             </select>
           </div>
           <div class="col-12 col-md-2 col-xl-2 mt-3 mt-md-0">

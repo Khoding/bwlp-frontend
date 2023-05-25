@@ -9,6 +9,7 @@ import { ThriftService } from '../thrift.service';
 import { MatSort } from '@angular/material';
 import { TableEntry } from '../table-entry';
 import { VirtuelleMaschinenDialogComponent } from '../virtuelle-maschinen-dialog/virtuelle-maschinen-dialog.component';
+import { filter } from 'rxjs/operators';
 
 export interface DialogData {
   veranstaltungen;
@@ -34,7 +35,15 @@ export class CombinedTableComponent implements OnInit {
     'vms': ['select', 'imageName', 'osId', 'vmOwnerId', 'updateTime', 'expireTime', 'fileSize', 'isValid', 'isTemplate',
     'versionCount', 'fileSizeSum']
   };
+  filterableColumns = {
+    'lectures': {'Name': 'lectureName', 'Besitzer': 'ownerId'},
+    'vms': {'Name': 'imageName', 'Besitzer': 'ownerId', 'Betriebsystem': 'osId'},
+  };
+  columnFilter: string;
   defaultFilterPredicate?: (record: any, filter: string) => boolean;
+
+  // allows access to Object.keys in ngfor, circumvents creating a pipe for a single use
+  Object = Object;
     
   @ViewChild(MatSort, {static:false}) set matSort(sort: MatSort) {
     this.entries.sort = sort;
@@ -116,7 +125,8 @@ export class CombinedTableComponent implements OnInit {
     }
   }
 
-  // add osId resolution to default filtering behavior + some custom behavior
+  // add osId resolution to default filtering behavior, as well as column filters
+  // if a column filter is active only the value of that column will be considered for filtering
   setFilter() {
     this.defaultFilterPredicate = this.entries.filterPredicate;
     this.entries.filterPredicate = (record: TableEntry, filter: string) => {
@@ -130,14 +140,22 @@ export class CombinedTableComponent implements OnInit {
         return false;
       }
 
-      if (objectToFilter instanceof ImageSummaryRead) {
+      // resolve osid and apply columfilter
+      if (objectToFilter instanceof ImageSummaryRead && (this.columnFilter == 'osId' || !this.columnFilter)) {
         const osEntry = this.osList[objectToFilter.osId - 1];
         const osName: string = osEntry ? osEntry.osName.trim().toLowerCase() : 'unknown';
         if (osName.indexOf(filter) != -1) {
           return true
         }
+        if (this.columnFilter == 'osId') {
+          return false;
+        }
+      }
+      else if (this.columnFilter) {
+        return this.defaultFilterPredicate({value: objectToFilter[this.columnFilter]}, filter);
       }
 
+      // if no columnfilter was set, use all fields to filter
       return this.defaultFilterPredicate(objectToFilter, filter);
     }
     // apply filter with delay in case a filter value was passed over
