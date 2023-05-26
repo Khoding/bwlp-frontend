@@ -101,8 +101,8 @@ export class CombinedTableComponent implements OnInit {
   // custom sorting for case insensitivity and resolving ids
   setSorting() {
     this.entries.sortingDataAccessor = (row: TableEntry, columnName: string) => {
-      if (this.displayedColumns.vms.includes(columnName) && !row.vm ||
-          this.displayedColumns.lectures.includes(columnName) && !row.lecture) {
+      if (this.displayedColumns.vms.includes(columnName) && !row.vm.imageBaseId ||
+          this.displayedColumns.lectures.includes(columnName) && !row.lecture.lectureId) {
         return null;
       }
       // resolve individually by column name to allow sorting by hidden columns
@@ -139,7 +139,8 @@ export class CombinedTableComponent implements OnInit {
       // using filterMode instead of displayMode ensures entries won't get filtered out
       // by toggling the view, meaning the pairing of lectures/vms stays intact
       const objectToFilter = this.filterMode == 'vms' ? record.vm : record.lecture;
-      if (!objectToFilter) {
+      if (objectToFilter instanceof ImageSummaryRead && !objectToFilter.imageBaseId ||
+          objectToFilter instanceof LectureSummary && !objectToFilter.lectureId) {
         return false;
       }
 

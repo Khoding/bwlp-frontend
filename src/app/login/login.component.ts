@@ -40,7 +40,8 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      user: ['', Validators.required]
     });
   }
 
@@ -54,9 +55,8 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-    this.loginservice.login('bwlp-test@uni-freiburg.de', this.form.password.value).subscribe((clientSessionData: ClientSessionData) => {
+    this.loginservice.login(this.form.user.value, this.form.password.value).subscribe((clientSessionData: ClientSessionData) => {
       sessionStorage.setItem('user', JSON.stringify(clientSessionData));
-      console.log(JSON.parse(sessionStorage.getItem('user')));
       this.loginfailed = false;
       this.satfailed = false;
       this.openDialog();
