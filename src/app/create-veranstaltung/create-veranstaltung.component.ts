@@ -121,6 +121,7 @@ export class CreateVeranstaltungComponent implements OnInit {
   hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
   // tslint:disable-next-line:variable-name
   hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
+  osList: OperatingSystem[];
   //#endregion Baumvariablen
 
   constructor(
@@ -186,21 +187,10 @@ export class CreateVeranstaltungComponent implements OnInit {
         let validVms: ImageSummaryRead[] = [];
         this.thriftService.getOsList().subscribe(
           (osList: OperatingSystem[]) => {
+            this.osList = osList;
             this.thriftService.getVms().then(
               (vms: ImageSummaryRead[]) => {
                 vms.forEach(vm => {
-                  // TODO: In Frontend implementieren
-                  // vm.osId = osList[vm.osId - 1].osName;
-                  // vm.updateTime = this.datePipe.transform(vm.updateTime * 1000, 'dd.MM.yyyy, HH:mm');
-                  // vm.expireTime = this.datePipe.transform(vm.expireTime * 1000, 'dd.MM.yyyy, HH:mm');
-                  // vm.createTime = this.datePipe.transform(vm.createTime * 1000, 'dd.MM.yyyy, HH:mm');
-                  // vm.uploadTime = this.datePipe.transform(vm.uploadTime * 1000, 'dd.MM.yyyy, HH:mm');
-                  // for (let i = 0; i < users.length; i++) {
-                  //   if (vm.ownerId === users[i].userId) {
-                  //     vm.ownerId = users[i].lastName + ', ' + users[i].firstName;
-                  //     i = users.length;
-                  //   }
-                  // }
                   if (vm.latestVersionId !== null && (vm.defaultPermissions.link || vm.userPermissions.link)) {
                     validVms.push(vm);
                   }
@@ -530,11 +520,11 @@ export class CreateVeranstaltungComponent implements OnInit {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.router.navigate([`/veranstaltungen`]);
+          this.router.navigate([`/tb`]);
         }
       });
     } else {
-      this.router.navigate([`/veranstaltungen`]);
+      this.router.navigate([`/tb`]);
     }
   }
 }

@@ -17,6 +17,8 @@ import Int64 from 'node-int64';
 
 export interface ChangeVmData {
   vms;
+  users;
+  osList;
   newvm;
 }
 
@@ -138,6 +140,7 @@ export class VeranstaltungComponent implements OnInit {
   hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
   // tslint:disable-next-line:variable-name
   hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
+  osList: OperatingSystem[];
 
   //#endregion Baumvariablen
 
@@ -195,6 +198,7 @@ export class VeranstaltungComponent implements OnInit {
           this.users = users;
           this.thriftService.getOsList().subscribe(
             (osList: OperatingSystem[]) => {
+              this.osList = osList;
               this.thriftService.getVms().then(
                 (vms: ImageSummaryRead[]) => {
                   // tslint:disable-next-line: prefer-for-of
@@ -596,7 +600,9 @@ export class VeranstaltungComponent implements OnInit {
     const dialogRef = this.dialog.open(ChangeVmComponent, {
       width: '800px',
       data: {
-        vms: this.possibleVms
+        vms: this.possibleVms,
+        users: this.users,
+        osList: this.osList
       }
     });
     dialogRef.afterClosed().subscribe(newVm => {

@@ -14,6 +14,8 @@ export class ChangeVmComponent implements OnInit {
   change = false;
   displayedColumns = ['select', 'name', 'betriebssystem', 'besitzer', 'geaendert', 'ablaufdatum', 'groesse', 'verwendbar'];
   vms: MatTableDataSource<ImageSummaryRead>;
+  users: UserInfo[];
+  osList: OperatingSystem[];
   constructor(@Inject(MAT_DIALOG_DATA) public data: ChangeVmData,
               private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<ChangeVmComponent>) { }
@@ -23,6 +25,8 @@ export class ChangeVmComponent implements OnInit {
       imageVersionId : ['', Validators.required]
     });
     this.vms = new MatTableDataSource<ImageSummaryRead>(this.data.vms);
+    this.users = this.data.users;
+    this.osList = this.data.osList;
   }
 
   // Schließt das Pop-Up und liefert die VM zurück.

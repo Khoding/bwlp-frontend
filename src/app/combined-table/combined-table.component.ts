@@ -173,22 +173,39 @@ export class CombinedTableComponent implements OnInit {
       (users: UserInfo[]) => {
         this.users = users;
         const vmsById = {};
+        const lecturesByVmId = {};
         const tableEntries: TableEntry[] = [];
 
-        // get vms and store them with their id as key
-        this.thriftService.getVms().then(
-        (vms: ImageSummaryRead[]) => {
-          vms.forEach(vm => {
-              vmsById[vm.imageBaseId] = vm;
-            });
+        // get lectures and store them in a list with all lectures that use the same vm
+        this.thriftService.getEvents().then(
+          (lectures: LectureSummary[]) => {
+            lectures.forEach(lecture => {
+              if (lecturesByVmId[lecture.imageBaseId]){
+                lecturesByVmId[lecture.imageBaseId].push(lecture);
+              } else {
+                lecturesByVmId[lecture.imageBaseId] = [lecture];
+              }
+            })
 
-            // get lectures and pair them with their corresponding vm
-            this.thriftService.getEvents().then(
-              (lectures: LectureSummary[]) => {
-                lectures.forEach(lecture => {
-                  tableEntries.push({lecture: lecture, vm: vmsById[lecture.imageBaseId]})                  
+            // now get vms and add all existing pairings of lecture/vm to the table entries
+            this.thriftService.getVms().then(
+              (vms: ImageSummaryRead[]) => {
+                vms.forEach(vm => {
+                  // special case unused vm
+                  if (!lecturesByVmId[vm.imageBaseId]) {
+                    lecturesByVmId[vm.imageBaseId] = [{lectureName: '(nicht verwendet)'}];
+                  }
+                  lecturesByVmId[vm.imageBaseId].forEach((lecture: LectureSummary) => {
+                    tableEntries.push({lecture: lecture, vm: vm});
+                  });
                 });
-
+                // special case lecture with no assigned vm
+                lecturesByVmId['null'].forEach((lecture: LectureSummary) => {
+                  const newVm = new ImageSummaryRead();
+                  newVm.imageName = '(not set)';
+                  tableEntries.push({lecture: lecture, vm: newVm})
+                })
+             
                 this.entries = new MatTableDataSource(tableEntries);
                 this.getOsList();
                 this.setSorting();
