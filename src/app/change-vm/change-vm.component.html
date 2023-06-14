@@ -29,7 +29,7 @@
         <!-- Betriebssystem Column -->
         <ng-container matColumnDef="betriebssystem">
           <mat-header-cell *matHeaderCellDef> OS</mat-header-cell>
-          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{osList[element.osid - 1].osName}}</mat-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{osList[element.osid - 1]?.osName}}</mat-cell>
         </ng-container>
 
         <!-- Besitzer Column -->

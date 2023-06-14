@@ -1012,7 +1012,41 @@ Thrift.Protocol.prototype = {
         if (typeof i64 === 'number') {
             this.tstack.push(i64);
         } else {
-            this.tstack.push(Int64Util.toDecimalString(i64));
+          var POW2_24 = Math.pow(2, 24);
+          var POW2_32 = Math.pow(2, 32);
+          var POW10_11 = Math.pow(10, 11);
+
+          var b = i64.buffer;
+          var o = i64.offset;
+          var i64Res;
+          if ((!b[o] && !(b[o + 1] & 0xe0)) ||
+              (!~b[o] && !~(b[o + 1] & 0xe0))) {
+            // The magnitude is small enough.
+            i64Res = i64.toString();
+          } else {
+            var negative = b[o] & 0x80;
+            if (negative) {
+              // 2's complement
+              var incremented = false;
+              var buffer = new Buffer(8);
+              for (var i = 7; i >= 0; --i) {
+                buffer[i] = (~b[o + i] + (incremented ? 0 : 1)) & 0xff;
+                incremented |= b[o + i];
+              }
+              b = buffer;
+            }
+            var high2 = b[o + 1] + (b[o] << 8);
+            // Lesser 11 digits with exceeding values but is under 53 bits capacity.
+            var low = b[o + 7] + (b[o + 6] << 8) + (b[o + 5] << 16)
+                + b[o + 4] * POW2_24  // Bit shift renders 32th bit as sign, so use multiplication
+                + (b[o + 3] + (b[o + 2] << 8)) * POW2_32 + high2 * 74976710656;  // The literal is 2^48 % 10^11
+            // 12th digit and greater.
+            var high = Math.floor(low / POW10_11) + high2 * 2814;  // The literal is 2^48 / 10^11
+            // Make it exactly 11 with leading zeros.
+            low = ('00000000000' + String(low % POW10_11)).slice(-11);
+            i64Res = (negative ? '-' : '') + String(high) + low;
+          }
+          this.tstack.push(i64Res);
         }
     },
 

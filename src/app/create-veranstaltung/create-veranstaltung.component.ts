@@ -485,6 +485,7 @@ export class CreateVeranstaltungComponent implements OnInit {
       (this.form.endTime.value as string) + ':00').getTime() / 1000));
     this.newLecture.isExam = this.form.isExam.value;
     this.newLecture.hasInternetAccess = this.form.hasInternetAccess.value;
+    this.newLecture.defaultPermissions = new ImagePermissions();
     this.newLecture.defaultPermissions.edit = this.form.edit.value;
     this.newLecture.defaultPermissions.admin = this.form.admin.value;
     this.newLecture.limitToLocations = this.form.limitToLocations.value;

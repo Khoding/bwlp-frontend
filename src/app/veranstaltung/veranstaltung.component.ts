@@ -260,15 +260,15 @@ export class VeranstaltungComponent implements OnInit {
                   });
                 }
               );
-              this.setStartDate(this.datePipe.transform(lecture.startTime, 'yyyy-MM-dd'));
-              this.setEndDate(this.datePipe.transform(lecture.endTime, 'yyyy-MM-dd'));
+              this.setStartDate(this.datePipe.transform(1000 * Number(lecture.startTime), 'yyyy-MM-dd'));
+              this.setEndDate(this.datePipe.transform(1000 * Number(lecture.endTime), 'yyyy-MM-dd'));
               this.editEventForm = this.formBuilder.group({
                 lectureName: [this.lecture.lectureName, Validators.required],
                 description: [this.lecture.description, Validators.required],
-                startDay: [this.datePipe.transform(lecture.startTime, 'yyyy-MM-dd'), Validators.required],
-                startTime: [this.datePipe.transform(lecture.startTime, 'HH:mm'), Validators.required],
-                endDay: [this.datePipe.transform(lecture.endTime, 'yyyy-MM-dd'), Validators.required],
-                endTime: [this.datePipe.transform(lecture.endTime, 'HH:mm'), Validators.required],
+                startDay: [this.datePipe.transform(1000 * Number(lecture.startTime), 'yyyy-MM-dd'), Validators.required],
+                startTime: [this.datePipe.transform(1000 * Number(lecture.startTime), 'HH:mm'), Validators.required],
+                endDay: [this.datePipe.transform(1000 * Number(lecture.endTime), 'yyyy-MM-dd'), Validators.required],
+                endTime: [this.datePipe.transform(1000 * Number(lecture.endTime), 'HH:mm'), Validators.required],
                 isEnabled: [this.lecture.isEnabled],
                 isExam: [this.lecture.isExam],
                 autoUpdate: [this.lecture.autoUpdate],
@@ -559,6 +559,7 @@ export class VeranstaltungComponent implements OnInit {
       (this.form.endTime.value as string) + ':00').getTime() / 1000));
     this.editLecture.isExam = this.form.isExam.value;
     this.editLecture.hasInternetAccess = this.form.hasInternetAccess.value;
+    this.editLecture.defaultPermissions = new ImagePermissions();
     this.editLecture.defaultPermissions.edit = this.form.edit.value;
     this.editLecture.defaultPermissions.admin = this.form.admin.value;
     this.editLecture.limitToLocations = this.form.limitToLocations.value;
