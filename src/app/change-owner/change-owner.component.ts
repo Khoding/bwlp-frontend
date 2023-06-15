@@ -13,7 +13,7 @@ export class ChangeOwnerComponent implements OnInit {
   changeOwnerForm: FormGroup;
   change = false;
   displayedColumns = ['select', 'name'];
-  possibleusers: MatTableDataSource<ImageSummaryRead>;
+  possibleusers: MatTableDataSource<UserInfo>;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ChangeOwnerData,
     private formBuilder: FormBuilder,
@@ -24,7 +24,7 @@ export class ChangeOwnerComponent implements OnInit {
     this.changeOwnerForm = this.formBuilder.group({
       owner: ['', Validators.required]
     });
-    this.possibleusers = new MatTableDataSource<ImageSummaryRead>(this.data.user);
+    this.possibleusers = new MatTableDataSource<UserInfo>(this.data.user);
   }
 
   // Schließt das Pop-Up und liefert den Users zurück.

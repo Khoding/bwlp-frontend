@@ -92,19 +92,22 @@ export class VirtuelleMaschineComponent implements OnInit {
 
               this.virtuellemaschine = vm;
               this.thriftService.getVmPermissions(id).subscribe(
-                (permissionMap: Map<any, ImagePermissions>) => {
+                (permissionMap: Map<string, ImagePermissions>) => {
                   this.users.forEach(user => {
-                    if (permissionMap[user.userId] !== undefined) {
+                    if (permissionMap.get(user.userId) !== undefined) {
                       this.permissions.push({
                         userName: user.lastName + ', ' + user.firstName + ' (' + user.eMail + ')',
                         userId: user.userId,
-                        download: permissionMap[user.userId].download,
-                        link: permissionMap[user.userId].link,
-                        admin: permissionMap[user.userId].admin,
-                        edit: permissionMap[user.userId].edit
+                        download: permissionMap.get(user.userId).download,
+                        link: permissionMap.get(user.userId).link,
+                        admin: permissionMap.get(user.userId).admin,
+                        edit: permissionMap.get(user.userId).edit
                       });
-                    } else if (user.userId !== this.currentOwner) {
+                    } else if (user.userId !== this.virtuellemaschine.ownerId) {
                       this.options.push((user.firstName + ' ' + user.lastName + ' (' + user.eMail + ')'));
+                    } else {
+                      this.possibleOwners = this.users;
+                      this.currentOwner = this.possibleOwners.splice(this.users.indexOf(user), 1);
                     }
                   });
                 }
@@ -242,10 +245,11 @@ export class VirtuelleMaschineComponent implements OnInit {
 
     this.editVM.imageName = this.form.imageName.value;
     this.editVM.description = this.form.description.value;
-    this.editVM.defaultPermissions.edit = this.form.edit.value;
-    this.editVM.defaultPermissions.admin = this.form.admin.value;
-    this.editVM.defaultPermissions.download = this.form.download.value;
-    this.editVM.defaultPermissions.link = this.form.link.value;
+    this.editVM.defaultPermissions = new ImagePermissions({
+      link: this.form.link.value,
+      download: this.form.download.value,
+      edit: this.form.edit.value,
+      admin: this.form.admin.value})
     this.editVM.isTemplate = this.virtuellemaschine.isTemplate;
     this.editVM.shareMode = this.virtuellemaschine.shareMode;
     this.editVM.virtId = this.virtuellemaschine.virtId;

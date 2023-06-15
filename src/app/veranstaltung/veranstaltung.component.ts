@@ -247,12 +247,12 @@ export class VeranstaltungComponent implements OnInit {
               this.thriftService.getLecturePermissions(id).subscribe(
                 (permissionMap: Map<string, LecturePermissions>) => {
                   this.users.forEach(user => {
-                    if (permissionMap[user.userId] !== undefined) {
+                    if (permissionMap.get(user.userId) !== undefined) {
                       this.permissions.push({
                         userName: user.lastName + ', ' + user.firstName + ' (' + user.eMail + ')',
                         userId: user.userId,
-                        admin: permissionMap[user.userId].admin,
-                        edit: permissionMap[user.userId].edit
+                        admin: permissionMap.get(user.userId).admin,
+                        edit: permissionMap.get(user.userId).edit
                       });
                     } else if (user.userId !== this.currentOwner) {
                       this.options.push((user.firstName + ' ' + user.lastName + ' (' + user.eMail + ')'));

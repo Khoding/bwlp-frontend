@@ -176,6 +176,7 @@ export class CreateVmComponent implements OnInit {
 
     this.newImage.imageName = this.form.imageName.value;
     this.newImage.description = this.form.description.value;
+    this.newImage.defaultPermissions = new ImagePermissions();
     this.newImage.defaultPermissions.edit = this.form.edit.value;
     this.newImage.defaultPermissions.admin = this.form.admin.value;
     this.newImage.defaultPermissions.download = this.form.download.value;
@@ -185,9 +186,9 @@ export class CreateVmComponent implements OnInit {
     this.newImage.virtId = 'vmware';
     this.newImage.osId = this.form.osId.value;
     this.thriftService.postVm(this.newImage.imageName).then((imageId: string) => {
-      this.thriftService.requestImageVersionUpload({ imageBaseId: imageId, fileSize: this.fileSize }).subscribe((result: any) => {
-        console.log(result);
-      });
+      // this.thriftService.requestImageVersionUpload({ imageBaseId: imageId, fileSize: this.fileSize }).subscribe((result: any) => {
+      //   console.log(result);
+      // });
       this.thriftService.updateImageBase(this.newImage, imageId).subscribe(() => {
         // tslint:disable: no-shadowed-variable
         // tslint:disable: prefer-const
