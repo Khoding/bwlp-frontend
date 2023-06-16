@@ -1,80 +1,72 @@
-<div class="container-fluid mt-5 content white-font smallFluidContainer">
-    <div class="row">
-      <div *ngIf="displayMode=='lectures'" class="col-12">
-        <h4>
-          Übersicht Veranstaltungen
-        </h4>
-        <p>
-          Hier können Sie Veranstaltungen anlegen, bearbeiten und l&ouml;schen.
-        </p>
-      </div>
-      <div *ngIf="displayMode=='vms'" class="col-12">
-        <h4>
-          Übersicht Virtuelle Maschinen
-        </h4>
-        <p>
-          Hier können Sie virtuelle Maschinen anlegen, bearbeiten und l&ouml;schen.
-        </p>
-      </div>
+<div class="container-fluid mt-3 content white-font smallFluidContainer">
+  <div class="row">
+    <div *ngIf="displayMode=='lectures'" class="col-12">
+      <h3>
+        Veranstaltungen
+      </h3>
+      <p>
+        Hier können Sie Veranstaltungen anlegen, bearbeiten und l&ouml;schen.
+      </p>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <h4>
-          Suchen
-        </h4>
-      </div>
+    <div *ngIf="displayMode=='vms'" class="col-12">
+      <h3>
+        Virtuelle Maschinen
+      </h3>
+      <p>
+        Hier können Sie virtuelle Maschinen anlegen, bearbeiten und l&ouml;schen.
+      </p>
     </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="form-group row">
-          <div class="col-12 col-md-5 col-xl-5">
-            <input #filter type="text" class="form-control mr-5" id="search" (keydown)="applyFilter($event.target.value)" value="{{passedFilter}}">
-          </div>
-          <div class="col-12 col-md-5 col-xl-3 mt-3 mt-md-0">
-            <select #columnfilter (input)="columnFilter = filterableColumns[displayMode][columnfilter.value]" (change)="applyFilter(filter.value)" id="searchselect" class="form-control">
-              <option>Beliebiges Feld</option>
-              <option *ngFor="let header of Object.keys(filterableColumns[displayMode])">{{header}}</option>
-            </select>
-          </div>
-          <div class="col-12 col-md-2 col-xl-2 mt-3 mt-md-0">
-            <span class="mt-2"><strong>Sichtbar: {{amountOfEvents}}</strong></span>
-          </div>
-          <div *ngIf="displayMode=='lectures'" class="col-12 col-md-12 col-xl-2 text-right mt-3 mt-xl-0">
-            <a class="button text-box" routerLink="/veranstaltungen/newveranstaltung"><i class="fa fa-plus-circle"></i><b> Neue
-              Veranstaltung</b></a>
-          </div>
-          <div *ngIf="displayMode=='vms'" class="col-12 col-md-12 col-xl-2 text-right mt-3 mt-xl-0">
-            <a class="button text-box" routerLink="/vms/newvm"><i class="fa fa-plus-circle"></i><b> Neue
-              virtuelle Maschine</b></a>
-          </div>
-  
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h5>
+        Suchen
+      </h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group row">
+        <div class="col-12 col-md-5 col-xl-5">
+          <input #filter type="text" class="form-control mr-5" id="search" (keydown)="applyFilter($event.target.value)" value="{{passedFilter}}">
+        </div>
+        <div class="col-12 col-md-5 col-xl-3 mt-3 mt-md-0">
+          <select #columnfilter (input)="columnFilter = filterableColumns[displayMode][columnfilter.value]" (change)="applyFilter(filter.value)" id="searchselect" class="form-control">
+            <option>Beliebiges Feld</option>
+            <option *ngFor="let header of Object.keys(filterableColumns[displayMode])">{{header}}</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-2 col-xl-2 mt-3 mt-md-0">
+          <span class="mt-2"><strong>Sichtbar: {{amountOfEvents}}</strong></span>
         </div>
       </div>
     </div>
-    <div *ngIf="displayMode=='lectures'" class="row">
-      <div class="col-12 text-right">
-        <a class="deletebutton text-box"(click)="deleteEvent()">
-          <i class="fa fa-trash"></i><b> Auswahl löschen</b>
-        </a>
-      </div>
-    </div>
-    <div *ngIf="displayMode=='vms'" class="row">
-      <div class="col-12 text-right">
-        <a class="deletebutton text-box"(click)="deleteVm()">
-          <i class="fa fa-trash"></i><b> Auswahl löschen</b>
-        </a>
-      </div>
-    </div>
+  </div>
 </div> <!-- container -->
 
 
 <div class="container-fluid mt-3 smallFluidContainer">
-  <div *ngIf="displayMode== 'lectures'" class="col-12 col-md-12 col-xl-2 text-left mt-3 mt-xl-0">
+  <div *ngIf="displayMode=='lectures'" class="mx-3 mt-3 mt-xl-0 clearfix">
     <a class="button text-box" (click)="toggleDisplay()"><i class="fa fa-arrows-h"></i><b> Virtuelle Maschinen</b></a>
+  
+    <button class=" text-box float-right" [disabled]="selection.selected.length==0" (click)="deleteEvent()"
+            [ngClass]="{ 'butdis': selection.selected.length==0, 'deletebutton': selection.selected.length!=0}">
+    <i class="fa fa-trash"></i><b> Auswahl löschen</b>
+    </button>
+    <a class="button text-box float-right" routerLink="/veranstaltungen/newveranstaltung"><i class="fa fa-plus-circle"></i><b> Neue
+      Veranstaltung</b></a>
   </div>
-  <div *ngIf="displayMode == 'vms'" class="col-12 col-md-12 col-xl-2 text-left mt-3 mt-xl-0">
+  <div *ngIf="displayMode=='vms'" class="mx-3 mt-3 mt-xl-0 clearfix">
     <a class="button text-box" (click)="toggleDisplay()"><i class="fa fa-arrows-h"></i><b> Veranstaltungen</b></a>
+    
+    <button class=" text-box float-right" [disabled]="selection.selected.length==0" (click)="deleteVm()"
+        [ngClass]="{ 'butdis': selection.selected.length==0, 'deletebutton': selection.selected.length!=0}">
+    <i class="fa fa-trash"></i><b> Auswahl löschen</b>
+    </button>
+    <a class="button text-box float-right" routerLink="/vms/newvm"><i class="fa fa-plus-circle"></i><b> Neue
+      virtuelle Maschine</b></a>
   </div>
+
 
   <mat-table class="mat-table-list" [dataSource]="entries" matSort>
     <!-- Checkbox Column -->
