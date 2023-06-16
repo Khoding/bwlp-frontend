@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="mt-4">
-      <mat-table class="createLecture" [dataSource]="vms">
+      <mat-table class="createLecture" [dataSource]="vms" matSort>
         <!-- Checkbox Column -->
         <ng-container matColumnDef="select">
           <mat-header-cell class="checkboxSpalte" *matHeaderCellDef>
@@ -21,46 +21,46 @@
         </ng-container>
 
         <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
+        <ng-container matColumnDef="imageName">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Name</mat-header-cell>
           <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.imageName}}</mat-cell>
         </ng-container>
 
         <!-- Betriebssystem Column -->
-        <ng-container matColumnDef="betriebssystem">
-          <mat-header-cell *matHeaderCellDef> OS</mat-header-cell>
-          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{osList[element.osid - 1]?.osName}}</mat-cell>
+        <ng-container matColumnDef="osId">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> OS</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{osList[element.osId - 1].osName}}</mat-cell>
         </ng-container>
 
         <!-- Besitzer Column -->
-        <ng-container matColumnDef="besitzer">
-          <mat-header-cell *matHeaderCellDef> Besitzer</mat-header-cell>
-          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.ownerId | matchId:users}}</mat-cell>
+        <ng-container matColumnDef="ownerId">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Besitzer</mat-header-cell>
+          <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.ownerId | matchId:users:element}}</mat-cell>
         </ng-container>
 
         <!-- Geändert Column -->
-        <ng-container matColumnDef="geaendert">
-          <mat-header-cell *matHeaderCellDef> Geändert</mat-header-cell>
+        <ng-container matColumnDef="updateTime">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Geändert</mat-header-cell>
           <mat-cell class="mat-cell-mini-list"
                     *matCellDef="let element">{{element.updateTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
         </ng-container>
 
         <!-- Ablaufdatum Column -->
-        <ng-container matColumnDef="ablaufdatum">
-          <mat-header-cell *matHeaderCellDef> Ablaufdatum</mat-header-cell>
+        <ng-container matColumnDef="expireTime">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Ablaufdatum</mat-header-cell>
           <mat-cell class="mat-cell-mini-list"
                     *matCellDef="let element">{{element.expireTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</mat-cell>
         </ng-container>
 
         <!-- Größe Column -->
-        <ng-container matColumnDef="groesse">
-          <mat-header-cell *matHeaderCellDef> Größe</mat-header-cell>
+        <ng-container matColumnDef="fileSize">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Größe</mat-header-cell>
           <mat-cell class="mat-cell-mini-list" *matCellDef="let element">{{element.fileSize | size}}</mat-cell>
         </ng-container>
 
         <!--Verwendbar Column-->
-        <ng-container matColumnDef="verwendbar">
-          <mat-header-cell *matHeaderCellDef> Verwendbar</mat-header-cell>
+        <ng-container matColumnDef="isValid">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Verwendbar</mat-header-cell>
           <mat-cell class="mat-cell-mini-list" *matCellDef="let element"><input type="checkbox"
                                                                                 [checked]="element.isValid"
                                                                                 disabled></mat-cell>

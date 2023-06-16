@@ -73,7 +73,7 @@ export class CombinedTableComponent implements OnInit {
   }
 
   // toggles between displaying virtual machines and lectures
-  // the idea is that if you toggle the view pairs of corresponding
+  // the idea is that if you toggle the view, pairs of corresponding
   // vm/lecture will always share the same spot on the list
   toggleDisplay() {
     switch (this.displayMode) {
@@ -173,7 +173,6 @@ export class CombinedTableComponent implements OnInit {
     this.thriftService.getUserList().subscribe(
       (users: UserInfo[]) => {
         this.users = users;
-        const vmsById = {};
         const lecturesByVmId = {};
         const tableEntries: TableEntry[] = [];
 

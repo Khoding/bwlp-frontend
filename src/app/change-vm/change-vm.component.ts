@@ -1,6 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatTableDataSource, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MatTableDataSource, MAT_DIALOG_DATA, MatDialogRef, MatSort } from '@angular/material';
 import { ChangeVmData } from '../veranstaltung/veranstaltung.component';
 
 @Component({
@@ -12,13 +12,19 @@ export class ChangeVmComponent implements OnInit {
   submitted = false;
   changeVmForm: FormGroup;
   change = false;
-  displayedColumns = ['select', 'name', 'betriebssystem', 'besitzer', 'geaendert', 'ablaufdatum', 'groesse', 'verwendbar'];
+  displayedColumns = ['select', 'imageName', 'osId', 'ownerId', 'updateTime', 'expireTime', 'fileSize', 'isValid'];
   vms: MatTableDataSource<ImageSummaryRead>;
   users: UserInfo[];
   osList: OperatingSystem[];
+  defaultFilterPredicate?: (record: any, filter: string) => boolean;
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: ChangeVmData,
               private formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<ChangeVmComponent>) { }
+
+  @ViewChild(MatSort, {static:false}) set matSort(sort: MatSort) {
+    this.vms.sort = sort;
+  }
 
   ngOnInit() {
     this.changeVmForm = this.formBuilder.group({
@@ -27,6 +33,9 @@ export class ChangeVmComponent implements OnInit {
     this.vms = new MatTableDataSource<ImageSummaryRead>(this.data.vms);
     this.users = this.data.users;
     this.osList = this.data.osList;
+
+    this.setFilter();
+    this.setSorting();
   }
 
   // Schließt das Pop-Up und liefert die VM zurück.
@@ -54,5 +63,29 @@ export class ChangeVmComponent implements OnInit {
     this.vms.filter = filterValue.trim().toLowerCase();
   }
 
+  setFilter() {
+    this.defaultFilterPredicate = this.vms.filterPredicate;
+
+    this.vms.filterPredicate = (record: ImageSummaryRead, filter: string) => {
+      filter = filter.trim().toLowerCase();
+
+      const osName = this.osList[record.osId - 1].osName.trim().toLowerCase();
+      
+      return this.defaultFilterPredicate(record, filter) || osName.indexOf(filter) != -1;
+    }
+  }
+
+  setSorting() {
+    this.vms.sortingDataAccessor = (row: ImageSummaryRead, columnName: string) => {
+      // resolve osId, else get column normally
+      var sortValue = columnName == 'osId' ? this.osList[row.osId - 1].osName : row[columnName];
+
+      if (typeof sortValue === 'string') {
+        sortValue = sortValue.toLowerCase();
+      }
+
+      return sortValue;
+    }
+  }
 
 }
