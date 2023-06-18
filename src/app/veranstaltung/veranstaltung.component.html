@@ -86,7 +86,7 @@
               <label class="control-label col-5 col-md-3 description" for="erstellt-am-veranstaltung"><b>Erstellt
                 am</b></label>
               <div class="col-7 col-md-9">
-                <span id="erstellt-am-veranstaltung">{{lecture.createTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</span>
+                <span id="erstellt-am-veranstaltung">{{convertTime(lecture.createTime) | date:'dd.MM.yyyy, HH:mm'}}</span>
               </div>
             </div>
             <div class="form-group row">
@@ -94,7 +94,7 @@
                      for="geaendert-am-veranstaltung"><b>Geändert
                 am</b></label>
               <div class="col-7 col-md-3 col-lg-3 col-xl-2">
-                <span id="geaendert-am-veranstaltung">{{lecture.updateTime * 1000 | date:'dd.MM.yyyy, HH:mm'}}</span>
+                <span id="geaendert-am-veranstaltung">{{convertTime(lecture.updateTime) | date:'dd.MM.yyyy, HH:mm'}}</span>
               </div>
               <label class="control-label col-5 col-md-2 col-lg-1 col-xl-1 description"
                      for="geaendert-durch-veranstaltung"><b>durch</b></label>
@@ -139,7 +139,7 @@
               </div>
               <ng-template #startday>
                 <div class="col-7 col-sm-5 col-md-5 col-lg-3 col-xl-2">
-                  <p>{{lecture.startTime * 1000 | date:'dd.MM.yyyy'}}</p>
+                  <p>{{convertTime(lecture.startTime) | date:'dd.MM.yyyy'}}</p>
                 </div>
               </ng-template>
               <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2 " *ngIf="edit; else starttime">
@@ -148,7 +148,7 @@
               </div>
               <ng-template #starttime>
                 <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2 ">
-                 <p>{{lecture.startTime * 1000 | date:'HH:mm'}}</p>
+                 <p>{{convertTime(lecture.startTime) | date:'HH:mm'}}</p>
                 </div>
               </ng-template>
               <div class="col-12 offset-md-3 offset-lg-0 col-lg-2 col-xl-3 mt-1 invalid"
@@ -169,7 +169,7 @@
               </div>
               <ng-template #endday>
                 <div class="col-7 col-sm-5 col-md-5 col-lg-3 col-xl-2">
-                  <p>{{lecture.endTime * 1000 | date:'dd.MM.yyyy'}}</p>
+                  <p>{{convertTime(lecture.endTime) | date:'dd.MM.yyyy'}}</p>
                 </div>
               </ng-template>
               <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2" *ngIf="edit; else endtime">
@@ -178,7 +178,7 @@
               </div>
               <ng-template #endtime>
                 <div class="col-5 col-sm-5 col-md-3 col-lg-2 col-xl-2">
-                  <p>{{lecture.endTime * 1000 | date:'HH:mm'}}</p>
+                  <p>{{convertTime(lecture.endTime) | date:'HH:mm'}}</p>
                 </div>
               </ng-template>
               <div class="col-12 col-md-4 offset-md-3 offset-lg-0 col-lg-4 mt-2 mt-lg-0">

@@ -509,6 +509,12 @@ export class VeranstaltungComponent implements OnInit {
     return null;
   }
 
+  // converts the time properties of the lecture (no. of seconds)
+  // to a proper unix timestamp (no. of milliseconds)
+  convertTime(time: Int64) {
+    return Number(time) * 1000;
+  }
+
   // Gibt ein Datum in Milliskenden zurück
   dateToNumber(date: Date) {
     return date.getTime();

@@ -18,6 +18,10 @@ export class NavigationsleisteComponent implements OnInit {
   ngOnInit() {
   }
 
+  loggedIn() {
+    return this.router.url != '/';
+  }
+
 
   logout() {
     sessionStorage.removeItem('user');

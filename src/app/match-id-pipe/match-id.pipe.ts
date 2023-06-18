@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class MatchIdPipe implements PipeTransform {
 
-  transform(value: string, users: UserInfo[], rowObject: any): string {
+  transform(value: string, users: UserInfo[], rowObject?: any): string {
     //HACK: cache result in row object, so that the for-loop doesn't
     // need to be executed on every sort/filter
 
