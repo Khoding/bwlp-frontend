@@ -226,22 +226,13 @@ export class VeranstaltungComponent implements OnInit {
         if (id != null) {
           this.thriftService.getEvent(id).then(
             (lecture: LectureRead) => {
-              //TODO: put into frontend
-              // lecture.updateTime = this.datePipe.transform(lecture.updateTime * 1000, 'dd.MM.yyyy, HH:mm');
-              // lecture.createTime = this.datePipe.transform(lecture.createTime * 1000, 'dd.MM.yyyy, HH:mm');
-              // lecture.startTime = new Date(lecture.startTime * 1000);
-              // lecture.endTime = new Date(lecture.endTime * 1000);
               // tslint:disable-next-line: prefer-for-of
               for (let i = 0; i < this.users.length; i++) {
                 if (lecture.ownerId === users[i].userId) {
-                  // lecture.ownerId = users[i].lastName + ', ' + users[i].firstName;
                   this.currentOwner = this.users[i].userId;
                 } else {
                   this.possibleOwners.push(this.users[i]);
                 }
-                // if (lecture.updaterId === users[i].userId) {
-                //   lecture.updaterId = users[i].lastName + ', ' + users[i].firstName;
-                // }
               }
               this.lecture = lecture;
               this.thriftService.getLecturePermissions(id).subscribe(
@@ -249,13 +240,13 @@ export class VeranstaltungComponent implements OnInit {
                   this.users.forEach(user => {
                     if (permissionMap.get(user.userId) !== undefined) {
                       this.permissions.push({
-                        userName: user.lastName + ', ' + user.firstName + ' (' + user.eMail + ')',
+                        userName: user.lastName + ', ' + user.firstName + ' (' + user.eMail + ', ' + user.userId + ')',
                         userId: user.userId,
                         admin: permissionMap.get(user.userId).admin,
                         edit: permissionMap.get(user.userId).edit
                       });
                     } else if (user.userId !== this.currentOwner) {
-                      this.options.push((user.firstName + ' ' + user.lastName + ' (' + user.eMail + ')'));
+                      this.options.push((user.firstName + ' ' + user.lastName + ' (' + user.eMail + ', ' + user.userId + ')'));
                     }
                   });
                 }
@@ -310,12 +301,13 @@ export class VeranstaltungComponent implements OnInit {
       // Wenn ein Benutzer aus der Liste hinzugefügt wurde, soll er nicht mehr in der Liste aufgelistet werden
       const start = this.userControl.value.indexOf('(');
       const end = this.userControl.value.indexOf(')');
-      const userMail = this.userControl.value.substring(start + 1, end);
+      const startId = this.userControl.value.substring(start + 1, end).indexOf(',');
+      const userId = this.userControl.value.substring(start + startId + 3, end);
       // tslint:disable-next-line: prefer-for-of
       for (let index = 0; index < this.users.length; index++) {
-        if (this.users[index].eMail === userMail) {
+        if (this.users[index].userId === userId) {
           this.permissions.push({
-            userName: this.users[index].lastName + ', ' + this.users[index].firstName + ' (' + this.users[index].eMail + ')',
+            userName: this.users[index].lastName + ', ' + this.users[index].firstName + ' (' + this.users[index].eMail + ', ' + this.users[index].userId + ')',
             userId: this.users[index].userId,
             admin: false,
             edit: false
@@ -338,7 +330,7 @@ export class VeranstaltungComponent implements OnInit {
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.users.length; index++) {
       if (this.users[index].userId === userId) {
-        this.options.push((this.users[index].firstName + ' ' + this.users[index].lastName + ' (' + this.users[index].eMail + ')'));
+        this.options.push((this.users[index].firstName + ' ' + this.users[index].lastName + ' (' + this.users[index].eMail + ', ' + this.users[index].userId + ')'));
         this.permissions.splice(i, 1);
         return;
       }

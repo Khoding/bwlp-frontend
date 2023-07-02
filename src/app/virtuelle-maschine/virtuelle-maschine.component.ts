@@ -96,7 +96,7 @@ export class VirtuelleMaschineComponent implements OnInit {
                   this.users.forEach(user => {
                     if (permissionMap.get(user.userId) !== undefined) {
                       this.permissions.push({
-                        userName: user.lastName + ', ' + user.firstName + ' (' + user.eMail + ')',
+                        userName: user.lastName + ', ' + user.firstName + ' (' + user.eMail + ', ' + user.userId + ')',
                         userId: user.userId,
                         download: permissionMap.get(user.userId).download,
                         link: permissionMap.get(user.userId).link,
@@ -104,7 +104,7 @@ export class VirtuelleMaschineComponent implements OnInit {
                         edit: permissionMap.get(user.userId).edit
                       });
                     } else if (user.userId !== this.virtuellemaschine.ownerId) {
-                      this.options.push((user.firstName + ' ' + user.lastName + ' (' + user.eMail + ')'));
+                      this.options.push((user.firstName + ' ' + user.lastName + ' (' + user.eMail + ', ' + user.userId + ')'));
                     } else {
                       this.possibleOwners = this.users;
                       this.currentOwner = this.possibleOwners.splice(this.users.indexOf(user), 1);
@@ -162,12 +162,13 @@ export class VirtuelleMaschineComponent implements OnInit {
       // Wenn ein Benutzer aus der Liste hinzugefügt wurde, soll er nicht mehr in der Liste aufgelistet werden
       const start = this.userControl.value.indexOf('(');
       const end = this.userControl.value.indexOf(')');
-      const userMail = this.userControl.value.substring(start + 1, end);
+      const startId = this.userControl.value.substring(start + 1, end).indexOf(',');
+      const userId = this.userControl.value.substring(start + startId + 3, end)
       // tslint:disable-next-line: prefer-for-of
       for (let index = 0; index < this.users.length; index++) {
-        if (this.users[index].eMail === userMail) {
+        if (this.users[index].userId === userId) {
           this.permissions.push({
-            userName: this.users[index].lastName + ', ' + this.users[index].firstName + ' (' + this.users[index].eMail + ')',
+            userName: this.users[index].lastName + ', ' + this.users[index].firstName + ' (' + this.users[index].eMail + ', ' + this.users[index].userId + ')',
             userId: this.users[index].userId,
             admin: false,
             edit: false,
@@ -192,7 +193,7 @@ export class VirtuelleMaschineComponent implements OnInit {
     // tslint:disable-next-line: prefer-for-of
     for (let index = 0; index < this.users.length; index++) {
       if (this.users[index].userId === userId) {
-        this.options.push((this.users[index].firstName + ' ' + this.users[index].lastName + ' (' + this.users[index].eMail + ')'));
+        this.options.push((this.users[index].firstName + ' ' + this.users[index].lastName + ' (' + this.users[index].eMail + ', ' + this.users[index].userId + ')'));
         this.permissions.splice(i, 1);
         return;
       }
