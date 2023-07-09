@@ -631,6 +631,7 @@ export class VeranstaltungComponent implements OnInit {
 
   // return to lecture list while passing a value to use as a filter
   setFilterValue(filterValue: string) {
-    this.router.navigate(['/tb'],{state:{data:filterValue, display:'lectures'}});
+    sessionStorage.setItem('filter', filterValue);
+    this.router.navigate(['/tb'],{state:{display:'lectures'}});
   }
 }

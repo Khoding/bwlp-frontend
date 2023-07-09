@@ -93,7 +93,7 @@ export class CombinedTableComponent implements OnInit {
     } else {
       this.getEntries();
     }
-    this.passedFilter = history.state.data;
+    this.passedFilter = sessionStorage.getItem('filter');
     this.displayMode = history.state.display ? history.state.display : 'lectures';
     this.filterMode = this.displayMode;
   }
@@ -276,12 +276,18 @@ export class CombinedTableComponent implements OnInit {
   }
 
   // Filtert die Tabelle nach dem String, welcher in der Suchleiste eingegeben wird
+  // TODO: currently gets called BEFORE the change to the search field value is made
+  // => missing the last character/change
   applyFilter(filterValue: string) {
     if (filterValue) {
       // remember what entries the user wanted to filter
       this.filterMode = this.displayMode;
+      sessionStorage.setItem('filter', filterValue);
 
       this.entries.filter = filterValue.trim().toLowerCase();
+    }
+    else {
+      sessionStorage.setItem('filter', '');
     }
     this.amountEvents();
   }

@@ -290,7 +290,8 @@ export class VirtuelleMaschineComponent implements OnInit {
 
   // return to vm list while passing a value to use as a filter
   setFilterValue(filterValue: string, targetList: string = 'vms') {
-    this.router.navigate([`/tb`],{state:{data:filterValue, display:`${targetList}`}});
+    sessionStorage.setItem('filter', filterValue);
+    this.router.navigate([`/tb`],{state:{display:`${targetList}`}});
   }
 
   // Änderungen verwerfen
